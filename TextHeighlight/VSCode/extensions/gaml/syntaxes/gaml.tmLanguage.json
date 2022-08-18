@@ -1,0 +1,154 @@
+{
+	"name": "gaml",
+	"scopeName": "source.gaml",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+				{
+				"name": "keyword.control.gaml",
+				"match": "\\b(do|while|for|foreach|break|continue|if|else|switch|case|default|return)\\b"
+				},
+				{
+				"name": "keyword.other.gaml",
+				"match": "\\b(func|lambda|extern_c|cdecl|stdcall|fastcall|thiscall|sizeof|typeof|nameof|alignof|alignas|isfunction|issubclass|isinstance|in|is|as|addr|cast|unsafe_cast|assert|static_assert|static_error|static_warning|static_message|import|module|implement|using)\\b"
+				},
+				
+				{
+				"name": "storage.modifier.gaml",
+				"match": "\\b(const|mut|static|inline|virtual|override|abstract|final|template|deprecated|unimplemented|public|protected|private)\\b"
+				},
+				{
+				"name": "storage.type.gaml",
+				"match": "\\b(struct|enum|interface|object|component)\\b"
+				},
+				
+				{
+				"name": "constant.language.gaml",
+				"match": "\\b(true|false|None|this|super)\\b"
+				},
+				
+				{
+				"name": "support.type.gaml",
+				"match": "\\b(void|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"include": "#block_comment"
+				},
+				{
+					"include": "#line_comment"
+				}
+			]
+		},
+		"strings": {
+			"patterns": [
+				{
+				"name":"string.quoted.single.gaml",
+				"begin": "'",
+				"end": "'"
+				},
+				{
+				"name":"string.quoted.double.gaml",
+				"begin": "\"",
+				"end": "\""
+				}
+			]
+		},
+		"block_comment": {
+			"patterns": [
+				{
+					"name": "comment.block.gaml",
+					"begin": "\\s*+(\\/\\*)",
+					"end": "\\*\\/",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.begin.gaml"
+						}
+					},
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.end.gaml"
+						}
+					}
+				},
+				{
+					"name": "comment.block.gaml",
+					"begin": "\\s*+(\\/\\*)",
+					"end": "\\*\\/",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.begin.gaml"
+						}
+					},
+					"endCaptures": {
+						"0": {
+							"name": "punctuation.definition.comment.end.gaml"
+						}
+					}
+				}
+			]
+		},
+		"line_comment": {
+			"patterns": [
+				{
+					"name": "comment.line.double-slash.gaml",
+					"begin": "\\s*+(\\/\\/)",
+					"end": "(?<=\\n)(?<!\\\\\\n)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.gaml"
+						}
+					},
+					"endCaptures": {},
+					"patterns": [
+						{
+							"include": "#line_continuation_character"
+						}
+					]
+				},
+				{
+					"name": "comment.line.double-slash.gaml",
+					"begin": "\\s*+(\\/\\/)",
+					"end": "(?<=\\n)(?<!\\\\\\n)",
+					"beginCaptures": {
+						"1": {
+							"name": "punctuation.definition.comment.gaml"
+						}
+					},
+					"endCaptures": {},
+					"patterns": [
+						{
+							"include": "#line_continuation_character"
+						}
+					]
+				}
+			]
+		},
+		"line_continuation_character": {
+			"patterns": [
+				{
+					"match": "(\\\\)\\n",
+					"captures": {
+						"1": {
+							"name": "constant.character.escape.line-continuation.gaml"
+						}
+					}
+				}
+			]
+		}
+	}
+}

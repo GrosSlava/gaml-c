@@ -1,0 +1,27 @@
+
+How to use gaml-c?
+
+gaml-c works from your system terminal(console).
+In Windows we recommend to use Command Prompt for VS [version]
+
+To run gaml-c use compiler executable file with options.
+Options can be short(-[option short name]) or long(--[option long name]).
+
+To list all options use: -h or --help
+
+To pass a value with a short option, put your argument after the option without a space.
+To pass a value with a long option, put your argument after the option with '='.
+
+gaml-c inputs files extensions:
+    .gaml
+    .o 
+    .obj
+All arguments without the specified option ('-' or '--') are interpreted as an input file.
+
+
+
+Example options line:
+    Test/MyTestFile.gaml - compile file and create executable
+    -c Test/MyTestFile.gaml - compile, but not create executable
+    -c --progress -pTest - compile to object files all gaml files from folder "Test" and show compilation progress
+    -O2 --package=Test --name=ProgramName - compile all gaml files from folder "Test" with optimization level = 2 and set exceutable file name = "ProgramName"

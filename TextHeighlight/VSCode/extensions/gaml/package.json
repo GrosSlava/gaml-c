@@ -1,0 +1,30 @@
+{
+	"name": "gaml",
+	"displayName": "%displayName%",
+	"description": "%description%",
+	"version": "1.0.0",
+	"license": "MIT",
+	"engines": {
+		"vscode": "*"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "gaml",
+				"aliases": ["gaml", "Gaml" ],
+				"extensions": [".gaml", ".gh"],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "gaml",
+				"scopeName": "source.gaml",
+				"path": "./syntaxes/gaml.tmLanguage.json"
+			}
+		]
+	}
+}
