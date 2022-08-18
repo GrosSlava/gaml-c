@@ -1,4 +1,3 @@
-
 // operator do
 
 
@@ -7,7 +6,7 @@ func void main()
 {   
 
     /*
-        do is complex operator. It do code inside brackets and stop by condition.
+        do is complex operator. It executes the code inside brackets and stop by condition.
         Condition check after loop. 
     */
 
@@ -18,7 +17,7 @@ func void main()
     do
     {
         // break - exit do
-        // continue - go to next iteration
+        // continue - go to the next iteration
 
         // do namespace
 

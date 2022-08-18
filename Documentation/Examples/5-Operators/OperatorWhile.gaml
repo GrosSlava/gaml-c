@@ -1,4 +1,3 @@
-
 // operator while
 
 
@@ -14,7 +13,7 @@ func void main()
         // while namespace
 
         // break - exit while
-        // continue - go to next iteration
+        // continue - go to the next iteration
 
         a--;
     }

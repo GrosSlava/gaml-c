@@ -129,6 +129,8 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(EXPECTED_ARGUMENT_TYPE):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument type.");
 	CASE_ERROR(EXPECTED_ARGUMENT_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument name.");
 	CASE_ERROR(FUNCTION_DECLARATION_NOT_FOUND):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function declaration not found.");
+	CASE_ERROR(FUNCTION_ARGUMENT_NAME_MISMATCH):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Mismatch of the function declaration argument name.");
+	CASE_ERROR(FUNCTION_STATIC_CODE_OVERRIDE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function static code override.");
 
 	//Code generator
 	CASE_ERROR(NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM):	return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "No default compiler for current platform.");

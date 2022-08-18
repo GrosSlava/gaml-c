@@ -67,7 +67,7 @@ func uint8 foo()
         a | b - binary or
         ~a - binary inverse
         a ^ b- binary xor
-        a << b - binari shift left
+        a << b - binary shift left
         a >> b - binary shift right
 
         a + b - plus

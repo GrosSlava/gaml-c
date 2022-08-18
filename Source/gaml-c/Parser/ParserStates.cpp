@@ -802,22 +802,36 @@ IParserState* DeclareFunction2_ParserState::Process(FParserStates& InParserState
 	}
 
 
-	//TODO namespace with name 
-
 	InParserStates.FunctionDeclarationContext.FunctionName = InToken.GetLexeme();
 	return InParserStates.GDeclareFunction3_ParserState;
 }
 
 IParserState* DeclareFunction3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	if( InToken.GetType() != ETokenType::LPAR )
+	if( InToken.GetType() == ETokenType::LPAR )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_LPAR, InToken);
-		return nullptr;
+		return InParserStates.GDeclareFunction4_ParserState;
+	}
+	else
+	if( InToken.GetType() == ETokenType::NAMESPACE_ACCESS_OPERATOR )
+	{
+		if( InParserStates.FunctionDeclarationContext.ClassDeclarationNamespace.empty() )
+		{
+			InParserStates.FunctionDeclarationContext.ClassDeclarationNamespace = InParserStates.FunctionDeclarationContext.FunctionName;
+			InParserStates.FunctionDeclarationContext.FunctionName.clear();
+		}
+		else
+		{
+			InParserStates.RaiseError(EErrorMessageType::EXPECTED_LPAR, InToken);
+			return nullptr;
+		}
+
+		return InParserStates.GDeclareFunction2_ParserState;
 	}
 
 
-	return InParserStates.GDeclareFunction4_ParserState;
+	InParserStates.RaiseError(EErrorMessageType::EXPECTED_LPAR, InToken);
+	return nullptr;
 }
 
 IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
@@ -838,7 +852,7 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 			}
 		}
 
-		return InParserStates.GDeclareFunction5_ParserState;
+		return InParserStates.GDeclareFunction6_ParserState;
 	}
 	else if( InToken.GetType() == ETokenType::CONST )
 	{
@@ -969,7 +983,7 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 		// TODO pointer to lambda
 		return nullptr;
 	}
-	else if( InToken.GetType() == ETokenType::EQUAL )
+	else if( InToken.GetType() == ETokenType::ASSIGN )
 	{
 		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.empty() )
 		{
@@ -990,7 +1004,8 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 			}
 		}
 		
-		return nullptr; //TODO default value
+		InParserStates.FunctionDeclarationContext.DefaultValueOpenBracketLayer = 0;
+		return InParserStates.GDeclareFunction5_ParserState;
 	}
 	else if( InToken.GetType() == ETokenType::COMMA )
 	{
@@ -1008,6 +1023,7 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 			}
 			else
 			{
+				// push info for next argument
 				FVariableInfo LVariableInfo;
 				InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.push_back(LVariableInfo);
 			}
@@ -1027,6 +1043,43 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 
 IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
+	if(InToken.GetType() == ETokenType::COMMA)
+	{
+		if( InParserStates.FunctionDeclarationContext.DefaultValueOpenBracketLayer == 0 )
+		{
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().DefaultValueTree.BuildAST(InParserStates.FunctionDeclarationContext.LastInputDefaultValueTokens);
+			InParserStates.FunctionDeclarationContext.LastInputDefaultValueTokens.clear();
+
+			// push info for next argument
+			FVariableInfo LVariableInfo;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.push_back(LVariableInfo);
+
+			return InParserStates.GDeclareFunction4_ParserState;
+		}
+	}
+	else if( InToken.GetType() == ETokenType::RPAR )
+	{
+		if( InParserStates.FunctionDeclarationContext.DefaultValueOpenBracketLayer == 0 )
+		{
+			return InParserStates.GDeclareFunction6_ParserState;
+		}
+	}
+	else if( FParserHelperLibrary::IsOpenPairToken(InToken) )
+	{
+		++InParserStates.FunctionDeclarationContext.DefaultValueOpenBracketLayer;
+	}
+	else if( FParserHelperLibrary::IsClosePairToken(InToken) )
+	{
+		--InParserStates.FunctionDeclarationContext.DefaultValueOpenBracketLayer;
+	}
+	
+	InParserStates.FunctionDeclarationContext.LastInputDefaultValueTokens.push_back(InToken);
+
+	return InParserStates.GDeclareFunction5_ParserState;
+}
+
+IParserState* DeclareFunction6_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
 	if( FParserHelperLibrary::IsFunctionRightCpecifier(InToken) )
 	{
 		switch( InToken.GetType() )
@@ -1040,7 +1093,7 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 			}
 
 			InParserStates.FunctionDeclarationContext.SignatureInfo.IsConst = true;
-			return InParserStates.GDeclareFunction5_ParserState;
+			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::OVERRIDE:
 		{
@@ -1051,7 +1104,7 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 			}
 
 			InParserStates.FunctionDeclarationContext.SignatureInfo.IsOverride = true;
-			return InParserStates.GDeclareFunction5_ParserState;
+			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::ABSTRACT:
 		{
@@ -1062,7 +1115,7 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 			}
 
 			InParserStates.FunctionDeclarationContext.SignatureInfo.IsAbstract = true;
-			return InParserStates.GDeclareFunction5_ParserState;
+			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::FINAL:
 		{
@@ -1073,7 +1126,7 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 			}
 
 			InParserStates.FunctionDeclarationContext.SignatureInfo.IsFinal = true;
-			return InParserStates.GDeclareFunction5_ParserState;
+			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::UNIMPLEMENTED:
 		{
@@ -1084,11 +1137,11 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 			}
 
 			InParserStates.FunctionDeclarationContext.SignatureInfo.IsUnimplemented = true;
-			return InParserStates.GDeclareFunction5_ParserState;
+			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		}
 
-		return InParserStates.GDeclareFunction5_ParserState;
+		return InParserStates.GDeclareFunction6_ParserState;
 	}
 	else if( InToken.GetType() == ETokenType::SEMICOLON )
 	{
@@ -1109,7 +1162,7 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 	else if( InToken.GetType() == ETokenType::LSQR )
 	{
 		InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer = 1;
-		return InParserStates.GDeclareFunction6_ParserState;
+		return InParserStates.GDeclareFunction7_ParserState;
 	}
 	else if( InToken.GetType() == ETokenType::LBRA )
 	{
@@ -1119,14 +1172,14 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 		}
 
 		InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer = 1;
-		return InParserStates.GDeclareFunction8_ParserState;
+		return InParserStates.GDeclareFunction9_ParserState;
 	}
 
 	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
-IParserState* DeclareFunction6_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+IParserState* DeclareFunction7_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer == 0 )
 	{
@@ -1140,7 +1193,7 @@ IParserState* DeclareFunction6_ParserState::Process(FParserStates& InParserState
 		++InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer;
 		InParserStates.FunctionDeclarationContext.StaticCodeTokens.push_back(InToken);
 
-		return InParserStates.GDeclareFunction6_ParserState;
+		return InParserStates.GDeclareFunction7_ParserState;
 	}
 
 	if( InToken.GetType() == ETokenType::RSQR )
@@ -1148,20 +1201,20 @@ IParserState* DeclareFunction6_ParserState::Process(FParserStates& InParserState
 		--InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer;
 		if( InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer == 0 )
 		{
-			return InParserStates.GDeclareFunction7_ParserState;
+			return InParserStates.GDeclareFunction8_ParserState;
 		}
 
 		InParserStates.FunctionDeclarationContext.StaticCodeTokens.push_back(InToken);
-		return InParserStates.GDeclareFunction6_ParserState;
+		return InParserStates.GDeclareFunction7_ParserState;
 	}
 
 
 	InParserStates.FunctionDeclarationContext.StaticCodeTokens.push_back(InToken);
 
-	return InParserStates.GDeclareFunction6_ParserState;
+	return InParserStates.GDeclareFunction7_ParserState;
 }
 
-IParserState* DeclareFunction7_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+IParserState* DeclareFunction8_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() == ETokenType::SEMICOLON )
 	{
@@ -1187,14 +1240,14 @@ IParserState* DeclareFunction7_ParserState::Process(FParserStates& InParserState
 		}
 
 		InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer = 1;
-		return InParserStates.GDeclareFunction8_ParserState;
+		return InParserStates.GDeclareFunction9_ParserState;
 	}
 
 	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
-IParserState* DeclareFunction8_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+IParserState* DeclareFunction9_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer == 0 )
 	{
@@ -1208,7 +1261,7 @@ IParserState* DeclareFunction8_ParserState::Process(FParserStates& InParserState
 		++InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer;
 		InParserStates.FunctionImplementationContext.FunctionCodeTokens.push_back(InToken);
 
-		return InParserStates.GDeclareFunction8_ParserState;
+		return InParserStates.GDeclareFunction9_ParserState;
 	}
 
 	if( InToken.GetType() == ETokenType::RBRA )
@@ -1233,13 +1286,13 @@ IParserState* DeclareFunction8_ParserState::Process(FParserStates& InParserState
 
 		InParserStates.FunctionImplementationContext.FunctionCodeTokens.push_back(InToken);
 
-		return InParserStates.GDeclareFunction8_ParserState;
+		return InParserStates.GDeclareFunction9_ParserState;
 	}
 
 
 	InParserStates.FunctionImplementationContext.FunctionCodeTokens.push_back(InToken);
 
-	return InParserStates.GDeclareFunction8_ParserState;
+	return InParserStates.GDeclareFunction9_ParserState;
 }
 
 
@@ -1323,6 +1376,7 @@ FParserStates::FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOpti
 	CREATE_STATE(DeclareFunction6)
 	CREATE_STATE(DeclareFunction7)
 	CREATE_STATE(DeclareFunction8)
+	CREATE_STATE(DeclareFunction9)
 
 	CREATE_STATE(StartDeclareClass)
 
@@ -1371,6 +1425,7 @@ FParserStates::~FParserStates()
 	DELETE_STATE(DeclareFunction6)
 	DELETE_STATE(DeclareFunction7)
 	DELETE_STATE(DeclareFunction8)
+	DELETE_STATE(DeclareFunction9)
 
 	DELETE_STATE(StartDeclareClass)
 
@@ -1714,11 +1769,25 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 		return false;
 	}
 
-	if( OutProgramInfo.Functions.find(LFunctionCompileName) != OutProgramInfo.Functions.end() )
+	auto LProgramFunctionIterator = OutProgramInfo.Functions.find(LFunctionCompileName);
+	if( LProgramFunctionIterator != OutProgramInfo.Functions.end() )
 	{
 		if( SkipIfExist )
 		{
-			//TODO check deep equal
+			for( int i = 0; i < FunctionDeclarationContext.SignatureInfo.Inputs.size(); ++i )
+			{
+				if( FunctionDeclarationContext.SignatureInfo.Inputs[i].VariableName != (*LProgramFunctionIterator).second.Inputs[i].VariableName )
+				{
+					RaiseError(EErrorMessageType::FUNCTION_ARGUMENT_NAME_MISMATCH, TokenCTX);
+					return false;
+				}
+			}
+
+			if( !FunctionDeclarationContext.StaticCodeTokens.empty() )
+			{
+				RaiseError(EErrorMessageType::FUNCTION_STATIC_CODE_OVERRIDE, TokenCTX);
+				return false;
+			}
 
 			return true;
 		}
@@ -1732,12 +1801,6 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 	FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredInFile = TokenCTX.GetFileInfo();
 	FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredAtLine = TokenCTX.GetLine();
 	FunctionDeclarationContext.SignatureInfo.StaticCodeTree.BuildAST(FunctionDeclarationContext.StaticCodeTokens);
-
-	for( FVariableInfo& LVariableInfo : FunctionDeclarationContext.SignatureInfo.Inputs )
-	{
-		//TODO
-		//LVariableInfo.DefaultValueTree.BuildAST();
-	}
 
 	const bool ThisSignatureExists = FParserHelperLibrary::GetFunctionSignatureID(FunctionDeclarationContext.SignatureInfo, OutProgramInfo) != -1;
 	if( !ThisSignatureExists )
@@ -1923,7 +1986,7 @@ std::string FParserStates::GetCTXFunctionCompileName(const FProgramInfo& OutProg
 	{
 		LFunctionCompileName = FParserHelperLibrary::GetFunctionCompileName
 		(
-			OutProgramInfo.MainModuleName, "", FunctionDeclarationContext.FunctionName, FunctionDeclarationContext.SignatureInfo, OutProgramInfo
+			OutProgramInfo.MainModuleName, FunctionDeclarationContext.ClassDeclarationNamespace, FunctionDeclarationContext.FunctionName, FunctionDeclarationContext.SignatureInfo, OutProgramInfo
 		);
 		break;
 	}

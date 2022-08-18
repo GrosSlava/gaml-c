@@ -6,7 +6,7 @@ module MyModule; // set the module name, it must match the file name
 
 // can import other modules if module depends on them
 
-// Inside module we can use all module functions without namespace access operator
+// inside module we can use all module functions without namespace access operator
 
 
 

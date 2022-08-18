@@ -53,12 +53,12 @@ DECLARE_STATE_CLASS(DeclareAnyGlobalPrivate) // private -> func|interface|object
 
 
 // moudle [IDENTIFIER].[IDENTIFIER]...;
-DECLARE_STATE_CLASS(StartDeclareModule) // module -> [IDENTIFIER] -> .|;
+DECLARE_STATE_CLASS(StartDeclareModule)	// module -> [IDENTIFIER] -> .|;
 DECLARE_STATE_CLASS(DeclareModule1)		// [IDENTIFIER] -> .|; -> [IDENTIFIER]|[Default]
 
 // implement [IDENTIFIER].[IDENTIFIER]...;
-DECLARE_STATE_CLASS(StartImplementModule) // implement -> [IDENTIFIER] -> .|;
-DECLARE_STATE_CLASS(ImplementModule1) //[IDENTIFIER] -> .|; -> [IDENTIFIER]|[Default]
+DECLARE_STATE_CLASS(StartImplementModule)	// implement -> [IDENTIFIER] -> .|;
+DECLARE_STATE_CLASS(ImplementModule1)		//[IDENTIFIER] -> .|; -> [IDENTIFIER]|[Default]
 
 // import [IDENTIFIER].[IDENTIFIER]... as [IDENTIFIER];
 DECLARE_STATE_CLASS(StartImportModule)	// import -> [IDENTIFIER] -> .|as|;
@@ -69,15 +69,16 @@ DECLARE_STATE_CLASS(ImportModule3)		// [IDENTIFIER] -> ; -> [Default]
 
 
 // func [specifiers...] [return type]|[IDENTIFIER] [IDENTIFIER] ([params...]) [specifiers...];
-DECLARE_STATE_CLASS(StartDeclareFunction) // func -> [specifiers...]|const|[stadrad type]|[user type] -> const|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareFunction1)	  // const -> [stadrad type]|[user type] -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareFunction2)	  // [stadrad type]|[user type] -> [IDENTIFIER] -> (
-DECLARE_STATE_CLASS(DeclareFunction3)	  // [IDENTIFIER] -> ( -> )|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareFunction4)	  // ( -> [stadrad type]|[user type] -> )|,|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareFunction5)	  // (|[stadrad type]|[user type] -> ) -> [specifiers...]|;|[|{
-DECLARE_STATE_CLASS(DeclareFunction6)	  // ) -> [ -> ]
-DECLARE_STATE_CLASS(DeclareFunction7)	  // ] -> ;|{ -> [Default]
-DECLARE_STATE_CLASS(DeclareFunction8)	  // )|] -> { -> }
+DECLARE_STATE_CLASS(StartDeclareFunction)	// func -> [specifiers...]|const|[stadrad type]|[user type] -> const|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareFunction1)		// const -> [stadrad type]|[user type] -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareFunction2)		// [stadrad type]|[user type] -> [IDENTIFIER] -> (|::
+DECLARE_STATE_CLASS(DeclareFunction3)		// [IDENTIFIER] -> ( -> )|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareFunction4)		// ( -> [stadrad type]|[user type] -> )|=|,|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareFunction5)		// 
+DECLARE_STATE_CLASS(DeclareFunction6)		// (|[stadrad type]|[user type] -> ) -> [specifiers...]|;|[|{
+DECLARE_STATE_CLASS(DeclareFunction7)		// ) -> [ -> ]
+DECLARE_STATE_CLASS(DeclareFunction8)		// ] -> ;|{ -> [Default]
+DECLARE_STATE_CLASS(DeclareFunction9)		// )|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
 DECLARE_STATE_CLASS(StartDeclareClass)
@@ -155,6 +156,9 @@ public:
 	{
 		SignatureInfo = FFunctionSignatureInfo();
 		FunctionName.clear();
+		LastInputDefaultValueTokens.clear();
+		DefaultValueOpenBracketLayer = 0;
+		ClassDeclarationNamespace.clear();
 		StaticCodeTokens.clear();
 		StaticCodeOpenBracketLayer = 0;
 	}
@@ -163,7 +167,10 @@ public:
 public:
 
 	FFunctionSignatureInfo SignatureInfo;
+	std::string ClassDeclarationNamespace = "";
 	std::string FunctionName = "";
+	std::vector<Token> LastInputDefaultValueTokens;
+	int DefaultValueOpenBracketLayer = 0;
 
 	std::vector<Token> StaticCodeTokens;
 	int StaticCodeOpenBracketLayer = 0;
@@ -307,6 +314,7 @@ public:
 	DECLARE_STATE(DeclareFunction6)
 	DECLARE_STATE(DeclareFunction7)
 	DECLARE_STATE(DeclareFunction8)
+	DECLARE_STATE(DeclareFunction9)
 
 	DECLARE_STATE(StartDeclareClass)
 

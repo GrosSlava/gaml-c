@@ -52,5 +52,5 @@ func void foo4(const uint8 a) {}
 /*
     Function argument 'a' is mutable, so the passed argument will change when 'a' modified.
 */
-func void foo4(mut uint8 a) {}
+func void foo5(mut uint8 a) {}
 

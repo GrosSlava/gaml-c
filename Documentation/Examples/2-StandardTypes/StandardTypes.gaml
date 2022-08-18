@@ -27,9 +27,9 @@ func void main()
     char h;     // 16-bit symbol type(utf-16)
 
     string s;   // builtin type for easy operations with strings, see documentation about string
-    vector4d v; // builtin type for easy operations with 4d-vectors, see documentation about vectors
-    vector3d v; // builtin type for easy operations with 3d-vectors, see documentation about vectors
-    vector2d v; // builtin type for easy operations with 2d-vectors, see documentation about vectors
+    vector4d v1; // builtin type for easy operations with 4d-vectors, see documentation about vectors
+    vector3d v2; // builtin type for easy operations with 3d-vectors, see documentation about vectors
+    vector2d v3; // builtin type for easy operations with 2d-vectors, see documentation about vectors
 
     array<|uint8|> arr; // builtin array for any type, see documentation about arrays
 }

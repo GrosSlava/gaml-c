@@ -1,4 +1,3 @@
-
 // operator for
 
 
@@ -13,6 +12,6 @@ func void main()
         // for namespace
 
         // break - exit for
-        // continue - go to next iteration
+        // continue - go to the next iteration
     }
 }

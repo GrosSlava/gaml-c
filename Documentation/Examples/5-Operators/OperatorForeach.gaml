@@ -1,4 +1,4 @@
-// operator for
+// operator foreach
 
 
 
@@ -16,6 +16,6 @@ func void main()
         // foreach namespace
 
         // break - exit foreach
-        // continue - go to next iteration
+        // continue - go to the next iteration
     }
 }
