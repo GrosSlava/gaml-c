@@ -7,7 +7,7 @@
 # Requirements
 
 On Linux: gcc, nasm \
-On Windows: Visual Studio 2017 and higher, native tools command promt for VS
+On Windows: Visual Studio 2017 or higher, native tools command prompt for VS
 
 
 # FAQ
