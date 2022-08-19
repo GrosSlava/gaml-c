@@ -749,6 +749,10 @@ IParserState* StartDeclareFunction_ParserState::Process(FParserStates& InParserS
 		InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
 		return InParserStates.GDeclareFunction2_ParserState;
 	}
+	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
+	{
+		//TODO
+	}
 	else if( InToken.GetType() == ETokenType::IDENTIFIER )
 	{
 		if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID != -1 )
@@ -759,6 +763,11 @@ IParserState* StartDeclareFunction_ParserState::Process(FParserStates& InParserS
 
 		//TODO user type
 	}
+	else if( InToken.GetType() == ETokenType::LAMBDA )
+	{
+		// TODO lambda
+	}
+
 
 	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
@@ -777,6 +786,10 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 		InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
 		return InParserStates.GDeclareFunction2_ParserState;
 	}
+	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
+	{
+		//TODO
+	}
 	else if( InToken.GetType() == ETokenType::IDENTIFIER )
 	{
 		if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID != -1 )
@@ -786,6 +799,10 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 		}
 
 		//TODO user type
+	}
+	else if( InToken.GetType() == ETokenType::LAMBDA )
+	{
+		// TODO lambda
 	}
 
 
@@ -808,12 +825,13 @@ IParserState* DeclareFunction2_ParserState::Process(FParserStates& InParserState
 
 IParserState* DeclareFunction3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	if( InToken.GetType() == ETokenType::LPAR )
+	switch( InToken.GetType() )
+	{
+	case ETokenType::LPAR:
 	{
 		return InParserStates.GDeclareFunction4_ParserState;
 	}
-	else
-	if( InToken.GetType() == ETokenType::NAMESPACE_ACCESS_OPERATOR )
+	case ETokenType::NAMESPACE_ACCESS_OPERATOR:
 	{
 		if( InParserStates.FunctionDeclarationContext.ClassDeclarationNamespace.empty() )
 		{
@@ -828,8 +846,8 @@ IParserState* DeclareFunction3_ParserState::Process(FParserStates& InParserState
 
 		return InParserStates.GDeclareFunction2_ParserState;
 	}
-
-
+	}
+	
 	InParserStates.RaiseError(EErrorMessageType::EXPECTED_LPAR, InToken);
 	return nullptr;
 }
@@ -948,6 +966,10 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 
 		return InParserStates.GDeclareFunction4_ParserState;
 	}
+	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
+	{
+		//TODO
+	}
 	else if( InToken.GetType() == ETokenType::IDENTIFIER )
 	{
 		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.empty() )
@@ -973,15 +995,9 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 
 		return InParserStates.GDeclareFunction4_ParserState;
 	}
-	else if( InToken.GetType() == ETokenType::FUNCTION )
-	{
-		// TODO pointer to function
-		return nullptr;
-	}
 	else if( InToken.GetType() == ETokenType::LAMBDA )
 	{
 		// TODO pointer to lambda
-		return nullptr;
 	}
 	else if( InToken.GetType() == ETokenType::ASSIGN )
 	{
@@ -1064,7 +1080,9 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 			return InParserStates.GDeclareFunction6_ParserState;
 		}
 	}
-	else if( FParserHelperLibrary::IsOpenPairToken(InToken) )
+
+
+	if( FParserHelperLibrary::IsOpenPairToken(InToken) )
 	{
 		++InParserStates.FunctionDeclarationContext.DefaultValueOpenBracketLayer;
 	}
@@ -1140,8 +1158,6 @@ IParserState* DeclareFunction6_ParserState::Process(FParserStates& InParserState
 			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		}
-
-		return InParserStates.GDeclareFunction6_ParserState;
 	}
 	else if( InToken.GetType() == ETokenType::SEMICOLON )
 	{
@@ -1188,15 +1204,16 @@ IParserState* DeclareFunction7_ParserState::Process(FParserStates& InParserState
 	}
 
 
-	if( InToken.GetType() == ETokenType::LSQR )
+	switch( InToken.GetType() )
+	{
+	case ETokenType::LSQR:
 	{
 		++InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer;
 		InParserStates.FunctionDeclarationContext.StaticCodeTokens.push_back(InToken);
 
 		return InParserStates.GDeclareFunction7_ParserState;
 	}
-
-	if( InToken.GetType() == ETokenType::RSQR )
+	case ETokenType::RSQR:
 	{
 		--InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer;
 		if( InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer == 0 )
@@ -1207,16 +1224,21 @@ IParserState* DeclareFunction7_ParserState::Process(FParserStates& InParserState
 		InParserStates.FunctionDeclarationContext.StaticCodeTokens.push_back(InToken);
 		return InParserStates.GDeclareFunction7_ParserState;
 	}
-
-
-	InParserStates.FunctionDeclarationContext.StaticCodeTokens.push_back(InToken);
-
-	return InParserStates.GDeclareFunction7_ParserState;
+	default:
+	{
+		InParserStates.FunctionDeclarationContext.StaticCodeTokens.push_back(InToken);
+		return InParserStates.GDeclareFunction7_ParserState;
+	}
+	}
+	
+	return nullptr;
 }
 
 IParserState* DeclareFunction8_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	if( InToken.GetType() == ETokenType::SEMICOLON )
+	switch( InToken.GetType() )
+	{
+	case ETokenType::SEMICOLON:
 	{
 		if( !InParserStates.RegisterFunctionFromContext(OutProgramInfo, false, InToken) )
 		{
@@ -1232,7 +1254,7 @@ IParserState* DeclareFunction8_ParserState::Process(FParserStates& InParserState
 			//TODO to class context
 		}
 	}
-	else if( InToken.GetType() == ETokenType::LBRA )
+	case ETokenType::LBRA:
 	{
 		if( !InParserStates.RegisterFunctionFromContext(OutProgramInfo, true, InToken) )
 		{
@@ -1241,6 +1263,7 @@ IParserState* DeclareFunction8_ParserState::Process(FParserStates& InParserState
 
 		InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer = 1;
 		return InParserStates.GDeclareFunction9_ParserState;
+	}
 	}
 
 	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
@@ -1255,16 +1278,16 @@ IParserState* DeclareFunction9_ParserState::Process(FParserStates& InParserState
 		return nullptr;
 	}
 
-
-	if( InToken.GetType() == ETokenType::LBRA )
+	switch( InToken.GetType() )
+	{
+	case ETokenType::LBRA:
 	{
 		++InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer;
 		InParserStates.FunctionImplementationContext.FunctionCodeTokens.push_back(InToken);
 
 		return InParserStates.GDeclareFunction9_ParserState;
 	}
-
-	if( InToken.GetType() == ETokenType::RBRA )
+	case ETokenType::RBRA:
 	{
 		--InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer;
 		if( InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer == 0 )
@@ -1288,11 +1311,14 @@ IParserState* DeclareFunction9_ParserState::Process(FParserStates& InParserState
 
 		return InParserStates.GDeclareFunction9_ParserState;
 	}
+	default:
+	{
+		InParserStates.FunctionImplementationContext.FunctionCodeTokens.push_back(InToken);
+		return InParserStates.GDeclareFunction9_ParserState;
+	}
+	}
 
-
-	InParserStates.FunctionImplementationContext.FunctionCodeTokens.push_back(InToken);
-
-	return InParserStates.GDeclareFunction9_ParserState;
+	return nullptr;
 }
 
 
@@ -1309,7 +1335,76 @@ IParserState* StartDeclareClass_ParserState::Process(FParserStates& InParserStat
 
 IParserState* StartDefineAlias_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	//TODO
+	if( InToken.GetType() != ETokenType::IDENTIFIER )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_ALIAS_NAME, InToken);
+		return nullptr;
+	}
+
+
+	InParserStates.AliasDeclarationContext.AliasName = InToken.GetLexeme();
+	return InParserStates.GDefineAlias1_ParserState;
+}
+
+IParserState* DefineAlias1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() != ETokenType::ASSIGN )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_ASSIGN, InToken);
+		return nullptr;
+	}
+
+
+	return InParserStates.GDefineAlias2_ParserState;
+}
+
+IParserState* DefineAlias2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( FParserHelperLibrary::IsStandardType(InToken) )
+	{
+		InParserStates.AliasDeclarationContext.OriginalTypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+		return InParserStates.GDefineAlias3_ParserState;
+	}
+	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
+	{
+		//TODO
+	}
+	else if( InToken.GetType() == ETokenType::IDENTIFIER )
+	{
+		//TODO user type
+	}
+	else if( InToken.GetType() == ETokenType::LAMBDA )
+	{
+		//TODO lambda
+	}
+
+	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	return nullptr;
+}
+
+IParserState* DefineAlias3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() != ETokenType::SEMICOLON )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+		return nullptr;
+	}
+
+
+	if( !InParserStates.RegisterAliasFromContext(OutProgramInfo, InToken) )
+	{
+		return nullptr;
+	}
+
+	if( InParserStates.StateContextType == EStateContextType::Global )
+	{
+		return InParserStates.GDefault_ParserState;
+	}
+	else if( InParserStates.StateContextType == EStateContextType::InClass )
+	{
+		//TODO to class context
+	}
+
 	return nullptr;
 }
 
@@ -1317,8 +1412,67 @@ IParserState* StartDefineAlias_ParserState::Process(FParserStates& InParserState
 
 IParserState* StartStaticAssert_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	//TODO
+	if( InToken.GetType() != ETokenType::LPAR )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_LPAR, InToken);
+		return nullptr;
+	}
+
+
+	InParserStates.StaticAssertContext.Clear();
+
+	return InParserStates.GStaticAssert1_ParserState;
+}
+
+IParserState* StaticAssert1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() == ETokenType::RPAR )
+	{
+		if( InParserStates.StaticAssertContext.OpenBracketLayer == 0 )
+		{
+			AST LAST;
+			LAST.BuildAST(InParserStates.StaticAssertContext.Expression);
+			//TODO interpret ast
+
+			return InParserStates.GStaticAssert2_ParserState;
+		}
+	}
+
+
+	if( FParserHelperLibrary::IsOpenPairToken(InToken) )
+	{
+		++InParserStates.StaticAssertContext.OpenBracketLayer;
+	}
+	else if( FParserHelperLibrary::IsClosePairToken(InToken) )
+	{
+		--InParserStates.StaticAssertContext.OpenBracketLayer;
+	}
+
+	InParserStates.StaticAssertContext.Expression.push_back(InToken);
+
+	return InParserStates.GStaticAssert1_ParserState;
+}
+
+IParserState* StaticAssert2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() != ETokenType::SEMICOLON )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+		return nullptr;
+	}
+
+
+	if( InParserStates.StateContextType == EStateContextType::Global )
+	{
+		return InParserStates.GDefault_ParserState;
+	}
+	else if( InParserStates.StateContextType == EStateContextType::InClass )
+	{
+		//TODO to class context
+	}
+
 	return nullptr;
+
 }
 
 
@@ -1382,8 +1536,13 @@ FParserStates::FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOpti
 
 
 	CREATE_STATE(StartDefineAlias)
+	CREATE_STATE(DefineAlias1)
+	CREATE_STATE(DefineAlias2)
+	CREATE_STATE(DefineAlias3)
 
 	CREATE_STATE(StartStaticAssert)
+	CREATE_STATE(StaticAssert1)
+	CREATE_STATE(StaticAssert2)
 
 	CREATE_STATE(StartDefineTemplate)
 }
@@ -1431,8 +1590,13 @@ FParserStates::~FParserStates()
 
 
 	DELETE_STATE(StartDefineAlias)
+	DELETE_STATE(DefineAlias1)
+	DELETE_STATE(DefineAlias2)
+	DELETE_STATE(DefineAlias3)
 
 	DELETE_STATE(StartStaticAssert)
+	DELETE_STATE(StaticAssert1)
+	DELETE_STATE(StaticAssert2)
 
 	DELETE_STATE(StartDefineTemplate)
 }
@@ -1605,7 +1769,7 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 	return true;
 }
 
-bool FParserStates::ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImortModuleName, const Token& TokenCTX)
+bool FParserStates::ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX)
 {
 	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
 
@@ -1647,16 +1811,16 @@ bool FParserStates::ImportModule(FProgramInfo& OutProgramInfo, const std::string
 
 	// stop import recursion
 	if( 
-		ImortModuleName == OutProgramInfo.MainModuleName || 
-		OutProgramInfo.ImportedModulesInfo.find(ImortModuleName) != OutProgramInfo.ImportedModulesInfo.end() ||
-		std::find(LRequiredModules.begin(), LRequiredModules.end(), ImortModuleName) != LRequiredModules.end() 
+		ImportModuleName == OutProgramInfo.MainModuleName || 
+		OutProgramInfo.ImportedModulesInfo.find(ImportModuleName) != OutProgramInfo.ImportedModulesInfo.end() ||
+		std::find(LRequiredModules.begin(), LRequiredModules.end(), ImportModuleName) != LRequiredModules.end() 
 	  )
 	{
 		LFile.close();
 		return true;
 	}
 
-	LRequiredModules.push_back(ImortModuleName);
+	LRequiredModules.push_back(ImportModuleName);
 
 
 	std::string LSourceCode;
@@ -1667,14 +1831,14 @@ bool FParserStates::ImportModule(FProgramInfo& OutProgramInfo, const std::string
 	LLexer.Process(LSourceCode, LModuleFileInfo, CompileOptions, LTokens);
 
 	const std::string LModuleRealName = FParserHelperLibrary::GetFirstModuleName(LTokens);
-	if( ImortModuleName != LModuleRealName )
+	if( ImportModuleName != LModuleRealName )
 	{
 		RaiseError(EErrorMessageType::MODULE_NAME_NOT_MATCH_FILE_NAME, TokenCTX);
 		return false;
 	}
 
 	const std::string LSavedMainModuleName = OutProgramInfo.MainModuleName;
-	OutProgramInfo.MainModuleName = ImortModuleName; // not main module should check this name by it's name
+	OutProgramInfo.MainModuleName = ImportModuleName; // not main module should check this name by it's name
 	Parser LParser;
 	LParser.Process(LTokens, LModuleFileInfo, CompileOptions, false, OutProgramInfo);
 	OutProgramInfo.MainModuleName = LSavedMainModuleName;
@@ -1918,7 +2082,7 @@ bool FParserStates::RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const
 		return false;
 	}
 
-	if( OutProgramInfo.TypeAliases.find(LAliasCompileName) == OutProgramInfo.TypeAliases.end() )
+	if( OutProgramInfo.TypeAliases.find(LAliasCompileName) != OutProgramInfo.TypeAliases.end() )
 	{
 		RaiseError(EErrorMessageType::ALIAS_NAME_REDEFINITION, TokenCTX);
 		return false;
@@ -2022,7 +2186,7 @@ std::string FParserStates::GetCTXTypeAliasCompileName(const FProgramInfo& OutPro
 	{
 	case EStateContextType::Global:
 	{
-		LAliasCompileName = FParserHelperLibrary::GetTypeAliasCompileName(OutProgramInfo.MainModuleName, "", AliasDeclarationContext.AliasName);
+		LAliasCompileName = FParserHelperLibrary::GetTypeAliasCompileName(OutProgramInfo.MainModuleName, "", "", AliasDeclarationContext.AliasName);
 		break;
 	}
 	case EStateContextType::InClass:
@@ -2033,7 +2197,7 @@ std::string FParserStates::GetCTXTypeAliasCompileName(const FProgramInfo& OutPro
 			return "";
 		}
 
-		LAliasCompileName = FParserHelperLibrary::GetTypeAliasCompileName(OutProgramInfo.MainModuleName, LClassCompileName, AliasDeclarationContext.AliasName);
+		LAliasCompileName = FParserHelperLibrary::GetTypeAliasCompileName(OutProgramInfo.MainModuleName, LClassCompileName, "", AliasDeclarationContext.AliasName);
 		break;
 	}
 	}

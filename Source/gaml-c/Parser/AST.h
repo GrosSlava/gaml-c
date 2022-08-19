@@ -9,11 +9,12 @@
 
 
 
-struct FAST
+class AST
 {
 public:
 
-	inline FAST() { }
+	inline AST() { }
+	virtual ~AST() { }
 
 
 

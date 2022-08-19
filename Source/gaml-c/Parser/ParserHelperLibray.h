@@ -11,6 +11,11 @@
 
 
 /*
+	Separetor for compile names.
+*/
+const static std::string NameSeparator = "_0";
+
+/*
 	Helper library for common parser operations.
 */
 struct FParserHelperLibrary
@@ -104,13 +109,13 @@ public:
 
 		if( !ModuleName.empty() )
 		{
-			LClassCompileName += ModuleName + "_";
+			LClassCompileName += ModuleName + NameSeparator;
 		}
 
 		LClassCompileName += ClassName;
 		for( const std::string& LArgumentStr : TemplateArgumentNames )
 		{
-			LClassCompileName += "_" + LArgumentStr;
+			LClassCompileName += NameSeparator + LArgumentStr;
 		}
 
 		return LClassCompileName;
@@ -128,23 +133,23 @@ public:
 
 		if( IsConst )
 		{
-			LFunctionCompileName += "const_";
+			LFunctionCompileName += "const" + NameSeparator;
 		}
 
 		if( !ModuleName.empty() )
 		{
-			LFunctionCompileName += ModuleName + "_";
+			LFunctionCompileName += ModuleName + NameSeparator;
 		}
 
 		if( !ClassName.empty() )
 		{
-			LFunctionCompileName += ClassName + "_";
+			LFunctionCompileName += ClassName + NameSeparator;
 		}
 
 		LFunctionCompileName += OriginalName;
 		for( const std::string& LArgumentTypeStr : ArgumentTypeNames )
 		{
-			LFunctionCompileName += "_" + LArgumentTypeStr;
+			LFunctionCompileName += NameSeparator + LArgumentTypeStr;
 		}
 
 		return LFunctionCompileName;
@@ -194,12 +199,12 @@ public:
 
 		if( !ModuleName.empty() )
 		{
-			VariableCompileName += ModuleName + "_";
+			VariableCompileName += ModuleName + NameSeparator;
 		}
 
 		if( !ClassName.empty() )
 		{
-			VariableCompileName += ClassName + "_";
+			VariableCompileName += ClassName + NameSeparator;
 		}
 
 		VariableCompileName += OriginalName;
@@ -207,7 +212,7 @@ public:
 		return VariableCompileName;
 	}
 
-	static std::string GetTypeAliasCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& AliasName)
+	static std::string GetTypeAliasCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& FunctionName, const std::string& AliasName)
 	{
 		if( AliasName.empty() ) return "";
 
@@ -216,16 +221,52 @@ public:
 
 		if( !ModuleName.empty() )
 		{
-			LAliasCompileName += ModuleName + "_";
+			LAliasCompileName += ModuleName + NameSeparator;
 		}
 		if( !ClassName.empty() )
 		{
-			LAliasCompileName += ClassName + "_";
+			LAliasCompileName += ClassName + NameSeparator;
+		}
+		if( !FunctionName.empty() )
+		{
+			LAliasCompileName += FunctionName + NameSeparator;
 		}
 
 		LAliasCompileName += AliasName;
 
 		return LAliasCompileName;
+	}
+
+	static inline std::string GetTemplateCodeCompileName(
+															const std::string& ModuleName, const std::string& ClassName, const std::string& FunctionName, 
+															const std::string& TemplateCodeName, const std::vector<std::string>& TemplateArgumentNames
+														)
+	{
+		if( TemplateCodeName.empty() ) return "";
+
+
+		std::string LTemplateCodeName = "";
+
+		if( !ModuleName.empty() )
+		{
+			LTemplateCodeName += ModuleName + NameSeparator;
+		}
+		if( !ClassName.empty() )
+		{
+			LTemplateCodeName += ClassName + NameSeparator;
+		}
+		if( !FunctionName.empty() )
+		{
+			LTemplateCodeName += FunctionName + NameSeparator;
+		}
+
+		LTemplateCodeName += TemplateCodeName;
+		for( const std::string& LArgumentStr : TemplateArgumentNames )
+		{
+			LTemplateCodeName += NameSeparator + LArgumentStr;
+		}
+
+		return LTemplateCodeName;
 	}
 
 
@@ -279,6 +320,17 @@ public:
 	{ 
 		return IsStandardType(TypeID); 
 	}
+
+	static inline bool IsBuiltinTemplateType(ETokenType TokenType) noexcept
+	{
+		return TokenType == ETokenType::ARRAY;
+	}
+
+	static inline bool IsBuiltinTemplateType(const Token& InToken) noexcept 
+	{ 
+		return IsBuiltinTemplateType(InToken.GetType());
+	}
+
 
 
 

@@ -16,7 +16,9 @@
 
 struct FParserStates;
 
-
+/*
+	Parser state interface.
+*/
 class IParserState
 {
 public:
@@ -74,7 +76,7 @@ DECLARE_STATE_CLASS(DeclareFunction1)		// const -> [stadrad type]|[user type] ->
 DECLARE_STATE_CLASS(DeclareFunction2)		// [stadrad type]|[user type] -> [IDENTIFIER] -> (|::
 DECLARE_STATE_CLASS(DeclareFunction3)		// [IDENTIFIER] -> ( -> )|[stadrad type]|[user type]
 DECLARE_STATE_CLASS(DeclareFunction4)		// ( -> [stadrad type]|[user type] -> )|=|,|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareFunction5)		// 
+DECLARE_STATE_CLASS(DeclareFunction5)		// = -> [tokens...] -> ,|)
 DECLARE_STATE_CLASS(DeclareFunction6)		// (|[stadrad type]|[user type] -> ) -> [specifiers...]|;|[|{
 DECLARE_STATE_CLASS(DeclareFunction7)		// ) -> [ -> ]
 DECLARE_STATE_CLASS(DeclareFunction8)		// ] -> ;|{ -> [Default]
@@ -85,11 +87,16 @@ DECLARE_STATE_CLASS(StartDeclareClass)
 
 
 
-// using [IDENTIFIER] = [IDENTIFIER]|[expression];
-DECLARE_STATE_CLASS(StartDefineAlias)
+// using [IDENTIFIER] = [stadrad type]|[user type];
+DECLARE_STATE_CLASS(StartDefineAlias)	// using -> [IDENTIFIER] -> =
+DECLARE_STATE_CLASS(DefineAlias1)		// [IDENTIFIER] -> = -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DefineAlias2)		// = -> [stadrad type]|[user type] -> ;
+DECLARE_STATE_CLASS(DefineAlias3)		// [stadrad type]|[user type] -> ; -> [Default]
 
 // static_assert(expression);
-DECLARE_STATE_CLASS(StartStaticAssert)
+DECLARE_STATE_CLASS(StartStaticAssert)	// static_assert -> ( -> [expression]
+DECLARE_STATE_CLASS(StaticAssert1)		// ( -> [expression...]|) -> ;
+DECLARE_STATE_CLASS(StaticAssert2)		// ) -> ; -> [Default]
 
 // template<| [IDENTIFIER]...|... |> [IDENTIFIER] { ... }
 DECLARE_STATE_CLASS(StartDefineTemplate)
@@ -233,6 +240,23 @@ public:
 	std::string AliasName = "";
 };
 
+struct FStaticAssertContext
+{
+public:
+
+	inline void Clear() noexcept
+	{
+		Expression.clear();
+		OpenBracketLayer = 0;
+	}
+
+
+public:
+
+	std::vector<Token> Expression;
+	int OpenBracketLayer = 0;
+};
+
 struct FFunctionImplementationContext
 {
 public:
@@ -320,8 +344,13 @@ public:
 
 
 	DECLARE_STATE(StartDefineAlias)
+	DECLARE_STATE(DefineAlias1)
+	DECLARE_STATE(DefineAlias2)
+	DECLARE_STATE(DefineAlias3)
 
 	DECLARE_STATE(StartStaticAssert)
+	DECLARE_STATE(StaticAssert1)
+	DECLARE_STATE(StaticAssert2)
 
 	DECLARE_STATE(StartDefineTemplate)
 
@@ -350,6 +379,7 @@ public:
 		VariableDeclarationContext.Clear();
 		ClassDeclarationContext.Clear();
 		AliasDeclarationContext.Clear();
+		StaticAssertContext.Clear();
 		FunctionImplementationContext.Clear();
 	}
 
@@ -366,7 +396,7 @@ public:
 
 private:
 
-	bool ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImortModuleName, const Token& TokenCTX);
+	bool ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX);
 	bool ImportPackage(FProgramInfo& OutProgramInfo, const std::string& ImportPackageRelativePath, const Token& TokenCTX);
 
 	std::string GetCTXFunctionCompileName(const FProgramInfo& OutProgramInfo) const;
@@ -397,5 +427,6 @@ public:
 	FVariableDeclarationContext VariableDeclarationContext;
 	FClassDeclarationContext ClassDeclarationContext;
 	FAliasDeclarationContext AliasDeclarationContext;
+	FStaticAssertContext StaticAssertContext;
 	FFunctionImplementationContext FunctionImplementationContext;
 };

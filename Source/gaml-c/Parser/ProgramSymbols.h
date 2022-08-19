@@ -116,7 +116,7 @@ struct FVariableInfo
 	bool IsDeprecated = false;
 	bool IsStatic = false;
 
-	FAST DefaultValueTree;
+	AST DefaultValueTree;
 
 	FSymbolMetaInfo MetaInfo;
 };
@@ -151,7 +151,7 @@ struct FFunctionSignatureInfo
 	bool IsFinal = false;
 	bool IsExternC = false;
 
-	FAST StaticCodeTree;
+	AST StaticCodeTree;
 
 	FSymbolMetaInfo MetaInfo;
 };
@@ -227,7 +227,7 @@ struct FModuleInfo
 struct FTemplateCodeInfo
 {
 	std::vector<std::string> TemplateArguments;
-	FAST StaticCodeTree;
+	AST StaticCodeTree;
 	std::vector<Token> TemplateCode;
 
 	FSymbolMetaInfo MetaInfo;
@@ -237,7 +237,7 @@ struct FTemplateCodeInfo
 
 struct FCompilingFunctionInfo
 {
-	FAST FunctionCodeTree;
+	AST FunctionCodeTree;
 };
 
 struct FCompilingVariableInfo

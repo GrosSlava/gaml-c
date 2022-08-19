@@ -6,8 +6,7 @@
 
 
 
-void FAST::BuildAST(const std::vector<Token>& InTokens)
+void AST::BuildAST(const std::vector<Token>& InTokens)
 {
 	//TODO
 }
-
