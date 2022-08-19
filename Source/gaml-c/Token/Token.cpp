@@ -97,6 +97,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("false",					FALSE_CONST)
 	
 	CASE_LEXEME("void",						VOID)
+	CASE_LEXEME("any",						ANY)
 	CASE_LEXEME("uint8",					UINT8)
 	CASE_LEXEME("uint16",					UINT16)
 	CASE_LEXEME("uint32",					UINT32)
@@ -126,6 +127,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("if",						IF)
 	CASE_LEXEME("else",						ELSE)
 	CASE_LEXEME("switch",					SWITCH)
+	CASE_LEXEME("switch_all",				SWITCH_ALL)
 	CASE_LEXEME("case",						CASE)
 	CASE_LEXEME("default",					DEFAULT)
 
@@ -279,6 +281,7 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(FALSE_CONST,					"false const")
 
 	CASE_TOKEN(VOID,						"void")
+	CASE_TOKEN(ANY,							"any")
 	CASE_TOKEN(UINT8,						"uint8")
 	CASE_TOKEN(UINT16,						"uint16")
 	CASE_TOKEN(UINT32,						"uint32")
@@ -308,6 +311,7 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(IF,							"if")
 	CASE_TOKEN(ELSE,						"else")
 	CASE_TOKEN(SWITCH,						"switch")
+	CASE_TOKEN(SWITCH_ALL,					"switch all")
 	CASE_TOKEN(CASE,						"case")
 	CASE_TOKEN(DEFAULT,						"default")
 

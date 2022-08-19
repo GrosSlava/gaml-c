@@ -308,7 +308,10 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 		if( VariableInfo.IsConst && IncludeConst ) LResult += "const ";
 
 		LResult += GetStandardTypeNameCStr(VariableInfo.TypeID);
-		if( IsFunctionArgument && ((VariableInfo.IsConst && VariableInfo.TypeID == EStandardTypesID::STRING_ID) || VariableInfo.IsMutable) )
+		if( 
+			IsFunctionArgument && VariableInfo.TypeID != EStandardTypesID::ANY_ID && 
+			((VariableInfo.IsConst && VariableInfo.TypeID == EStandardTypesID::STRING_ID) || VariableInfo.IsMutable)
+		  )
 		{
 			LResult += "*";
 		}
@@ -376,6 +379,7 @@ std::string ReduceCGenerator::GetStandardTypeNameCStr(int TypeID) const
 	switch( (EStandardTypesID)TypeID )
 	{
 	case EStandardTypesID::VOID_ID: return "void";
+	case EStandardTypesID::ANY_ID: return "void*";
 	case EStandardTypesID::UINT8_ID: return "unsigned char";
 	case EStandardTypesID::UINT16_ID: return "unsigned short int";
 	case EStandardTypesID::UINT32_ID: return "unsigned int";

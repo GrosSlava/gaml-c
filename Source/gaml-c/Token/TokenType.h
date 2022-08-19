@@ -113,6 +113,7 @@ enum class ETokenType
 
 	// types
 	VOID,                       // void
+	ANY,						// any
 	UINT8,                      // uint8
 	UINT16,                     // uint16
 	UINT32,                     // uint32
@@ -146,6 +147,7 @@ enum class ETokenType
 	IF,                         // if
 	ELSE,                       // else
 	SWITCH,                     // switch
+	SWITCH_ALL,					// switch_all
 	CASE,                       // case
 	DEFAULT,                    // default
 

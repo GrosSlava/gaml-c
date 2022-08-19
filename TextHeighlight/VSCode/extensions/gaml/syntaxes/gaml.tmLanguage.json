@@ -17,7 +17,7 @@
 			"patterns": [
 				{
 				"name": "keyword.control.gaml",
-				"match": "\\b(do|while|for|foreach|break|continue|if|else|switch|case|default|return)\\b"
+				"match": "\\b(do|while|for|foreach|break|continue|if|else|switch|switch_all|case|default|return)\\b"
 				},
 				{
 				"name": "keyword.other.gaml",
@@ -40,7 +40,7 @@
 				
 				{
 				"name": "support.type.gaml",
-				"match": "\\b(void|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
+				"match": "\\b(void|any|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
 				}
 			]
 		},

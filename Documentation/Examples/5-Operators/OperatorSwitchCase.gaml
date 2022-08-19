@@ -49,4 +49,13 @@ func void main()
         // do smth
     }
     }
+
+    // let us have an enum and we want to switch by all it's members
+    // switch_all is similar to switch, but works only with enums 
+    /*
+    switch_all()
+    {
+
+    }
+    */
 }

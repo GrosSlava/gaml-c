@@ -31,6 +31,12 @@ func uint8 foo()
     bool b = true; // false
 
     /*
+        We can declare variable with system default value.
+    */
+    uint8 IntegerWithDefautValue = default(); // same to ... = default(uint8)
+    string SameDefautValueS = default(s); // there will be "Hello World!\n"
+
+    /*
         Static local variables are visible only inside function body, but created only once.
     */
     static uint8 StaticInt = 7;
@@ -41,6 +47,7 @@ func uint8 foo()
     using MyUnsignedType = uint8;
     MyUnsignedType LVariable = 1;
 
+   
 
     // we can't use local nested namespaces { {} } unlike c++
 
@@ -100,7 +107,8 @@ func uint8 foo()
         isfunction(a) - check that object/type is function
         issubclass(a, b) - check that object/type a is subclass of object/type b
         isinstance(a, B) - check that object/type a is instance of type b
-        addr(a) - get addres of object (return type is addr_t)
+        addr(a) - get addres of object (return type is addr_t
+        default(a) - get default value for object, if function has default value for argument return it(e.g for integer it is 0)
 
         a::b - access b from namespace a
 

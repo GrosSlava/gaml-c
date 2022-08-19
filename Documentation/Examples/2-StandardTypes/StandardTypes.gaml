@@ -4,7 +4,9 @@
 
 func void main()
 {
-    // void - can't be as function argument or variable type. Only for functions return.
+    // void - can't be as function argument or variable type. Only for function return.
+	any A       // pointer to any data, can't be as function return type
+
     uint8 a;    // 8-bit unsigned integer [0 - 255]
     uint16 b;   // 16-bit unsigned integer [0 - 65 535]
     uint32 c;   // 32-bit unsigned integer [0 - 4 294 967 295]
