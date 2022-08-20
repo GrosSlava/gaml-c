@@ -47,10 +47,8 @@ enum class ECodeGenerationType
 */
 enum class ESubsystemType
 {
-	Boot,
-	Native,
 	Console,
-	Windows
+	Window
 };
 
 

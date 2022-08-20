@@ -103,7 +103,6 @@ func uint8 foo()
 
         a in b - check that b contains a (for classes - address of a)
         a is b - check that object a is deep copy of b (useful for class objects), for default types (int32, bool etc.) '==' and 'is' are equal
-        a is B - check that a is subclass of B, where B is class name. Same to issubclass(a, B)
     */
     // we can change operations sequence by ()
 

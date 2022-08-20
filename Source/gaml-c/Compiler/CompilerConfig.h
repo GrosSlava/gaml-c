@@ -67,10 +67,46 @@ struct FCompilerConfig
 	*/
 	const static std::string LANGUAGE_VERSION;
 
+
 	/*
 		Default name of module which can be compiled into an executable file.
 	*/
 	const static std::string RESERVED_MAIN_MODULE_NAME;
+
+	/*
+		Reserved name of function of module init generated code.
+	*/
+	const static std::string RESERVED_INIT_MODULE_FUNCTION_NAME;
+	/*
+		Reserved name of user function of module init code.
+	*/
+	const static std::string RESERVED_USER_INIT_MODULE_FUNCTION_NAME;
+	/*
+		Reserved name of function of module deinit generated code.
+	*/
+	const static std::string RESERVED_DEINIT_MODULE_FUNCTION_NAME;
+	/*
+		Reserved name of user function of module init code.
+	*/
+	const static std::string RESERVED_USER_DEINIT_MODULE_FUNCTION_NAME;
+
+	/*
+		Reserved name of function of program init code.
+	*/
+	const static std::string RESERVED_PROGRAM_INIT_FUNCTION_NAME;
+	/*
+		Reserved name of function of program deinit code.
+	*/
+	const static std::string RESERVED_PROGRAM_DEINIT_FUNCTION_NAME;
+
+	/*
+		Reserved name of function of console program entry point.
+	*/
+	const static std::string RESERVED_CONSOLE_ENTRY_POINT_FUNCTION_NAME;
+	/*
+		Reserved name of function of window program entry point.
+	*/
+	const static std::string RESERVED_WINDOW_ENTRY_POINT_FUNCTION_NAME;
 };
 
 

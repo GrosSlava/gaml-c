@@ -88,22 +88,12 @@ void Linker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPath
 	
 	switch( CurrentCompileOptions.SubsystemType )
 	{
-	case ESubsystemType::Boot:
-	{
-		ConsoleCommand += " -SUBSYSTEM:BOOT_APPLICATION";
-		break;
-	}
-	case ESubsystemType::Native:
-	{
-		ConsoleCommand += " -SUBSYSTEM:NATIVE";
-		break;
-	}
 	case ESubsystemType::Console:
 	{
 		ConsoleCommand += " -SUBSYSTEM:CONSOLE";
 		break;
 	}
-	case ESubsystemType::Windows:
+	case ESubsystemType::Window:
 	{
 		ConsoleCommand += " -SUBSYSTEM:WINDOWS";
 		break;

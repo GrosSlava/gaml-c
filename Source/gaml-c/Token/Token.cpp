@@ -92,6 +92,8 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME(".",						POINT)
 	CASE_LEXEME("?",						QUESTION)
 	CASE_LEXEME("...",						VARIADIC)
+	CASE_LEXEME("$",						DOLLAR)
+	CASE_LEXEME("#",						SHARP)
 
 	if( IsIntegerLexeme(LexemeStr) )		{ Type = ETokenType::INTEGER_CONST;				return; }
 	if( IsFloatLexeme(LexemeStr) )			{ Type = ETokenType::FLOAT_CONST;				return; }
@@ -282,6 +284,8 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(POINT,						"point")
 	CASE_TOKEN(QUESTION,					"question")
 	CASE_TOKEN(VARIADIC,					"variadic")
+	CASE_TOKEN(DOLLAR,						"dollar")
+	CASE_TOKEN(SHARP,						"sharp")
 
 	CASE_TOKEN(INTEGER_CONST,				"integer const")
 	CASE_TOKEN(FLOAT_CONST,					"float const")

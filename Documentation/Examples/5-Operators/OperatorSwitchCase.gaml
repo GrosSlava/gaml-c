@@ -33,7 +33,7 @@ func void main()
     }
 
     // switch/case works with strings
-    string s = "Hello";
+    const string s = "Hello";
     switch( s )
     {
     case "He":
@@ -54,6 +54,30 @@ func void main()
     // switch_all is similar to switch, but works only with enums 
     /*
     switch_all()
+    {
+
+    }
+    */
+
+
+
+    /*
+        Compile time switch.
+        Body of this 'switch' will be interpreted during compile time and will be converted into code.
+        e.g select one case code from body
+    */
+    static switch( s )
+    {
+
+    }
+
+    /*
+        Compile time switch_all.
+        Body of this 'switch_all' will be interpreted during compile time and will be converted into code.
+        e.g select one case code from body
+    */
+    /*
+    static switch_all( s )
     {
 
     }

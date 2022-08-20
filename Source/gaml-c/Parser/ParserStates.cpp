@@ -1771,6 +1771,13 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 
 bool FParserStates::ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX)
 {
+	if( ImportModuleName == FCompilerConfig::RESERVED_MAIN_MODULE_NAME )
+	{
+		RaiseError(EErrorMessageType::IMPORTING_MAIN_MODULE, TokenCTX);
+		return false;
+	}
+
+
 	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
@@ -1831,6 +1838,11 @@ bool FParserStates::ImportModule(FProgramInfo& OutProgramInfo, const std::string
 	LLexer.Process(LSourceCode, LModuleFileInfo, CompileOptions, LTokens);
 
 	const std::string LModuleRealName = FParserHelperLibrary::GetFirstModuleName(LTokens);
+	if( LModuleRealName == FCompilerConfig::RESERVED_MAIN_MODULE_NAME )
+	{
+		RaiseError(EErrorMessageType::IMPORTING_MAIN_MODULE, TokenCTX);
+		return false;
+	}
 	if( ImportModuleName != LModuleRealName )
 	{
 		RaiseError(EErrorMessageType::MODULE_NAME_NOT_MATCH_FILE_NAME, TokenCTX);
@@ -1873,6 +1885,12 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 
 	for( const FGamlFileInfo& LFileInfo : FilesInfo )
 	{
+		if( LFileInfo.FileNameOnly == FCompilerConfig::RESERVED_MAIN_MODULE_NAME )
+		{
+			continue;
+		}
+
+
 		std::vector<std::string>& LRequiredModules = OutProgramInfo.ImportedModulesInfo[OutProgramInfo.MainModuleName].RequiredModulesNames;
 
 		std::ifstream LFile(LFileInfo.GetFileFullPath(), std::ios::binary);
@@ -1890,7 +1908,7 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 		LLexer.Process(LSourceCode, LFileInfo, CompileOptions, LTokens);
 
 		const std::string LPackageModuleRealName = FParserHelperLibrary::GetFirstModuleName(LTokens); // return empty name for implementing modules, so do not include them
-		if( LPackageModuleRealName.empty() )
+		if( LPackageModuleRealName.empty() || LPackageModuleRealName == FCompilerConfig::RESERVED_MAIN_MODULE_NAME )
 		{
 			continue;
 		}
@@ -2142,8 +2160,13 @@ bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutP
 
 std::string FParserStates::GetCTXFunctionCompileName(const FProgramInfo& OutProgramInfo) const
 {
-	std::string LFunctionCompileName = "";
+	if( FunctionDeclarationContext.SignatureInfo.IsExternC )
+	{
+		return FParserHelperLibrary::GetFunctionCompileName("", "", FunctionDeclarationContext.FunctionName, FunctionDeclarationContext.SignatureInfo, OutProgramInfo);
+	}
+	
 
+	std::string LFunctionCompileName = "";
 	switch( StateContextType )
 	{
 	case EStateContextType::Global:

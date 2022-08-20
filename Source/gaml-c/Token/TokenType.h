@@ -104,6 +104,8 @@ enum class ETokenType
 	POINT,                      // .
 	QUESTION,                   // ?
 	VARIADIC,                   // ...
+	DOLLAR,						// $
+	SHARP,						// #
 
 
 

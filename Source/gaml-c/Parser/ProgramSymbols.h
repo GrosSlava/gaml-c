@@ -231,6 +231,7 @@ struct FTemplateCodeInfo
 	std::vector<std::string> TemplateArguments;
 	AST StaticCodeTree;
 	std::vector<Token> TemplateCode;
+	bool DeclareFirst = false;
 
 	FSymbolMetaInfo MetaInfo;
 };

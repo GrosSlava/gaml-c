@@ -130,7 +130,7 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("-O",	"",							"optimization level [0 - 2]",							true,	OptimizationLevelOption),
 	FOptionInfo("-W",	"",							"warning level [0 - 3]",								true,	WarningLevelOption),
 	FOptionInfo("",		"--code_type=",				"code generation type [ReduceC, LLVM, NASM]",			true,	CodeGenerationTypeOption),
-	FOptionInfo("",		"--subsystem=",				"type of subsystem [Boot, Native, Console, Windows]",	true,	SubsystemTypeOption),
+	FOptionInfo("",		"--subsystem=",				"type of subsystem [Console, Window]",					true,	SubsystemTypeOption),
 	FOptionInfo("",		"--platform=",				"[Undefined, Windows, Linux]",							true,	TargetPlatformOption),
 	FOptionInfo("",		"--arch=",					"[x86, x86_64, ARM, ARM_64]",							true,	TargetArchOption),
 	FOptionInfo("-e",	"--entry=",					"entry point name",										true,	EntryPointOption),
@@ -306,21 +306,13 @@ OPTION_FUNCTION(CodeGenerationTypeOption)
 
 OPTION_FUNCTION(SubsystemTypeOption)
 {
-	if( Argument == "Boot" )
-	{
-		OutCompileOptions.SubsystemType = ESubsystemType::Boot;
-	}
-	else if( Argument == "Native" )
-	{
-		OutCompileOptions.SubsystemType = ESubsystemType::Native;
-	}
-	else if( Argument == "Console" )
+	if( Argument == "Console" )
 	{
 		OutCompileOptions.SubsystemType = ESubsystemType::Console;
 	}
-	else if( Argument == "Windows" )
+	else if( Argument == "Window" )
 	{
-		OutCompileOptions.SubsystemType = ESubsystemType::Windows;
+		OutCompileOptions.SubsystemType = ESubsystemType::Window;
 	}
 	else
 	{

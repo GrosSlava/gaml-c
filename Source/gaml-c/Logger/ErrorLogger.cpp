@@ -121,6 +121,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(INVALID_IMPORTING_MODULE_NAME):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid importing module name.");
 	CASE_ERROR(IMPORTING_PACKAGE_PROBLEM):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Importing package problem.");
 	CASE_ERROR(MODULE_NAME_NOT_MATCH_FILE_NAME):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module name does not match the file name.");
+	CASE_ERROR(IMPORTING_MAIN_MODULE):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Main module can't be imported.");
 	CASE_ERROR(IMPORTING_IMPLEMENT_MODULE):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Implement module can only main module.");
 	CASE_ERROR(FUNCTION_DOUBLE_SPECIFIER):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function double specifier.");
 	CASE_ERROR(FUNCTION_RETURN_TYPE_DOUBLE_CPECIFIER):		return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function return type double specifier.");

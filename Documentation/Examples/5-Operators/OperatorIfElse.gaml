@@ -24,4 +24,19 @@ func void main()
     */
     int8 a;
     if( true ) { a = 5; }
+
+
+    // we can't declare variable inside if, unlike c++
+    //if( int32 LVar = 55 ) {}
+
+
+
+    /*
+        Compile time if.
+        Body of this 'if' will be included if codition is true.
+    */
+    static if( DEBUG )
+    {
+
+    }
 }

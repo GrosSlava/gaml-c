@@ -190,7 +190,7 @@ public:
 		return GetFunctionCompileName(ModuleName, "", "lam_c", FunctionSignatureInfo, ProgramInfo);
 	}
 
-	static inline std::string GetVariableCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName)
+	static inline std::string GetStaticVariableCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName)
 	{
 		if( OriginalName.empty() ) return "";
 
@@ -201,10 +201,26 @@ public:
 		{
 			VariableCompileName += ModuleName + NameSeparator;
 		}
-
 		if( !ClassName.empty() )
 		{
 			VariableCompileName += ClassName + NameSeparator;
+		}
+
+		VariableCompileName += OriginalName;
+
+		return VariableCompileName;
+	}
+
+	static inline std::string GetStaticVariableCompileName(const std::string& FunctionCompileName, const std::string& OriginalName)
+	{
+		if( OriginalName.empty() ) return "";
+
+
+		std::string VariableCompileName = "";
+
+		if( !FunctionCompileName.empty() )
+		{
+			VariableCompileName += FunctionCompileName + NameSeparator;
 		}
 
 		VariableCompileName += OriginalName;

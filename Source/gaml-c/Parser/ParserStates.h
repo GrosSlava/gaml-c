@@ -98,7 +98,7 @@ DECLARE_STATE_CLASS(StartStaticAssert)	// static_assert -> ( -> [expression]
 DECLARE_STATE_CLASS(StaticAssert1)		// ( -> [expression...]|) -> ;
 DECLARE_STATE_CLASS(StaticAssert2)		// ) -> ; -> [Default]
 
-// template<| [IDENTIFIER]...|... |> [IDENTIFIER] { ... }
+// template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
 DECLARE_STATE_CLASS(StartDefineTemplate)
 
 
