@@ -1,4 +1,3 @@
-
 // This examples show features of functions implementation
 
 
@@ -99,16 +98,6 @@ func uint8 foo()
         a >>= b - equals to a = a >> b
 
         a ? b : c - ternary operator, can be read as "if a then b else c"
-
-        sizeof(a) - count of bits of type size of object/type
-        typeof(a) - type of object/type
-        nameof(a) - compile name of object/type
-        alignof(a) - memory align of object/type
-        isfunction(a) - check that object/type is function
-        issubclass(a, b) - check that object/type a is subclass of object/type b
-        isinstance(a, B) - check that object/type a is instance of type b
-        addr(a) - get addres of object (return type is addr_t
-        default(a) - get default value for object, if function has default value for argument return it(e.g for integer it is 0)
 
         a::b - access b from namespace a
 

@@ -1,4 +1,3 @@
-
 // This examples show features of functions declaration
 
 

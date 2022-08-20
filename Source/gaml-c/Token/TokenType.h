@@ -50,6 +50,11 @@ enum class ETokenType
 	ALIGN_OF,                   // alignof
 	ALIGN_AS,					// alignas
 	IS_FUNCTION,                // isfunction
+	IS_STRUCT,					// isstruct
+	IS_ENUM,					// isenum
+	IS_INTERFACE,				// isinterface
+	IS_OBJECT,					// isobject
+	IS_COMPONENT,				// iscomponent
 	IS_SUBCLASS,                // issubclass
 	IS_INSTANCE,                // isinstance
 	IN,                         // in
@@ -114,6 +119,7 @@ enum class ETokenType
 	// types
 	VOID,                       // void
 	ANY,						// any
+	CLASS,						// class
 	UINT8,                      // uint8
 	UINT16,                     // uint16
 	UINT32,                     // uint32

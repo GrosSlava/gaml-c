@@ -322,8 +322,8 @@ public:
 	}
 
 	static inline bool IsBuiltinTemplateType(ETokenType TokenType) noexcept
-	{
-		return TokenType == ETokenType::ARRAY;
+	{ 
+		return TokenType == ETokenType::ARRAY || TokenType == ETokenType::CLASS;
 	}
 
 	static inline bool IsBuiltinTemplateType(const Token& InToken) noexcept 

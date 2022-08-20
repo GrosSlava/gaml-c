@@ -45,6 +45,7 @@ enum EStandardTypesID
 {
 	VOID_ID = 0,
 	ANY_ID = 1,
+	//CLASS_ID - it is build in template
 	UINT8_ID = 2,
 	UINT16_ID = 3,
 	UINT32_ID = 4,
@@ -59,7 +60,7 @@ enum EStandardTypesID
 	BOOL_ID = 13,
 	CHAR_ID = 14,
 	STRING_ID = 15,
-	//ARRAY_ID, it is build in template
+	//ARRAY_ID - it is build in template
 	VECTOR4D_ID = 16,
 	VECTOR3D_ID = 17,
 	VECTOR2D_ID = 18,

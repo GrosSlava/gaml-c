@@ -1,4 +1,3 @@
-
 // This examples show features of standard types
 
 
@@ -34,4 +33,5 @@ func void main()
     vector2d v3; // builtin type for easy operations with 2d-vectors, see documentation about vectors
 
     array<|uint8|> arr; // builtin array for any type, see documentation about arrays
+    //class<|class type|> - container of any class type
 }
