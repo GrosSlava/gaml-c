@@ -108,12 +108,12 @@ int ReduceCGenerator::RunThirdPartyCompiler(const std::string& FilePath, std::st
 		ConsoleCommand += "\\x64\\cl.exe\" -arch:AVX2";
 		break;
 	}
-	case ETargetArch::Arm:
+	case ETargetArch::arm:
 	{
 		ConsoleCommand += "\\arm\\cl.exe\" -arch:VFPv4";
 		break;
 	}
-	case ETargetArch::Arm_64:
+	case ETargetArch::arm_64:
 	{
 		ConsoleCommand += "\\arm64\\cl.exe\" -arch:armv8.0";
 		break;
@@ -150,6 +150,7 @@ int ReduceCGenerator::RunThirdPartyCompiler(const std::string& FilePath, std::st
 	}
 	}
 
+	if( CurrentCompileOptions.IsDebug ) ConsoleCommand += "";
 	if( CurrentCompileOptions.ConvertWarningsToErrors ) ConsoleCommand += " -WX";
 	if( CurrentCompileOptions.DumpAssembly ) ConsoleCommand += " -FAcs -Fa" + GetOutputDirectoryPath();
 	if( CurrentCompileOptions.NoBuiltin ) ConsoleCommand += "";
@@ -213,6 +214,7 @@ int ReduceCGenerator::RunThirdPartyCompiler(const std::string& FilePath, std::st
 	}
 	}
 
+	if( CurrentCompileOptions.IsDebug ) ConsoleCommand += " -g";
 	if( CurrentCompileOptions.ConvertWarningsToErrors ) ConsoleCommand += " -Werror";
 	if( CurrentCompileOptions.DumpAssembly ) ConsoleCommand += " -S";
 	if( CurrentCompileOptions.NoBuiltin ) ConsoleCommand += " -fno-builtin";

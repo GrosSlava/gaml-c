@@ -19,5 +19,9 @@
         addr(a) - get addres of object (return type is addr_t)
         default(a) - get default value for object, if function has default value for argument return it(e.g for integer it is 0)
 
-    
+    Predefined variables:
+		string TARGET_PLATFORM - contains platform for which this code is build("Windows", "Linux")
+		string TARGET_ARCH - contains cpu architecture for which this code is build("x86", "x86-64", "arm", "arm-64")
+		string SUBSYSTEM - contains selected subsystem for which this code is build("Boot", "Native", "Console", "Windows")
+		bool DEBUG - true, if this is debug build
 */

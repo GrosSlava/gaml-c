@@ -24,8 +24,8 @@ enum class ETargetArch
 {
 	x86,
 	x86_64,
-	Arm,
-	Arm_64
+	arm,
+	arm_64
 };
 	
 

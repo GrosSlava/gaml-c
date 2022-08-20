@@ -108,6 +108,10 @@ struct FCompileOptions
 	std::vector<std::string> AdditionalLibsSearchingDirs;
 
 	/*
+		Include debug information or not.
+	*/
+	bool IsDebug = false;
+	/*
 		Is compiling dll.
 	*/
 	bool IsDLL = false;

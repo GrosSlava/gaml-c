@@ -67,12 +67,12 @@ void Linker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPath
 		ConsoleCommand += "\\x64\\link.exe\" -MACHINE:X64";
 		break;
 	}
-	case ETargetArch::Arm:
+	case ETargetArch::arm:
 	{
 		ConsoleCommand += "\\arm\\link.exe\" -MACHINE:ARM";
 		break;
 	}
-	case ETargetArch::Arm_64:
+	case ETargetArch::arm_64:
 	{
 		ConsoleCommand += "\\arm64\\link.exe\"-MACHINE:ARM64";
 		break;
@@ -133,14 +133,9 @@ void Linker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPath
 	{
 		// use native tools command prompt for VS
 	}
-	if( !CurrentCompileOptions.EntryPoint.empty() )
-	{
-		ConsoleCommand += " -ENTRY:" + CurrentCompileOptions.EntryPoint;
-	}
-	if( CurrentCompileOptions.IsDLL )
-	{
-		ConsoleCommand += " -DLL";
-	}
+	if( !CurrentCompileOptions.EntryPoint.empty() ) ConsoleCommand += " -ENTRY:" + CurrentCompileOptions.EntryPoint;
+	if( CurrentCompileOptions.IsDebug ) ConsoleCommand += " -DEBUG:FULL";
+	if( CurrentCompileOptions.IsDLL ) ConsoleCommand += " -DLL";
 
 	ConsoleCommand += " -OUT:" + GetOutputFilePath(CurrentCompileOptions.IsDLL ? LibraryFileExtension : ExecutableFileExtension);
 #elif LINUX
@@ -198,19 +193,15 @@ void Linker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPath
 	{
 		ConsoleCommand += " -lm -lc -lgcc";
 	}
-	if( !CurrentCompileOptions.EntryPoint.empty() )
-	{
-		ConsoleCommand += " -e" + CurrentCompileOptions.EntryPoint;
-	}
-	if( CurrentCompileOptions.IsDLL )
-	{
-		ConsoleCommand += " -shared -fPIC";
-	}
+	if( !CurrentCompileOptions.EntryPoint.empty() ) ConsoleCommand += " -e" + CurrentCompileOptions.EntryPoint;
+	if( CurrentCompileOptions.IsDebug ) ConsoleCommand += "";
+	if( CurrentCompileOptions.IsDLL ) ConsoleCommand += " -shared -fPIC";
 
 	ConsoleCommand += " -o" + GetOutputFilePath(CurrentCompileOptions.IsDLL ? LibraryFileExtension : ExecutableFileExtension);
 #else
 	RaiseError(EErrorMessageType::NO_DEFAULT_LINKER_FOR_CURRENT_PLATFORM, "");
 #endif
+
 
 	for( const std::string& LObjectFilePath : ObjectFilesPaths )
 	{

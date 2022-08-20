@@ -100,6 +100,7 @@ OPTION_FUNCTION(TargetPlatformOption);
 OPTION_FUNCTION(TargetArchOption);
 OPTION_FUNCTION(EntryPointOption);
 OPTION_FUNCTION(LibsSearchingOption);
+OPTION_FUNCTION(DebugOption);
 OPTION_FUNCTION(DLLOption);
 OPTION_FUNCTION(WarningToErrorsOption);
 OPTION_FUNCTION(NoBuiltinOption);
@@ -135,6 +136,7 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("-e",	"--entry=",					"entry point name",										true,	EntryPointOption),
 	FOptionInfo("-L",	"--libpath=",				"add libs searching dir",								true,	LibsSearchingOption),
 
+	FOptionInfo("",		"--debug",					"Include debug information",							false,	DebugOption),
 	FOptionInfo("",		"--DLL",					"output result will be in dll",							false,	DLLOption),
 	FOptionInfo("",		"--w2e",					"warnings to errors",									false,	WarningToErrorsOption),
 	FOptionInfo("",		"--no_builtin",				"no builtin content",									false,	NoBuiltinOption), 
@@ -360,11 +362,11 @@ OPTION_FUNCTION(TargetArchOption)
 	}
 	else if( Argument == "ARM" )
 	{
-		OutCompileOptions.TargetArch = ETargetArch::Arm;
+		OutCompileOptions.TargetArch = ETargetArch::arm;
 	}
 	else if( Argument == "ARM_64" )
 	{
-		OutCompileOptions.TargetArch = ETargetArch::Arm_64;
+		OutCompileOptions.TargetArch = ETargetArch::arm_64;
 	}
 	else
 	{
@@ -381,6 +383,11 @@ OPTION_FUNCTION(EntryPointOption)
 OPTION_FUNCTION(LibsSearchingOption) 
 {
 	OutCompileOptions.AdditionalLibsSearchingDirs.push_back(Argument);
+}
+
+OPTION_FUNCTION(DebugOption)
+{
+	OutCompileOptions.IsDebug = true;
 }
 
 OPTION_FUNCTION(DLLOption)
