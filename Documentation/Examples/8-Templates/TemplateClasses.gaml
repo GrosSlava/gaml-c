@@ -19,7 +19,7 @@ struct<|T|> TMyStruct
     It is template struct specialization.
     Technically it is new template.
 */
-struct<int32> TMyStruct
+struct<|int32|> TMyStruct
 {
     int32 AA = 99;
 }
@@ -29,6 +29,6 @@ struct<int32> TMyStruct
 
 func void main()
 {
-    TMyStruct<uint8> LStruct; // TMyStruct with specialization uint8 will be declared in this module
-    TMyStruct<int32> LStruct2; // this specialization already exists
+    TMyStruct<|uint8|> LStruct; // TMyStruct with specialization uint8 will be declared in this module
+    TMyStruct<|int32|> LStruct2; // this specialization already exists
 }

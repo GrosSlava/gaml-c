@@ -5,7 +5,7 @@
     Minimal main function. 
     Works on any subsystem.
 
-    We not recommend use this signature with extern_c
+    We do not recommend using this signature with extern_c.
 */
 func void main()
 {

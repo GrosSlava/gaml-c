@@ -4,7 +4,7 @@
 
 /*
     Custom entry point can be any.
-    Custom entry point should be extern_c
+    Custom entry point should be extern_c.
 */
 func extern_c void CustomEntryPoint(int32 MyArg)
 {

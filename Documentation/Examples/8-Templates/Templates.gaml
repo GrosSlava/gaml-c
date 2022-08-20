@@ -97,7 +97,7 @@ func void main()
     s = MY_TEMPLATE_STRING_2<|int32|>; // s = "Hello World int32;
 
     int32 MyInt = 5;
-    TMyInlineCode<|MyInt|>; // MyInt *= 6; if(MyInt < 22) { MyInt += 30; }
+    TMyInlineCode<|MyInt|>; // MyInt *= 6; if(MyInt < 22) { MyInt += 30; };
     MyInt = TMyVariadicCode<|5, 4, MyInt|>; // MyInt = 5 + 4 + MyInt;
 }
 
