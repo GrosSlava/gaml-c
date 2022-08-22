@@ -45,7 +45,7 @@ public:
 		{
 		case '<': return c2 == '=' || c2 == '<' || c2 == '|';
 		case '>': return c2 == '=' || c2 == '>';
-		case '=': return c2 == '=';
+		case '=': return c2 == '=' || c2 == '>';
 		case '!': return c2 == '=';
 		case '&': return c2 == '&' || c2 == '=';
 		case '|': return c2 == '|' || c2 == '>' || c2 == '=';
@@ -56,7 +56,7 @@ public:
 		case '*': return c2 == '=' || c2 == '/';
 		case '/': return c2 == '=' || c2 == '/' || c2 == '*';
 		case '%': return c2 == '=';
-		case '~': return c2 == '=';
+		case '~': return c2 == '>' || c2 == '=';
 		}
 
 		return false;

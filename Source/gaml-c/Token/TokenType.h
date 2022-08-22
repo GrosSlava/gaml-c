@@ -65,6 +65,8 @@ enum class ETokenType
 	// code access operators
 	NAMESPACE_ACCESS_OPERATOR,  // ::
 	RIGHT_ARROW,				// ->
+	RIGHT_FAT_ARROW,			// =>
+	RIGHT_WAVE_ARROW,			// ~>
 
 	// brackets
 	LBRA,                       // {
@@ -86,6 +88,7 @@ enum class ETokenType
 	POW_ASSIGN,                 // ^^=
 	BINARY_AND_ASSIGN,          // &=
 	BINARY_OR_ASSIGN,           // |=
+	BINARY_INVERSE_ASSIGN,		// ~=
 	BINARY_XOR_ASSIGN,          // ^=
 	BINARY_SHL_ASSIGN,          // <<=
 	BINARY_SHR_ASSIGN,          // >>=

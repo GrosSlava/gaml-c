@@ -59,6 +59,8 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 
 	CASE_LEXEME("::",						NAMESPACE_ACCESS_OPERATOR)
 	CASE_LEXEME("->",						RIGHT_ARROW)
+	CASE_LEXEME("=>",						RIGHT_FAT_ARROW)
+	CASE_LEXEME("~>",						RIGHT_WAVE_ARROW)
 
 	CASE_LEXEME("{",						LBRA)
 	CASE_LEXEME("}",						RBRA)
@@ -78,6 +80,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("^^=",						POW_ASSIGN)
 	CASE_LEXEME("&=",						BINARY_AND_ASSIGN)
 	CASE_LEXEME("|=",						BINARY_OR_ASSIGN)
+	CASE_LEXEME("~=",						BINARY_INVERSE_ASSIGN)
 	CASE_LEXEME("^=",						BINARY_XOR_ASSIGN)
 	CASE_LEXEME("<<=",						BINARY_SHL_ASSIGN)
 	CASE_LEXEME(">>=",						BINARY_SHR_ASSIGN)
@@ -251,6 +254,8 @@ std::string Token::GetTypeAsStr() const noexcept
 
 	CASE_TOKEN(NAMESPACE_ACCESS_OPERATOR,	"namespace access operator")
 	CASE_TOKEN(RIGHT_ARROW,					"right arrow")
+	CASE_TOKEN(RIGHT_FAT_ARROW,				"right fat arrow")
+	CASE_TOKEN(RIGHT_WAVE_ARROW,			"right wave arrow")
 
 	CASE_TOKEN(LBRA,						"lbra")
 	CASE_TOKEN(RBRA,						"rbra")
@@ -270,6 +275,7 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(POW_ASSIGN,					"pow assign")
 	CASE_TOKEN(BINARY_AND_ASSIGN,			"binary 'and' assign")
 	CASE_TOKEN(BINARY_OR_ASSIGN,			"binary 'or' assign")
+	CASE_TOKEN(BINARY_INVERSE_ASSIGN,		"binary 'inverse' assign")
 	CASE_TOKEN(BINARY_XOR_ASSIGN,			"binary 'xor' assign")
 	CASE_TOKEN(BINARY_SHL_ASSIGN,			"binary 'shl' assign")
 	CASE_TOKEN(BINARY_SHR_ASSIGN,			"binary 'shr' assign")

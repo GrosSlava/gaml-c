@@ -26,7 +26,7 @@ func int32 main()
 /*
     Main function for Console subsystem.
 */
-func int32 main(int32 argc, const array<|string|> argv)
+func int32 main(const array<|string|> argv)
 {
     return 0;
 }
