@@ -2,10 +2,11 @@
 
 #pragma once
 
-#include "../Compiler/CompilerHelperLibrary.h"
+#include "../CoreMinimal.h"
+
+#include "../Compiler/CompilerConfig.h"
 
 #include <ctime>
-#include <string>
 
 
 
@@ -15,48 +16,32 @@
 */
 struct FGeneratorHelperLibrary
 {
-public:
-
+	/*
+		@return compilation date-time in formatted string.
+	*/
 	static std::string GetGenerationTime()
 	{
 		const std::time_t t = std::time(0);
 		std::tm CurrentTime;
 		localtime_s(&CurrentTime, &t);
 
+		// clang-format off
 		const std::string LGenerationDateTime = std::to_string(CurrentTime.tm_year + 1900) + "." + 
 												std::to_string(CurrentTime.tm_mon + 1) + "." + 
 												std::to_string(CurrentTime.tm_mday) + " " +
 												std::to_string(CurrentTime.tm_hour) + ":" + 
 												std::to_string(CurrentTime.tm_min) + ":" + 
 												std::to_string(CurrentTime.tm_sec);
+		// clang-format on
 
 		return LGenerationDateTime;
 	}
 
-	static std::string GetMSVCRootDirectory() 
+	/*
+		@return compiler identifier string.
+	*/
+	static inline std::string GetCompilerIdentifier() noexcept
 	{
-		std::string LResult = "";
-
-		LResult += "C:\\Program Files\\Microsoft Visual Studio\\";
-		const std::string LVisualStudioYearVersion = FCompilerHelperLibrary::GetBestFolderName("C:/Program Files/Microsoft Visual Studio", {"2022", "2019", "2017"});
-		LResult += LVisualStudioYearVersion;
-		LResult += "\\";
-		const std::string LVisualStudioType = FCompilerHelperLibrary::GetBestFolderName("C:/Program Files/Microsoft Visual Studio/" + LVisualStudioYearVersion, {"Professional", "Community"});
-		LResult += LVisualStudioType;
-		LResult += "\\VC\\Tools\\MSVC\\";
-		LResult += FCompilerHelperLibrary::GetFirstFolderName("C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC");
-
-		return LResult;
-	}
-
-	static inline std::string GetMSVCHostDirectory()
-	{
-		std::string LResult = GetMSVCRootDirectory() + "\\bin\\";
-#if WINDOWS_64
-		LResult += "Hostx64";
-#elif WINDOWS_32
-		LResult += "Hostx86";
-#endif
-		return LResult;
+		return std::string(FCompilerConfig::COMPILER_NAME) + " v" + std::string(FCompilerConfig::COMPILER_VERSION);
 	}
 };

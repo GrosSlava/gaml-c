@@ -3,6 +3,9 @@
 #include "CompilerOptions.h"
 #include "CompilerConfig.h"
 #include "CompilerHelperLibrary.h"
+
+#include "../Platform/PlatformHelperLibrary.h"
+
 #include "../Logger/ErrorLogger.h"
 
 
@@ -15,6 +18,7 @@ public:
 
 	FOptionInfo() = delete;
 
+	// clang-format off
 	FOptionInfo
 	(
 		const std::string& InShortOption, const std::string& InLongOption, const std::string& InDescription, bool InHasArgument,
@@ -24,17 +28,19 @@ public:
 	{
 
 	}
-
+	// clang-format on
 
 
 public:
 
+	// clang-format off
 	inline bool Process
 	(
 		const std::string& OptionStr, 
 		FCompileOptions& OutCompileOptions, std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths
 	) const
-	{ 
+	// clang-format on
+	{
 		if( HasArgument )
 		{
 			if( !ShortOption.empty() && OptionStr.substr(0, ShortOption.size()) == ShortOption )
@@ -53,14 +59,16 @@ public:
 			Function("", OutCompileOptions, OutSourceFilePaths, OutObjectFiles, OutLibsFilesPaths);
 			return true;
 		}
-		
+
 		return false;
 	}
 
+	// clang-format off
 	inline std::string GetHelpStr() const
 	{ 
 		return ShortOption + std::string(4 - ShortOption.size(), ' ') + LongOption + std::string(25 - LongOption.size(), ' ') + " --- " + Description;
 	}
+	// clang-format on
 
 
 
@@ -77,13 +85,14 @@ private:
 
 
 
-
+// clang-format off
 #define OPTION_FUNCTION(Name) \
 	void Name## \
 	( \
 		const std::string& Argument, \
 		FCompileOptions& OutCompileOptions, std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths \
 	)
+// clang-format on
 
 OPTION_FUNCTION(HelpOption);
 OPTION_FUNCTION(VersionOption);
@@ -117,6 +126,7 @@ OPTION_FUNCTION(QuietOption);
 OPTION_FUNCTION(NoContextOption);
 OPTION_FUNCTION(ShowProgressOption);
 
+// clang-format off
 static const std::vector<FOptionInfo> Options = 
 {
 	FOptionInfo("-h",	"--help",					"help information",										false,	HelpOption),
@@ -155,6 +165,7 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("",		"--no_context",				"no context string with errors",						false,	NoContextOption),
 	FOptionInfo("",		"--progress",				"show compilation progress",							false,	ShowProgressOption), 
 };
+// clang-format on
 
 OPTION_FUNCTION(HelpOption)
 {
@@ -224,7 +235,7 @@ OPTION_FUNCTION(OptimizationLevelOption)
 {
 	if( Argument.empty() || std::isdigit(Argument[0]) ) return;
 
-	switch( (int)(Argument[0] - '0') )
+	switch( static_cast<int>(Argument[0] - '0') )
 	{
 	case 0:
 	{
@@ -253,7 +264,7 @@ OPTION_FUNCTION(WarningLevelOption)
 {
 	if( Argument.empty() || std::isdigit(Argument[0]) ) return;
 
-	switch( (int)(Argument[0] - '0') )
+	switch( static_cast<int>(Argument[0] - '0') )
 	{
 	case 0:
 	{
@@ -372,7 +383,7 @@ OPTION_FUNCTION(EntryPointOption)
 	OutCompileOptions.EntryPoint = Argument;
 }
 
-OPTION_FUNCTION(LibsSearchingOption) 
+OPTION_FUNCTION(LibsSearchingOption)
 {
 	OutCompileOptions.AdditionalLibsSearchingDirs.push_back(Argument);
 }
@@ -460,19 +471,21 @@ OPTION_FUNCTION(ShowProgressOption)
 
 
 
-
+// clang-format off
 void ParseInputOptions
 (
 	int argc, char** argv, FCompileOptions& OutCompileOptions, 
 	std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths
 )
+// clang-format on
 {
 	for( int i = 0; i < argc; ++i )
 	{
 		if( argv[i][0] != '-' )
 		{
 			const FGamlFileInfo LFileInfo = FCompilerHelperLibrary::SplitFilePath(argv[i]);
-			if( LFileInfo.ExtensionOnly == "o" || LFileInfo.ExtensionOnly == "obj" )
+
+			if( FPlatformHelperLibrary::IsObjectFileExtension(LFileInfo.ExtensionOnly) )
 			{
 				OutObjectFiles.push_back(LFileInfo.GetFileFullPath());
 			}
@@ -484,7 +497,7 @@ void ParseInputOptions
 			{
 				FCompileLogger::Message("File with extension '" + LFileInfo.ExtensionOnly + "' can't be compiled!");
 			}
-			
+
 			continue;
 		}
 

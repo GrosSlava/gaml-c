@@ -2,15 +2,21 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
+#include "GeneratorHelperLibrary.h"
+
+#include "../Platform/PlatformHelperLibrary.h"
+#include "../Platform/GenericPlatform.h"
+
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
 #include "../Compiler/CompilerConfig.h"
 #include "../Compiler/CompilerHelperLibrary.h"
-#include "GeneratorHelperLibrary.h"
+
 #include "../Parser/ProgramSymbols.h"
 #include "../Logger/ErrorLogger.h"
 
-#include <string>
 #include <fstream>
 
 
@@ -34,14 +40,26 @@ public:
 
 public:
 
+	/*
+		Translate code to object file.
+
+		@param FileInfo - original file info.
+		@param CompileOptions - Current compile options.
+		@param ProgramInfo - Program abstract view.
+		@param OutCompiledObjectFilePath - Result path to generated object file.
+		@return success.
+	*/
 	virtual bool GenerateCode(const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, const FProgramInfo& ProgramInfo, std::string& OutCompiledObjectFilePath)
 	{
+		// set context
 		CurrentFileInfo = FileInfo;
 		CurrentCompileOptions = CompileOptions;
 		GeneratedCodeStr.clear();
 
-		OutCompiledObjectFilePath.clear(); 
+		OutCompiledObjectFilePath.clear();
 
+
+		// create other language file
 		const std::string LOutFilePath = GetOutputFilePath(GetOutFileExtension());
 		if( LOutFilePath.empty() ) return false;
 
@@ -52,16 +70,26 @@ public:
 			return false;
 		}
 
-
+		// generate code for low-level language
 		ProcessGeneration(ProgramInfo);
 		LFile.write(GeneratedCodeStr.c_str(), GeneratedCodeStr.size());
 		LFile.close();
 
+		// compile generated code by native compiler
 		if( !CurrentCompileOptions.NoTranslation )
 		{
-			RunThirdPartyCompiler(LOutFilePath, OutCompiledObjectFilePath);
+			const std::string LFileExtension = FPlatformHelperLibrary::GetPlatformObjectFileExtension(CurrentCompileOptions.TargetPlatform);
+			if( LFileExtension.empty() )
+			{
+				RaiseError(EErrorMessageType::INVALID_GENERATION_EXTENSION, 0, 0);
+				return false;
+			}
+
+			OutCompiledObjectFilePath = GetOutputFilePath(LFileExtension);
+			FGenericPlatform::RunThirdPartyCompiler(CurrentFileInfo, CurrentCompileOptions, LOutFilePath, GetOutputDirectoryPath(), OutCompiledObjectFilePath);
 		}
 		
+		// remove generated low-level code if needed
 		if( !CurrentCompileOptions.DumpGeneratedCode )
 		{
 			std::remove(LOutFilePath.c_str());
@@ -72,11 +100,21 @@ public:
 
 protected:
 
+	/*
+		@return low-level language extension.
+	*/
 	virtual std::string GetOutFileExtension() const { return ""; }
+	/*
+		Translate code to other language.
+	*/
 	virtual void ProcessGeneration(const FProgramInfo& ProgramInfo) { }
-	virtual int RunThirdPartyCompiler(const std::string& FilePath, std::string& OutCompiledObjectFilePath) { return 0; }
 
-	inline std::string GetOutputDirectoryPath() const
+protected:
+
+	/*
+		@return path to output folder.
+	*/
+	inline std::string GetOutputDirectoryPath() const noexcept
 	{
 		if( CurrentCompileOptions.OutputDir.empty() )
 		{
@@ -85,21 +123,24 @@ protected:
 
 		return CurrentCompileOptions.OutputDir;
 	}
-
-	inline std::string GetOutputFilePath(const std::string& ExtensionOnlyStr) const
+	/*
+		@param ExtensionOnlyStr - file extension wihout '.'
+		@return path to output file with specific extension.
+	*/
+	inline std::string GetOutputFilePath(const std::string& ExtensionOnlyStr) const noexcept
 	{
 		return FCompilerHelperLibrary::CatPaths(GetOutputDirectoryPath(), CurrentFileInfo.FileNameOnly + "." + ExtensionOnlyStr);
 	}
 
-	inline std::string GetCompilerIdentifier() const
-	{
-		return std::string(FCompilerConfig::COMPILER_NAME) + " v" + std::string(FCompilerConfig::COMPILER_VERSION);
-	}
-
+	
+	/*
+		Raise error based on compiler context.
+	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, size_t Line, size_t Pos) const 
 	{ 
 		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Line, Pos, CurrentCompileOptions); 
 	}
+
 
 
 

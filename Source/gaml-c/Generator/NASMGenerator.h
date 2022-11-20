@@ -2,10 +2,9 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "GeneratorBase.h"
-
-#include <string>
-
 
 
 
@@ -26,5 +25,4 @@ protected:
 
 	virtual std::string GetOutFileExtension() const override { return "asm"; }
 	virtual void ProcessGeneration(const FProgramInfo& ProgramInfo) override;
-	virtual int RunThirdPartyCompiler(const std::string& FilePath, std::string& OutCompiledObjectFilePath) override;
 };

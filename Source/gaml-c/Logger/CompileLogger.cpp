@@ -25,6 +25,7 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 		LErrorMessage += "] ";
 	}
 
+	// clang-format off
 	switch( ErrorType )
 	{
 	case EErrorType::WARNING:			{ LErrorMessage += "WARNING ";						break; }
@@ -42,7 +43,7 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 	case EErrorStage::LINKER:			{ LErrorMessage += "Linker: ";						break; }
 	default:							{ LErrorMessage += "INVALIID STAGE: ";				break; }
 	}
-
+	// clang-format on
 
 	LErrorMessage += Message;
 

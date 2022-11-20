@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <string>
+#include "../CoreMinimal.h"
 
 
 
@@ -35,8 +35,21 @@ enum class EErrorType
 */
 struct FCompileLogger
 {
-public:
+	/*
+		Log formatted message.
 
+		@param ErrorStage - Compilation stage.
+		@param ErrorType - Severity of the error.
+		@param File - Context file.
+		@param Message - Message to log.
+		@param Line - Context line.
+		@param Pos - Context line position.
+	*/
 	static void Raise(EErrorStage ErrorStage, EErrorType ErrorType, const std::string& File, const std::string& Message, size_t Line, size_t Pos);
+	/*
+		Log message.
+
+		@param Message - Message to log.
+	*/
 	static void Message(const std::string& Message);
 };

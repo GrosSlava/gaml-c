@@ -1,8 +1,11 @@
 // Copyright 2022 GrosSlava.
 
 #include "Linker.h"
+
 #include "../Compiler/CompilerConfig.h"
 #include "../Generator/GeneratorHelperLibrary.h"
+
+#include "../Platform/PlatformHelperLibrary.h"
 
 #include <cstdio>
 
@@ -27,33 +30,17 @@ void Linker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPath
 {
 	std::string ConsoleCommand = "";
 
-	std::string ExecutableFileExtension = "";
-	std::string LibraryFileExtension = "";
-	switch( CurrentCompileOptions.TargetPlatform )
-	{
-	case ETargetPlatform::Windows:
-	{
-		ExecutableFileExtension = "exe";
-		LibraryFileExtension = "dll";
-		break;
-	}
-	case ETargetPlatform::Linux:
-	{
-		ExecutableFileExtension = "out";
-		LibraryFileExtension = "so";
-		break;
-	}
-	default:
+	std::string ExecutableFileExtension = FPlatformHelperLibrary::GetPlatformExecutableFileExtension(CurrentCompileOptions.TargetPlatform);
+	std::string LibraryFileExtension = FPlatformHelperLibrary::GetPlatformLibraryFileExtension(CurrentCompileOptions.TargetPlatform);
+	
+	if( ExecutableFileExtension.empty() || LibraryFileExtension.empty() )
 	{
 		RaiseError(EErrorMessageType::CANT_LINK_TO_TARGET_PLATFORM, "");
-		break;
 	}
-	}
-	
 
 
 #if WINDOWS_32 || WINDOWS_64
-	ConsoleCommand += '\"' + FGeneratorHelperLibrary::GetMSVCHostDirectory();
+	//ConsoleCommand += '\"' + FGeneratorHelperLibrary::GetMSVCHostDirectory();
 
 	switch( CurrentCompileOptions.TargetArch )
 	{
@@ -138,22 +125,12 @@ void Linker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPath
 
 	switch( CurrentCompileOptions.SubsystemType )
 	{
-	case ESubsystemType::Boot:
-	{
-		ConsoleCommand += "-mcmodel=kernel";
-		break;
-	}
-	case ESubsystemType::Native:
-	{
-		ConsoleCommand += "-mcmodel=kernel";
-		break;
-	}
 	case ESubsystemType::Console:
 	{
 		ConsoleCommand += "";
 		break;
 	}
-	case ESubsystemType::Windows:
+	case ESubsystemType::Window:
 	{
 		ConsoleCommand += "";
 		break;

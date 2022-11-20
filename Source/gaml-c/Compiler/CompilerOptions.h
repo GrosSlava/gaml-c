@@ -2,11 +2,10 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "CompilerConfig.h"
 #include "CompilerFileInfo.h"
-
-#include <string>
-#include <vector>
 
 
 
@@ -175,9 +174,10 @@ struct FCompileOptions
 
 
 
-
+// clang-format off
 void ParseInputOptions
 (
 	int argc, char** argv, FCompileOptions& OutCompileOptions, 
 	std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths
 );
+// clang-format on

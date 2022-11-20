@@ -1,6 +1,7 @@
 // Copyright 2022 GrosSlava.
 
 #include "Lexer.h"
+
 #include "../Token/TokenHelperLibrary.h"
 
 
@@ -135,16 +136,17 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 			else if( SplitCommentState == ESpiltCommentState::PossibleOutBlockComment )
 			{
 				SplitCommentState = ESpiltCommentState::InBlockComment;
-			}	
+			}
 		}
 
-
+		// clang-format off
 		if( 
 			SplitCommentState == ESpiltCommentState::InLineComment || 
 			SplitCommentState == ESpiltCommentState::InBlockComment || 
 			SplitCommentState == ESpiltCommentState::PossibleOutBlockComment ||
 			SplitCommentState == ESpiltCommentState::CommentEnd 
 		  )
+		// clang-format on
 		{
 			continue;
 		}
@@ -497,11 +499,13 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 
 	for( size_t i = 0; i < OutTokens.size(); ++i )
 	{
+		// clang-format off
 		while( 
 				(i + 1 < OutTokens.size()) && 
 				(OutTokens[i].GetType() == ETokenType::PUBLIC || OutTokens[i].GetType() == ETokenType::PROTECTED || OutTokens[i].GetType() == ETokenType::PRIVATE) &&
 				OutTokens[i + 1].GetType() == ETokenType::COLON
 			 )
+		// clang-format on
 		{
 			Token LToken(CurrentFileInfo, OutTokens[i].GetLexeme() + OutTokens[i + 1].GetLexeme(), OutTokens[i].GetLine(), OutTokens[i].GetPos(), CurrentCompileOptions);
 			LTokens.push_back(LToken);
@@ -517,7 +521,7 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 
 	//.......................................................................//
 
-	
+
 	//....................Merge function description block...................//
 
 	for( size_t i = 0; i < OutTokens.size(); ++i )

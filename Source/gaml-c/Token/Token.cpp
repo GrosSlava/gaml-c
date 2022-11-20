@@ -2,14 +2,47 @@
 
 #include "Token.h"
 #include "TokenHelperLibrary.h"
+
 #include "../Logger/ErrorLogger.h"
 
 
 
 
 
+size_t Token::GetLexemeCache(const std::string& Lexeme) noexcept
+{
+	const size_t MagicValue = 73;
+	size_t Result = 0;
+
+	static std::vector<size_t> MagicNumbersMap = {MagicValue};
+
+
+	for( size_t i = 0; i < Lexeme.length(); ++i )
+	{
+		if( i >= MagicNumbersMap.size() )
+		{
+			MagicNumbersMap.push_back(MagicNumbersMap[i - 1] * MagicValue);
+		}
+
+		Result += Lexeme[i] * MagicNumbersMap[i];
+	}
+
+	return Result;
+}
+
+
+
+
 void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 {
+	// clang-format off
+
+	if( FTokenHelperLibrary::IsIntegerLexeme(LexemeStr) )	{ Type = ETokenType::INTEGER_CONST;	return;	}
+	if( FTokenHelperLibrary::IsFloatLexeme(LexemeStr) )		{ Type = ETokenType::FLOAT_CONST;	return; }
+	if( FTokenHelperLibrary::IsDoubleLexeme(LexemeStr) )	{ Type = ETokenType::DOUBLE_CONST;	return; }
+	if( FTokenHelperLibrary::IsCharLexeme(LexemeStr) )		{ Type = ETokenType::CHAR_CONST;	return; }
+	if( FTokenHelperLibrary::IsStringLexeme(LexemeStr) )	{ Type = ETokenType::STRING_CONST;	return; }
+
 #define CASE_LEXEME(Lexeme, TokenType) if( LexemeStr == Lexeme ) { Type = ETokenType::##TokenType##; return; }
 
 	CASE_LEXEME("<",						LESS)
@@ -88,7 +121,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("//",						LINE_COMMENT)
 	CASE_LEXEME("/*",						BLOCK_COMMENT_START)
 	CASE_LEXEME("*/",						BLOCK_COMMENT_END)
-	CASE_LEXEME("***",						FUNCTION_DESCRIPTION)
+	CASE_LEXEME("***",						DESCRIPTION_BLOCK)
 
 	CASE_LEXEME(";",						SEMICOLON)
 	CASE_LEXEME(":",						COLON)
@@ -100,11 +133,6 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("#",						SHARP)
 	CASE_LEXEME("@",						DOG)
 
-	if( IsIntegerLexeme(LexemeStr) )		{ Type = ETokenType::INTEGER_CONST;				return; }
-	if( IsFloatLexeme(LexemeStr) )			{ Type = ETokenType::FLOAT_CONST;				return; }
-	if( IsDoubleLexeme(LexemeStr) )			{ Type = ETokenType::DOUBLE_CONST;				return; }
-	if( IsCharLexeme(LexemeStr) )			{ Type = ETokenType::CHAR_CONST;				return; }
-	if( IsStringLexeme(LexemeStr) )			{ Type = ETokenType::STRING_CONST;				return; }
 	CASE_LEXEME("true",						TRUE_CONST)
 	CASE_LEXEME("false",					FALSE_CONST)
 	
@@ -145,6 +173,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 
 	CASE_LEXEME("func",						FUNCTION)
 	CASE_LEXEME("lambda",					LAMBDA)
+	CASE_LEXEME("param",					PARAM)
 	CASE_LEXEME("return",					RETURN)
 	CASE_LEXEME("extern_c",					EXTERN_C)
 	CASE_LEXEME("cdecl",					CDECL)
@@ -194,14 +223,15 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("module",					MODULE)
 	CASE_LEXEME("implement",				IMPLEMENT)
 
-	if( FTokenHelperLibrary::IsCorrectIdentifier(LexemeStr) ) { Type = ETokenType::IDENTIFIER;		return; }
-
+	if( FTokenHelperLibrary::IsCorrectIdentifier(LexemeStr) ) { Type = ETokenType::IDENTIFIER; return; }
+	// clang-format on
 
 	FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos - LexemeStr.size(), CompileOptions);
 }
 
 std::string Token::GetTypeAsStr() const noexcept
 {
+	// clang-format off
 #define CASE_TOKEN(TokenType, Str) case ETokenType::##TokenType##: return Str;
 
 	switch( Type )
@@ -219,12 +249,12 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(OR,							"or")
 	CASE_TOKEN(EXCLAMATION,					"exclamation")
 
-	CASE_TOKEN(BINARY_AND,					"binary and")
-	CASE_TOKEN(BINARY_OR,					"binary or")
-	CASE_TOKEN(BINARY_INVERSE,				"binary inverse")
-	CASE_TOKEN(BINARY_XOR,					"binary xor")
-	CASE_TOKEN(BINARY_SHL,					"binary shl")
-	CASE_TOKEN(BINARY_SHR,					"binary shr")
+	CASE_TOKEN(BINARY_AND,					"binary_and")
+	CASE_TOKEN(BINARY_OR,					"binary_or")
+	CASE_TOKEN(BINARY_INVERSE,				"binary_inverse")
+	CASE_TOKEN(BINARY_XOR,					"binary_xor")
+	CASE_TOKEN(BINARY_SHL,					"binary_shl")
+	CASE_TOKEN(BINARY_SHR,					"binary_shr")
 
 	CASE_TOKEN(PLUS,						"plus")
 	CASE_TOKEN(MINUS,						"minus")
@@ -235,28 +265,28 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(MOD,							"mod")
 	CASE_TOKEN(POW,							"pow")
 
-	CASE_TOKEN(SIZE_OF,						"size of")
-	CASE_TOKEN(TYPE_OF,						"type of")
-	CASE_TOKEN(NAME_OF,						"name of")
-	CASE_TOKEN(ALIGN_OF,					"align of")
-	CASE_TOKEN(ALIGN_AS,					"align as")
-	CASE_TOKEN(IS_FUNCTION,					"is function")
-	CASE_TOKEN(IS_STRUCT,					"is struct")
-	CASE_TOKEN(IS_ENUM,						"is enum")
-	CASE_TOKEN(IS_INTERFACE,				"is interface")
-	CASE_TOKEN(IS_OBJECT,					"is object")
-	CASE_TOKEN(IS_COMPONENT,				"is component")
-	CASE_TOKEN(IS_SUBCLASS,					"is subclass")
-	CASE_TOKEN(IS_INSTANCE,					"is instance")
+	CASE_TOKEN(SIZE_OF,						"size_of")
+	CASE_TOKEN(TYPE_OF,						"type_of")
+	CASE_TOKEN(NAME_OF,						"name_of")
+	CASE_TOKEN(ALIGN_OF,					"align_of")
+	CASE_TOKEN(ALIGN_AS,					"align_as")
+	CASE_TOKEN(IS_FUNCTION,					"is_function")
+	CASE_TOKEN(IS_STRUCT,					"is_struct")
+	CASE_TOKEN(IS_ENUM,						"is_enum")
+	CASE_TOKEN(IS_INTERFACE,				"is_interface")
+	CASE_TOKEN(IS_OBJECT,					"is_object")
+	CASE_TOKEN(IS_COMPONENT,				"is_component")
+	CASE_TOKEN(IS_SUBCLASS,					"isvsubclass")
+	CASE_TOKEN(IS_INSTANCE,					"is_instance")
 	CASE_TOKEN(IN,							"in")
 	CASE_TOKEN(IS,							"is")
 	CASE_TOKEN(AS,							"as")
 	CASE_TOKEN(ADDR,						"addr")
 
-	CASE_TOKEN(NAMESPACE_ACCESS_OPERATOR,	"namespace access operator")
-	CASE_TOKEN(RIGHT_ARROW,					"right arrow")
-	CASE_TOKEN(RIGHT_FAT_ARROW,				"right fat arrow")
-	CASE_TOKEN(RIGHT_WAVE_ARROW,			"right wave arrow")
+	CASE_TOKEN(NAMESPACE_ACCESS_OPERATOR,	"namespace_access_operator")
+	CASE_TOKEN(RIGHT_ARROW,					"right_arrow")
+	CASE_TOKEN(RIGHT_FAT_ARROW,				"right_fat_arrow")
+	CASE_TOKEN(RIGHT_WAVE_ARROW,			"right_wavevarrow")
 
 	CASE_TOKEN(LBRA,						"lbra")
 	CASE_TOKEN(RBRA,						"rbra")
@@ -268,23 +298,23 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(RTRI,						"rtri")
 
 	CASE_TOKEN(ASSIGN,						"assign")
-	CASE_TOKEN(ADD_ASSIGN,					"add assign")
-	CASE_TOKEN(SUB_ASSIGN,					"sub assign")
-	CASE_TOKEN(MUL_ASSIGN,					"mul assign")
-	CASE_TOKEN(DIV_ASSIGN,					"div assign")
-	CASE_TOKEN(MOD_ASSIGN,					"mod assign")
-	CASE_TOKEN(POW_ASSIGN,					"pow assign")
-	CASE_TOKEN(BINARY_AND_ASSIGN,			"binary 'and' assign")
-	CASE_TOKEN(BINARY_OR_ASSIGN,			"binary 'or' assign")
-	CASE_TOKEN(BINARY_INVERSE_ASSIGN,		"binary 'inverse' assign")
-	CASE_TOKEN(BINARY_XOR_ASSIGN,			"binary 'xor' assign")
-	CASE_TOKEN(BINARY_SHL_ASSIGN,			"binary 'shl' assign")
-	CASE_TOKEN(BINARY_SHR_ASSIGN,			"binary 'shr' assign")
+	CASE_TOKEN(ADD_ASSIGN,					"add_assign")
+	CASE_TOKEN(SUB_ASSIGN,					"sub_assign")
+	CASE_TOKEN(MUL_ASSIGN,					"mul_assign")
+	CASE_TOKEN(DIV_ASSIGN,					"div_assign")
+	CASE_TOKEN(MOD_ASSIGN,					"mod_assign")
+	CASE_TOKEN(POW_ASSIGN,					"pow_assign")
+	CASE_TOKEN(BINARY_AND_ASSIGN,			"binary_'and'_assign")
+	CASE_TOKEN(BINARY_OR_ASSIGN,			"binary_'or'_assign")
+	CASE_TOKEN(BINARY_INVERSE_ASSIGN,		"binary_'inverse'_assign")
+	CASE_TOKEN(BINARY_XOR_ASSIGN,			"binary_'xor'_assign")
+	CASE_TOKEN(BINARY_SHL_ASSIGN,			"binary_'shl'_assign")
+	CASE_TOKEN(BINARY_SHR_ASSIGN,			"binary_'shr'_assign")
 
-	CASE_TOKEN(LINE_COMMENT,				"line comment")
-	CASE_TOKEN(BLOCK_COMMENT_START,			"block comment start")
-	CASE_TOKEN(BLOCK_COMMENT_END,			"block comment end")
-	CASE_TOKEN(FUNCTION_DESCRIPTION,		"function description block")
+	CASE_TOKEN(LINE_COMMENT,				"line_comment")
+	CASE_TOKEN(BLOCK_COMMENT_START,			"block_comment_start")
+	CASE_TOKEN(BLOCK_COMMENT_END,			"block_comment_end")
+	CASE_TOKEN(DESCRIPTION_BLOCK,			"description_block")
 
 	CASE_TOKEN(SEMICOLON,					"semicolon")
 	CASE_TOKEN(COLON,						"colon")
@@ -296,13 +326,13 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(SHARP,						"sharp")
 	CASE_TOKEN(DOG,							"dog")
 
-	CASE_TOKEN(INTEGER_CONST,				"integer const")
-	CASE_TOKEN(FLOAT_CONST,					"float const")
-	CASE_TOKEN(DOUBLE_CONST,				"double const")
-	CASE_TOKEN(CHAR_CONST,					"char const")
-	CASE_TOKEN(STRING_CONST,				"string const")
-	CASE_TOKEN(TRUE_CONST,					"true const")
-	CASE_TOKEN(FALSE_CONST,					"false const")
+	CASE_TOKEN(INTEGER_CONST,				"integer_const")
+	CASE_TOKEN(FLOAT_CONST,					"float_const")
+	CASE_TOKEN(DOUBLE_CONST,				"double_const")
+	CASE_TOKEN(CHAR_CONST,					"char_const")
+	CASE_TOKEN(STRING_CONST,				"string_const")
+	CASE_TOKEN(TRUE_CONST,					"true_const")
+	CASE_TOKEN(FALSE_CONST,					"false_const")
 
 	CASE_TOKEN(VOID,						"void")
 	CASE_TOKEN(CLASS,						"class")
@@ -341,6 +371,7 @@ std::string Token::GetTypeAsStr() const noexcept
 
 	CASE_TOKEN(FUNCTION,					"function")
 	CASE_TOKEN(LAMBDA,						"lambda")
+	CASE_TOKEN(PARAM,						"param")
 	CASE_TOKEN(RETURN,						"return")
 	CASE_TOKEN(EXTERN_C,					"extern_c")
 	CASE_TOKEN(CDECL,						"cdecl")
@@ -361,13 +392,13 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(UNIMPLEMENTED,				"unimplemented")
 
 	CASE_TOKEN(CAST,						"cast")
-	CASE_TOKEN(UNSAFE_CAST,					"unsafe cast")
+	CASE_TOKEN(UNSAFE_CAST,					"unsafe_cast")
 
 	CASE_TOKEN(ASSERT,						"assert")
-	CASE_TOKEN(STATIC_ASSERT,				"static assert")
-	CASE_TOKEN(STATIC_ERROR,				"static error")
-	CASE_TOKEN(STATIC_WARNING,				"static warning")
-	CASE_TOKEN(STATIC_MESSAGE,				"static message")
+	CASE_TOKEN(STATIC_ASSERT,				"static_assert")
+	CASE_TOKEN(STATIC_ERROR,				"static_error")
+	CASE_TOKEN(STATIC_WARNING,				"static_warning")
+	CASE_TOKEN(STATIC_MESSAGE,				"static_message")
 
 	CASE_TOKEN(STRUCT,						"struct")
 	CASE_TOKEN(ENUM,						"enum")
@@ -382,160 +413,15 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(PUBLIC,						"public")
 	CASE_TOKEN(PROTECTED,					"protected")
 	CASE_TOKEN(PRIVATE,						"private")
-	CASE_TOKEN(PUBLIC_BLOCK,				"public block")
-	CASE_TOKEN(PROTECTED_BLOCK,				"protected block")
-	CASE_TOKEN(PRIVATE_BLOCK,				"private block")
+	CASE_TOKEN(PUBLIC_BLOCK,				"public_block")
+	CASE_TOKEN(PROTECTED_BLOCK,				"protected_block")
+	CASE_TOKEN(PRIVATE_BLOCK,				"private_block")
 
 	CASE_TOKEN(IMPORT,						"import")
 	CASE_TOKEN(MODULE,						"module")
 	CASE_TOKEN(IMPLEMENT,					"implement")
 	}
+	// clang-format on
 
 	return "";
-}
-
-
-
-
-bool Token::IsIntegerLexeme(const std::string& Lexeme) const noexcept
-{
-	bool IsHex = false;
-	bool IsBinary = false;
-	if( Lexeme.size() >= 2 && Lexeme[0] == '0' && (Lexeme[1] == 'x' || Lexeme[1] == 'X') ) IsHex = true;
-	if( !IsHex && (Lexeme.back() == 'b' || Lexeme.back() == 'B') ) IsBinary = true;
-
-	if( IsHex && Lexeme.size() < 3 ) return false;
-	if( IsBinary && Lexeme.size() < 2 ) return false;
-
-
-	bool LHasFirstDigit = false;
-	bool LHasX = false;
-	bool LHasDigitAfterX = false;
-	bool LHasB = false;
-	for( const char& c : Lexeme )
-	{
-		if( IsBinary && LHasB ) return false;
-
-		if( c == 'x' || c == 'X' )
-		{
-			if( !LHasFirstDigit || !IsHex || LHasX ) return false;
-			LHasX = true;
-			continue;
-		}
-
-		if( c == 'b' || c == 'B' )
-		{
-			if( !LHasFirstDigit ) return false;
-			LHasB = true;
-			continue;
-		}
-
-		if( (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F') )
-		{
-			if( !LHasX ) return false;
-			LHasDigitAfterX = true;
-			continue;
-		}
-
-		if( !FTokenHelperLibrary::IsDigit(c) ) return false;
-		LHasFirstDigit = true;
-		if( LHasX ) LHasDigitAfterX = true;
-	}
-
-	if( IsHex && !LHasDigitAfterX ) return false;
-	return LHasFirstDigit;
-}
-
-bool Token::IsDoubleLexeme(const std::string& Lexeme) const noexcept
-{
-	bool LHasFirstDigit = false;
-	bool LHasPoint = false;
-	bool LHasDigitAfterPoint = false;
-	bool LHasE = false;
-	bool LHasSignAfterE = false;
-	bool LHasDigitAfterE = false;
-
-	for( const char& c : Lexeme )
-	{
-		if( c == '.' )
-		{
-			if( !LHasFirstDigit || LHasPoint || LHasE ) return false;
-			LHasPoint = true;
-			continue;
-		}
-
-		if( c == 'e' || c == 'E' )
-		{
-			if( !LHasFirstDigit || LHasE || !LHasPoint ) return false;
-			LHasE = true;
-			continue;
-		}
-
-		if( FTokenHelperLibrary::IsSign(c) )
-		{
-			if( !LHasE || LHasSignAfterE || LHasDigitAfterE ) return false;
-			LHasSignAfterE = true;
-			continue;
-		}
-
-		if( !FTokenHelperLibrary::IsDigit(c) ) return false;
-		LHasFirstDigit = true;
-		if( LHasPoint ) LHasDigitAfterPoint = true;
-		if( LHasE ) LHasDigitAfterE = true;
-	}
-
-	if( LHasE && !LHasDigitAfterE ) return false;
-	return LHasFirstDigit && LHasPoint && LHasDigitAfterPoint;
-}
-
-bool Token::IsFloatLexeme(const std::string& Lexeme) const noexcept
-{
-	bool LHasFirstDigit = false;
-	bool LHasPoint = false;
-	bool LHasDigitAfterPoint = false;
-	bool LHasE = false;
-	bool LHasSignAfterE = false;
-	bool LHasDigitAfterE = false;
-	bool LHasF = false;
-
-	for( const char& c : Lexeme )
-	{
-		if( LHasF ) return false;
-
-		if( c == '.' )
-		{
-			if( !LHasFirstDigit || LHasPoint || LHasE ) return false;
-			LHasPoint = true;
-			continue;
-		}
-
-		if( c == 'e' || c == 'E' )
-		{
-			if( !LHasFirstDigit || LHasE || !LHasPoint ) return false;
-			LHasE = true;
-			continue;
-		}
-
-		if( FTokenHelperLibrary::IsSign(c) )
-		{
-			if( !LHasE || LHasSignAfterE || LHasDigitAfterE ) return false;
-			LHasSignAfterE = true;
-			continue;
-		}
-
-		if( c == 'f' || c == 'F' )
-		{
-			if( !LHasFirstDigit || !LHasPoint || !LHasDigitAfterPoint ) return false;
-			LHasF = true;
-			continue;
-		}
-
-		if( !FTokenHelperLibrary::IsDigit(c) ) return false;
-		LHasFirstDigit = true;
-		if( LHasPoint ) LHasDigitAfterPoint = true;
-		if( LHasE ) LHasDigitAfterE = true;
-	}
-
-	if( LHasE && !LHasDigitAfterE ) return false;
-	return LHasFirstDigit && LHasPoint && LHasDigitAfterPoint && LHasF;
 }

@@ -6,6 +6,7 @@
 #include "../Lexer/Lexer.h"
 #include "../Parser/Parser.h"
 #include "../SemanticAnalyzer/SemanticAnalyser.h"
+
 #include "../Generator/ReduceCGenerator.h"
 #include "../Generator/LLVMGenerator.h"
 #include "../Generator/NASMGenerator.h"
@@ -25,7 +26,7 @@ std::string Compiler::Process(const FGamlFileInfo& InFileInfo, const FCompileOpt
 {
 	FileInfo = InFileInfo;
 	CurrentOptions = Options;
-	
+
 	if( FileInfo.ExtensionOnly != FCompilerConfig::COMPILE_FILE_EXTENSION )
 	{
 		LogError(EErrorStage::INITIALIZATION, EErrorType::WARNING, "", "File with extension '" + FileInfo.ExtensionOnly + "' can't be compiled!", 0, 0);
@@ -164,8 +165,8 @@ void Compiler::DumpModuleDependencies(const FProgramInfo& ProgramInfo)
 	for( const std::pair<std::string, FModuleInfo>& LImportedModulePair : ProgramInfo.ImportedModulesInfo )
 	{
 		LStr += LImportedModulePair.first + ": ";
-		
-		for( size_t i = 0; i < LImportedModulePair.second.RequiredModulesNames.size(); ++i)
+
+		for( size_t i = 0; i < LImportedModulePair.second.RequiredModulesNames.size(); ++i )
 		{
 			LStr += LImportedModulePair.second.RequiredModulesNames[i];
 			if( i + 1 < LImportedModulePair.second.RequiredModulesNames.size() ) LStr += ", ";
@@ -182,13 +183,13 @@ void Compiler::DumpModuleDependencies(const FProgramInfo& ProgramInfo)
 
 
 
-BaseGenerator* Compiler::CreateCodeGenerator() const
+BaseGenerator* Compiler::CreateCodeGenerator() const noexcept
 {
 	switch( CurrentOptions.CodeGenerationType )
 	{
-	case ECodeGenerationType::ReduceC:	return new ReduceCGenerator();
-	case ECodeGenerationType::LLVM:		return new LLVMGenerator();
-	case ECodeGenerationType::NASM:		return new NASMGenerator();
+	case ECodeGenerationType::ReduceC: return new ReduceCGenerator();
+	case ECodeGenerationType::LLVM: return new LLVMGenerator();
+	case ECodeGenerationType::NASM: return new NASMGenerator();
 	}
 
 	FCompileLogger::Message("!!!UNDEFINED CODE GENERATOR TYPE!!!");

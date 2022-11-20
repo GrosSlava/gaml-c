@@ -2,16 +2,16 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "CompilerFileInfo.h"
 #include "CompilerOptions.h"
 #include "CompilerHelperLibrary.h"
+
 #include "../Token/Token.h"
 #include "../Parser/ProgramSymbols.h"
 #include "../Logger/ErrorLogger.h"
 #include "../Generator/GeneratorBase.h"
-
-#include <string>
-#include <vector>
 
 
 
@@ -29,10 +29,15 @@ public:
 
 public:
 
+	/*
+		Start compilation pipeline.
+	*/
 	std::string Process(const std::string& FilePath, const FCompileOptions& Options);
 	std::string Process(const FGamlFileInfo& InFileInfo, const FCompileOptions& Options);
-	
-	
+
+	/*
+		Log error based on compiler context.
+	*/
 	inline void LogError(EErrorStage ErrorStage, EErrorType ErrorType, const std::string& FileName, const std::string& Message, size_t Line, size_t Pos) const
 	{
 		if( CurrentOptions.Silent ) return;
@@ -40,7 +45,11 @@ public:
 		FCompileLogger::Raise(ErrorStage, ErrorType, FileName, Message, Line, Pos);
 	}
 
-	inline std::string GetCompilerOutputDir(const std::string& FileName) const
+
+	/*
+		@return path to result directory.
+	*/
+	inline std::string GetCompilerOutputDir(const std::string& FileName) const noexcept
 	{
 		std::string LFilePath = "";
 		if( CurrentOptions.OutputDir.empty() )
@@ -57,18 +66,34 @@ public:
 
 private:
 
+	//.....................Translation pipeline.....................//
+
 	bool Open(std::string& OutCode);
 	bool ProcessLexer(const std::string& Code, std::vector<Token>& OutTokens);
 	bool ProcessParser(const std::vector<Token>& Tokens, FProgramInfo& OutProgramInfo);
 	bool ProcessSemantic(FProgramInfo& ProgramInfo);
 	bool GenerateCode(const FProgramInfo& ProgramInfo, std::string& OutCompiledObjectFilePath);
 
+	//..............................................................//
 
+
+	/*
+		Save translation unit lexemes into file.
+	*/
 	void DumpLexemes(const std::vector<Token>& Tokens);
+	/*
+		Save translation unit dependencies into file.
+	*/
 	void DumpModuleDependencies(const FProgramInfo& ProgramInfo);
 
 
-	BaseGenerator* CreateCodeGenerator() const;
+	/*
+		Construct code generator based on current compilation options.
+
+		@return generated code generator.
+	*/
+	BaseGenerator* CreateCodeGenerator() const noexcept;
+
 
 
 

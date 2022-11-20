@@ -2,11 +2,12 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "TokenType.h"
+
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
-
-#include <string>
 
 
 
@@ -30,31 +31,49 @@ public:
 
 public:
 
+	/*
+		@return token type in str.
+	*/
 	std::string GetTypeAsStr() const noexcept;
+	/*
+		@return token type.
+	*/
 	inline ETokenType GetType() const noexcept { return Type; }
+	/*
+		@return original lexeme str.
+	*/
 	inline const std::string& GetLexeme() const noexcept { return LexemeStr; }
+	/*
+		@return information about token's file.
+	*/
 	inline const FGamlFileInfo& GetFileInfo() const noexcept { return FileInfo; }
+	/*
+		@return token line index in file.
+	*/
 	inline size_t GetLine() const noexcept { return Line; }
+	/*
+		@return token start position in line.
+	*/
 	inline size_t GetPos() const noexcept { return Pos; }
+
+	/*
+		@return cache from current lexeme str.
+	*/
+	size_t GetCache() const noexcept { return GetLexemeCache(LexemeStr); }
+	/*
+		@return cache from lexeme str.
+	*/
+	static size_t GetLexemeCache(const std::string& Lexeme) noexcept; 
 
 private:
 
+	/*
+		Set Type based on LexemeStr.
+
+		@param CompileOptions - Compile options to use in errors.
+	*/
 	void DetermineTokenType(const FCompileOptions& CompileOptions);
 
-
-	inline bool IsStringLexeme(const std::string& Lexeme) const noexcept
-	{ 
-		return Lexeme.size() >= 2 && Lexeme.front() == '"' && Lexeme.back() == '"'; 
-	}
-
-	inline bool IsCharLexeme(const std::string& Lexeme) const noexcept
-	{ 
-		return Lexeme.size() >= 2 && Lexeme.front() == '\'' && Lexeme.back() == '\''; 
-	}
-
-	bool IsIntegerLexeme(const std::string& Lexeme) const noexcept;
-	bool IsDoubleLexeme(const std::string& Lexeme) const noexcept;
-	bool IsFloatLexeme(const std::string& Lexeme) const noexcept;
 
 
 

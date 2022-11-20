@@ -2,11 +2,11 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "CompilerConfig.h"
 #include "CompilerFileInfo.h"
 
-#include <string>
-#include <vector>
 #include <filesystem>
 #include <fstream>
 #include <chrono>
@@ -19,8 +19,11 @@
 */
 struct FCompilerHelperLibrary
 {
-public:
+	/*
+		Time code performance.
 
+		@param Lambda - code to check.
+	*/
 	template<class CODE>
 	static inline size_t ClockCodeMilliseconds(CODE Lambda)
 	{
@@ -33,8 +36,12 @@ public:
 
 		return Duration.count();
 	}
-
-	static inline std::string GetPrettyTimeStr(size_t MillisecondsCount)
+	
+	/*
+		@param MillisecondsCount - Time in milliseconds.
+		@return formatted current time.
+	*/
+	static inline std::string GetPrettyTimeStr(size_t MillisecondsCount) noexcept
 	{
 		const size_t LSeconds = MillisecondsCount / 1000;
 		const size_t LMilliseconds = MillisecondsCount - LSeconds * 1000;
@@ -46,6 +53,15 @@ public:
 
 
 
+
+	/*
+		Split file path into Path/Name/Extension.
+
+		@param FilePath - Path to file for splitting.
+		@param OutPathOnly - Result of file path only.
+		@param OutNameOnly - Result of file name only.
+		@param OutExtensionOnly - Result of file extension only.
+	*/
 	static inline void SplitFilePath(const std::string& FilePath, std::string& OutPathOnly, std::string& OutNameOnly, std::string& OutExtensionOnly)
 	{
 		const size_t FileExtensionDotPos = FilePath.find_last_of('.');
@@ -56,7 +72,11 @@ public:
 		OutNameOnly = FilePath.substr(FileNameStart, FileExtensionDotPos - FileNameStart);
 		OutExtensionOnly = FileExtensionDotPos == std::string::npos ? "" : FilePath.substr(FileExtensionDotPos + 1);
 	}
+	/*
+		Split file path into FGamlFileInfo.
 
+		@param FilePath - Path to file for splitting.
+	*/
 	static inline FGamlFileInfo SplitFilePath(const std::string& FilePath)
 	{
 		FGamlFileInfo LResult;
@@ -64,7 +84,13 @@ public:
 		SplitFilePath(FilePath, LResult.PathToFileOnly, LResult.FileNameOnly, LResult.ExtensionOnly);
 		return LResult;
 	}
+	/*
+		Split file path by separator.
 
+		@param FilePath - Path to file for splitting.
+		@param OutParts - Result of split.
+		@param Separator - Char for separate(not included into split parts).
+	*/
 	static inline void SplitPathToParts(const std::string& FilePath, std::vector<std::string>& OutParts, char Separator = std::filesystem::path::preferred_separator)
 	{ 
 		OutParts.clear();
@@ -80,6 +106,13 @@ public:
 		OutParts.push_back(FilePath.substr(LPrevOffset, LOffset - LPrevOffset));
 	}
 
+	/*
+		Concatanate paths by platform specific delimiter.
+
+		@param Lhs - Left hand string to concatanate.
+		@param Rhs - Right hand string to concatanate.
+		@param Separator - Separetor to concatanate.
+	*/
 	static inline std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator) 
 	{ 
 		if( Lhs.empty() ) return Rhs;
@@ -99,8 +132,58 @@ public:
 		return LResult;
 	}
 
+	/*
+		Concatanate array of path parts by given separator.
+
+		@param Parts - Array of path parts.
+		@param IncludeEndSeparator - If true then path will be ended by separator.
+		@param Separator - Char to separate path parts.
+	*/
+	static inline std::string MakePathFromParts(const std::vector<std::string>& Parts, bool IncludeEndSeparator = false, char Separator = std::filesystem::path::preferred_separator)
+	{
+		std::string LResult = "";
+
+		for( const std::string& LPart : Parts )
+		{
+			LResult = CatPaths(LResult, LPart, Separator);
+		}
+		if( LResult.size() > 0 && !IncludeEndSeparator && LResult.back() == Separator )
+		{
+			LResult.resize(LResult.size() - 1); // without separator
+		}
+
+		return LResult;
+	}
+
+	/*
+		Make "up" path. It can be see like "../../../"
+
+		@param UpCount - Count of directories to up.
+	*/
+	static inline std::string MakeUpDirectoryStr(size_t UpCount)
+	{
+		std::string LResult = "";
+		const std::string LUp = ".." + std::filesystem::path::preferred_separator;
+
+		LResult.reserve(UpCount * LUp.length());
+		for( size_t i = 0; i < UpCount; ++i )
+		{
+			LResult += LUp;
+		}
+
+		return LResult;
+	}
 
 
+
+
+	/*
+		Find all files with specific extension in given folder and it's subfolders.
+
+		@param Path - Path to directory to search.
+		@param AvailableExtensions - Array of extensions to search.
+		@param OutFilesInfo - Result of the file search.
+	*/
 	static inline void GetAllFilesWithExtensionsInFolder(const std::string& Path, const std::vector<std::string>& AvailableExtensions, std::vector<FGamlFileInfo>& OutFilesInfo)
 	{
 		OutFilesInfo.clear();
@@ -122,12 +205,18 @@ public:
 			}
 		}
 	}
-
+	/*
+		Find all files with GAML extension in given folder and it's subfolders (search both of sources and headers).
+	*/
 	static inline void GetAllGamlFilesInFolder(const std::string& Path, std::vector<FGamlFileInfo>& OutFilesInfo) 
 	{
 		GetAllFilesWithExtensionsInFolder(Path, {FCompilerConfig::COMPILE_FILE_EXTENSION, FCompilerConfig::HEADER_FILE_EXTENSION}, OutFilesInfo);
 	}
 
+	/*
+		@param Path - Directory to search.
+		@return first folder name from given directory.
+	*/
 	static std::string GetFirstFolderName(const std::string& Path) 
 	{
 		if( !std::filesystem::exists(Path) ) return "";
@@ -141,7 +230,9 @@ public:
 
 		return "";
 	}
-
+	/*
+		@return first existing folder from FoldersBestOrder.
+	*/
 	static std::string GetBestFolderName(const std::string& Path, const std::vector<std::string>& FoldersBestOrder)
 	{
 		for( const std::string& LFolderName : FoldersBestOrder )
@@ -153,37 +244,14 @@ public:
 		return "";
 	}
 
-	static inline std::string MakePathFromParts(const std::vector<std::string>& Parts, bool IncludeEndSeparator = false, char Separator = std::filesystem::path::preferred_separator) 
-	{ 
-		std::string LResult = "";
+	
 
-		for( const std::string& LPart : Parts )
-		{
-			LResult = CatPaths(LResult, LPart, Separator);
-		}
-		if( LResult.size() > 0 && !IncludeEndSeparator && LResult.back() == Separator )
-		{
-			LResult.resize(LResult.size() - 1); // without separator
-		}
+	/*
+		Read file into string.
 
-		return LResult;
-	}
-
-	static inline std::string MakeUpDirectoryStr(size_t UpCount)
-	{
-		std::string LResult = "";
-
-		for( size_t i = 0; i < UpCount; ++i )
-		{
-			LResult += "..";
-			LResult += std::filesystem::path::preferred_separator;
-		}
-
-		return LResult;
-	}
-
-
-
+		@param File - opened file to read.
+		@param OutFileSource - Result string.
+	*/
 	static inline void ReadAllFileToStr(std::ifstream& File, std::string& OutFileSource)
 	{
 		OutFileSource.clear();

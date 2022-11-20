@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
 #include "../Parser/ProgramSymbols.h"

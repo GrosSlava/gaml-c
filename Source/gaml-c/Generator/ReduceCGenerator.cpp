@@ -2,8 +2,6 @@
 
 #include "ReduceCGenerator.h"
 
-#include <cstdio>
-
 
 
 
@@ -12,7 +10,7 @@ void ReduceCGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
 {
 	GeneratedCodeStr = "/*\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetGenerationTime() + "\n";
-	GeneratedCodeStr += GetCompilerIdentifier() + "\n";
+	GeneratedCodeStr += FGeneratorHelperLibrary::GetCompilerIdentifier() + "\n";
 	GeneratedCodeStr += "*/\n\n\n";
 
 
@@ -66,172 +64,6 @@ void ReduceCGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
 		GeneratedCodeStr += "\n\n";
 	}
 	GeneratedCodeStr += "/*................................................................................................*/\n\n";
-}
-
-int ReduceCGenerator::RunThirdPartyCompiler(const std::string& FilePath, std::string& OutCompiledObjectFilePath)
-{
-	std::string ConsoleCommand = "";
-
-	switch( CurrentCompileOptions.TargetPlatform )
-	{
-	case ETargetPlatform::Windows:
-	{
-		OutCompiledObjectFilePath = GetOutputFilePath("obj");
-		break;
-	}
-	case ETargetPlatform::Linux:
-	{
-		OutCompiledObjectFilePath = GetOutputFilePath("o");
-		break;
-	}
-	default:
-	{
-		OutCompiledObjectFilePath = GetOutputFilePath("");
-		break;
-	}
-	}
-
-
-#if WINDOWS_32 || WINDOWS_64
-	ConsoleCommand += '\"' + FGeneratorHelperLibrary::GetMSVCHostDirectory();
-
-	// for compiling to target platform use native tools command prompt for VS
-	switch( CurrentCompileOptions.TargetArch )
-	{
-	case ETargetArch::x86:
-	{
-		ConsoleCommand += "\\x86\\cl.exe\" -arch:SSE2";
-		break;
-	}
-	case ETargetArch::x86_64:
-	{
-		ConsoleCommand += "\\x64\\cl.exe\" -arch:AVX2";
-		break;
-	}
-	case ETargetArch::arm:
-	{
-		ConsoleCommand += "\\arm\\cl.exe\" -arch:VFPv4";
-		break;
-	}
-	case ETargetArch::arm_64:
-	{
-		ConsoleCommand += "\\arm64\\cl.exe\" -arch:armv8.0";
-		break;
-	}
-	default:
-	{
-		RaiseError(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, 0, 0);
-		break;
-	}
-	}
-
-	ConsoleCommand += " -TC -Gd -c -nologo -Wall -Qspectre-";
-	ConsoleCommand += " -source-charset:utf-8 -execution-charset:utf-8"; // set charset
-	ConsoleCommand += " -fp:precise"; // set floating point behaviour
-	ConsoleCommand += ""; // set assembler syntax (intel syntax is by default, no option to set directly)
-	ConsoleCommand += ""; // disable exceptions (not pass argument for exception)
-
-	switch( CurrentCompileOptions.OptimizationLevel )
-	{
-	case EOptimizationLevel::NoOptimization:
-	{
-		ConsoleCommand += " -Od";
-		break;
-	}
-	case EOptimizationLevel::SizeOptimization:
-	{
-		ConsoleCommand += " -O1 -Os";
-		break;
-	}
-	case EOptimizationLevel::SpeedOptimization:
-	{
-		ConsoleCommand += " -O2 -Ot";
-		break;
-	}
-	}
-
-	if( CurrentCompileOptions.IsDebug ) ConsoleCommand += "";
-	if( CurrentCompileOptions.ConvertWarningsToErrors ) ConsoleCommand += " -WX";
-	if( CurrentCompileOptions.DumpAssembly ) ConsoleCommand += " -FAcs -Fa" + GetOutputDirectoryPath();
-	if( CurrentCompileOptions.NoBuiltin ) ConsoleCommand += "";
-	if( CurrentCompileOptions.Freestanding ) ConsoleCommand += "";
-	if( CurrentCompileOptions.NoStackProtection ) ConsoleCommand += " -GS-";
-	if( CurrentCompileOptions.NoRedZone ) ConsoleCommand += "";
-
-	ConsoleCommand += " -Fo" + OutCompiledObjectFilePath;
-#elif LINUX
-	switch( CurrentCompileOptions.TargetArch )
-	{
-	case ETargetArch::x86:
-	{
-		ConsoleCommand += "gcc -m32";
-		break;
-	}
-	case ETargetArch::x86_64:
-	{
-		ConsoleCommand += "gcc -m64";
-		break;
-	}
-	case ETargetArch::Arm:
-	{
-		ConsoleCommand += "gcc -marm";
-		break;
-	}
-	case ETargetArch::Arm_64:
-	{
-		ConsoleCommand += "gcc -marm";
-		break;
-	}
-	default:
-	{
-		RaiseError(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, 0, 0);
-		break;
-	}
-	}
-
-	ConsoleCommand += " -c -Wextra -Wall";
-	ConsoleCommand += " -fexec-charset=UTF-8 -finput-charset=UTF-8"; // set charset
-	ConsoleCommand += ""; // set floating point behaviour (use default options)
-	ConsoleCommand += " -masm=intel"; // set assembler syntax
-	ConsoleCommand += ""; // disable exceptions(gcc does not support exceptions because it is compiler for C)
-
-	switch( CurrentCompileOptions.OptimizationLevel )
-	{
-	case EOptimizationLevel::NoOptimization:
-	{
-		ConsoleCommand += " -O0";
-		break;
-	}
-	case EOptimizationLevel::SizeOptimization:
-	{
-		ConsoleCommand += " -Os";
-		break;
-	}
-	case EOptimizationLevel::SpeedOptimization:
-	{
-		ConsoleCommand += " -Ofast";
-		break;
-	}
-	}
-
-	if( CurrentCompileOptions.IsDebug ) ConsoleCommand += " -g";
-	if( CurrentCompileOptions.ConvertWarningsToErrors ) ConsoleCommand += " -Werror";
-	if( CurrentCompileOptions.DumpAssembly ) ConsoleCommand += " -S";
-	if( CurrentCompileOptions.NoBuiltin ) ConsoleCommand += " -fno-builtin";
-	if( CurrentCompileOptions.Freestanding ) ConsoleCommand += " -ffreestanding";
-	if( CurrentCompileOptions.NoStackProtection ) ConsoleCommand += " -fno-stack-protector";
-	if( CurrentCompileOptions.NoRedZone ) ConsoleCommand += " -mno-red-zone";
-
-	ConsoleCommand += " -o" + OutCompiledObjectFilePath;
-#else
-	RaiseError(EErrorMessageType::NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM, 0, 0);
-#endif
-	
-
-	ConsoleCommand += " ";
-	ConsoleCommand += FilePath;
-
-	return system(ConsoleCommand.c_str());
 }
 
 

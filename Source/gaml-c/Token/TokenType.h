@@ -10,6 +10,8 @@
 */
 enum class ETokenType
 {
+	// clang-format off
+
 	IDENTIFIER,
 
 	// relationship operators
@@ -99,7 +101,7 @@ enum class ETokenType
 	LINE_COMMENT,               // //
 	BLOCK_COMMENT_START,        // /*
 	BLOCK_COMMENT_END,          // */
-	FUNCTION_DESCRIPTION,		// ***
+	DESCRIPTION_BLOCK,			// ***
 
 	// other symbols
 	SEMICOLON,                  // ;
@@ -166,6 +168,7 @@ enum class ETokenType
 	// function
 	FUNCTION,                   // func
 	LAMBDA,                     // lambda
+	PARAM,						// param
 	RETURN,                     // return
 	EXTERN_C,					// extern_c
 	CDECL,						// cdecl
@@ -220,5 +223,6 @@ enum class ETokenType
 	IMPORT,                     // import
 	MODULE,                     // module
 	IMPLEMENT					// implement
-};
 
+	// clang-format on
+};

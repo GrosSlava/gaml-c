@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "GeneratorBase.h"
+#include "../CoreMinimal.h"
 
-#include <string>
+#include "GeneratorBase.h"
 
 
 
@@ -25,7 +25,6 @@ protected:
 
 	virtual std::string GetOutFileExtension() const override { return "c"; }
 	virtual void ProcessGeneration(const FProgramInfo& ProgramInfo) override;
-	virtual int RunThirdPartyCompiler(const std::string& FilePath, std::string& OutCompiledObjectFilePath) override;
 
 private:
 

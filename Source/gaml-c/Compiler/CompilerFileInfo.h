@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <string>
+#include "../CoreMinimal.h"
 
 
 
@@ -12,21 +12,23 @@
 */
 struct FGamlFileInfo
 {
-
 public:
 
 	inline FGamlFileInfo() { }
 	inline FGamlFileInfo(const std::string& InPathToFileOnly, const std::string& InFileNameOnly, const std::string& InExtensionOnly) :
 		PathToFileOnly(InPathToFileOnly), FileNameOnly(InFileNameOnly), ExtensionOnly(InExtensionOnly)
 	{
-	
 	}
 
 
 
 public:
 
+	/*
+		@return original concatanated path.
+	*/
 	inline std::string GetFileFullPath() const noexcept { return PathToFileOnly + FileNameOnly + "." + ExtensionOnly; }
+
 
 
 

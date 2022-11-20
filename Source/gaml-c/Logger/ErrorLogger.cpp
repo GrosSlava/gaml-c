@@ -64,8 +64,9 @@ void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File,
 
 FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 {
-	#define CASE_ERROR(Type) case EErrorMessageType::Type
+#define CASE_ERROR(Type) case EErrorMessageType::Type
 
+	// clang-format off
 	switch( MessageType )
 	{
 	// Initialization
@@ -138,6 +139,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	//Code generator
 	CASE_ERROR(NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM):	return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "No default compiler for current platform.");
 	CASE_ERROR(INVALID_ARCH_FOR_GENERATE):					return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid architecture type for default compiler.");
+	CASE_ERROR(INVALID_GENERATION_EXTENSION):				return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid generation file extension.");
 
 	// Linker
 	CASE_ERROR(NO_DEFAULT_LINKER_FOR_CURRENT_PLATFORM):		return FErrorInfo(EErrorStage::LINKER, EErrorType::ERROR, EWarningLevel::NoWarnings, "No default linker for current platform.");
@@ -146,6 +148,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(CANT_LINK_TO_TARGET_PLATFORM):				return FErrorInfo(EErrorStage::LINKER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Default linker can't create executable for target platform. Try to link on selected platform with native linker or with custom cross-compiler.");
 	
 	}
+	// clang-format on
 
 	return FErrorInfo(EErrorStage::INITIALIZATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "!!!EMPTY MESSAGE!!!");
 }

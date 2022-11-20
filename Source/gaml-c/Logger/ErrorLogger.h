@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "CompileLogger.h"
 #include "../Compiler/CompilerOptions.h"
 
@@ -93,6 +95,7 @@ enum class EErrorMessageType
 	/* Code generator */ 
 	NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM,
 	INVALID_ARCH_FOR_GENERATE,
+	INVALID_GENERATION_EXTENSION,
 
 	/* Linker */
 	NO_DEFAULT_LINKER_FOR_CURRENT_PLATFORM,
@@ -146,10 +149,20 @@ public:
 class FErrorLogger
 {
 public:
-
+	
+	/*
+		@param MessageType - Type of error.
+		@param File - Context file.
+		@param Line - Context line.
+		@param Pos - Context line.
+		@param CompileOptions - Current compilation options.
+	*/
 	static void Raise(EErrorMessageType MessageType, const std::string& File, size_t Line, size_t Pos, const FCompileOptions& CompileOptions);
 
 private:
 
+	/*
+		@return predefined error info based on MessageType.
+	*/
 	static FErrorInfo GetErrorInfo(EErrorMessageType MessageType);
 };
