@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 	std::vector<std::string> LObjectFilesPaths;
 	std::vector<std::string> LLibsFilesPaths;
 
+
 	LCompileOptions.PathToCompiler = argv[0];
 	ParseInputOptions(argc - 1, argv + 1, LCompileOptions, LSourceFilePaths, LObjectFilesPaths, LLibsFilesPaths);
 

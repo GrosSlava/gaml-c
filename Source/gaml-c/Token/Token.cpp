@@ -88,6 +88,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("//",						LINE_COMMENT)
 	CASE_LEXEME("/*",						BLOCK_COMMENT_START)
 	CASE_LEXEME("*/",						BLOCK_COMMENT_END)
+	CASE_LEXEME("***",						FUNCTION_DESCRIPTION)
 
 	CASE_LEXEME(";",						SEMICOLON)
 	CASE_LEXEME(":",						COLON)
@@ -97,6 +98,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("...",						VARIADIC)
 	CASE_LEXEME("$",						DOLLAR)
 	CASE_LEXEME("#",						SHARP)
+	CASE_LEXEME("@",						DOG)
 
 	if( IsIntegerLexeme(LexemeStr) )		{ Type = ETokenType::INTEGER_CONST;				return; }
 	if( IsFloatLexeme(LexemeStr) )			{ Type = ETokenType::FLOAT_CONST;				return; }
@@ -107,7 +109,6 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("false",					FALSE_CONST)
 	
 	CASE_LEXEME("void",						VOID)
-	CASE_LEXEME("any",						ANY)
 	CASE_LEXEME("class",					CLASS)
 	CASE_LEXEME("uint8",					UINT8)
 	CASE_LEXEME("uint16",					UINT16)
@@ -283,6 +284,7 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(LINE_COMMENT,				"line comment")
 	CASE_TOKEN(BLOCK_COMMENT_START,			"block comment start")
 	CASE_TOKEN(BLOCK_COMMENT_END,			"block comment end")
+	CASE_TOKEN(FUNCTION_DESCRIPTION,		"function description block")
 
 	CASE_TOKEN(SEMICOLON,					"semicolon")
 	CASE_TOKEN(COLON,						"colon")
@@ -292,6 +294,7 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(VARIADIC,					"variadic")
 	CASE_TOKEN(DOLLAR,						"dollar")
 	CASE_TOKEN(SHARP,						"sharp")
+	CASE_TOKEN(DOG,							"dog")
 
 	CASE_TOKEN(INTEGER_CONST,				"integer const")
 	CASE_TOKEN(FLOAT_CONST,					"float const")
@@ -302,7 +305,6 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(FALSE_CONST,					"false const")
 
 	CASE_TOKEN(VOID,						"void")
-	CASE_TOKEN(ANY,							"any")
 	CASE_TOKEN(CLASS,						"class")
 	CASE_TOKEN(UINT8,						"uint8")
 	CASE_TOKEN(UINT16,						"uint16")

@@ -99,6 +99,7 @@ enum class ETokenType
 	LINE_COMMENT,               // //
 	BLOCK_COMMENT_START,        // /*
 	BLOCK_COMMENT_END,          // */
+	FUNCTION_DESCRIPTION,		// ***
 
 	// other symbols
 	SEMICOLON,                  // ;
@@ -109,6 +110,7 @@ enum class ETokenType
 	VARIADIC,                   // ...
 	DOLLAR,						// $
 	SHARP,						// #
+	DOG,						// @
 
 
 
@@ -123,7 +125,6 @@ enum class ETokenType
 
 	// types
 	VOID,                       // void
-	ANY,						// any
 	CLASS,						// class
 	UINT8,                      // uint8
 	UINT16,                     // uint16

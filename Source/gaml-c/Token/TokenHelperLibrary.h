@@ -70,6 +70,7 @@ public:
 		case '<': return (c2 == '<' && c3 == '=');
 		case '>': return (c2 == '>' && c3 == '=');
 		case '.': return (c2 == '.' && c3 == '.');
+		case '*': return (c2 == '*' && c3 == '*');
 		}
 
 		return false;
@@ -81,8 +82,8 @@ public:
 	}
 
 	static inline bool IsSeparateSymbol(char c) noexcept
-	{
-		return IsWhitespace(c) || IsOperatorChar(c);
+	{ 
+		return IsWhitespace(c) || IsOperatorChar(c) || c == '@';
 	}
 
 	static inline bool IsLetter(const char c) noexcept
@@ -132,6 +133,7 @@ public:
 				!IsSign(c)			&&
 				(c != '_')			&&
 				(c != '$')			&&
+				(c != '@')			&&
 				(c != '#')			&&
 				(c != '"')			&&
 				(c != '\'');

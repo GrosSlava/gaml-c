@@ -44,26 +44,25 @@ struct FSymbolMetaInfo
 enum EStandardTypesID
 {
 	VOID_ID = 0,
-	ANY_ID = 1,
 	//CLASS_ID - it is build in template
-	UINT8_ID = 2,
-	UINT16_ID = 3,
-	UINT32_ID = 4,
-	UINT64_ID = 5,
-	INT8_ID = 6,
-	INT16_ID = 7,
-	INT32_ID = 8,
-	INT64_ID = 9,
-	ADDR_T_ID = 10,
-	FLOAT_ID = 11,
-	DOUBLE_ID = 12,
-	BOOL_ID = 13,
-	CHAR_ID = 14,
-	STRING_ID = 15,
+	UINT8_ID = 1,
+	UINT16_ID = 2,
+	UINT32_ID = 3,
+	UINT64_ID = 4,
+	INT8_ID = 5,
+	INT16_ID = 6,
+	INT32_ID = 7,
+	INT64_ID = 8,
+	ADDR_T_ID = 9,
+	FLOAT_ID = 10,
+	DOUBLE_ID = 11,
+	BOOL_ID = 12,
+	CHAR_ID = 13,
+	STRING_ID = 14,
 	//ARRAY_ID - it is build in template
-	VECTOR4D_ID = 16,
-	VECTOR3D_ID = 17,
-	VECTOR2D_ID = 18,
+	VECTOR4D_ID = 15,
+	VECTOR3D_ID = 16,
+	VECTOR2D_ID = 17,
 
 	StandardTypesID_MAX
 };

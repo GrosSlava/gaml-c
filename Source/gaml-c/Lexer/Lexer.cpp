@@ -494,7 +494,7 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 
 
 	//.......................Merge access modifier block.....................//
-	
+
 	for( size_t i = 0; i < OutTokens.size(); ++i )
 	{
 		while( 
@@ -513,6 +513,28 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 	}
 
 	OutTokens = LTokens;
+	LTokens.clear();
+
+	//.......................................................................//
+
+	
+	//....................Merge function description block...................//
+
+	for( size_t i = 0; i < OutTokens.size(); ++i )
+	{
+		while( (i + 2 < OutTokens.size()) && OutTokens[i].GetType() == ETokenType::STAR && OutTokens[i + 1].GetType() == ETokenType::STAR && OutTokens[i + 2].GetType() == ETokenType::STAR )
+		{
+			Token LToken(CurrentFileInfo, OutTokens[i].GetLexeme() + OutTokens[i + 1].GetLexeme() + OutTokens[i + 2].GetLexeme(), OutTokens[i].GetLine(), OutTokens[i].GetPos(), CurrentCompileOptions);
+			LTokens.push_back(LToken);
+			i += 3;
+		}
+
+		if( i >= OutTokens.size() ) break;
+		LTokens.push_back(OutTokens[i]);
+	}
+
+	OutTokens = LTokens;
+	LTokens.clear();
 
 	//.......................................................................//
 }

@@ -289,7 +289,7 @@ public:
 
 	static inline bool IsStandardType(ETokenType TokenType) noexcept
 	{
-		return	TokenType == ETokenType::VOID		|| TokenType == ETokenType::ANY			||
+		return	TokenType == ETokenType::VOID		|| 
 				TokenType == ETokenType::UINT8		|| TokenType == ETokenType::UINT16		|| TokenType == ETokenType::UINT32	|| TokenType == ETokenType::UINT64	||
 				TokenType == ETokenType::INT8		|| TokenType == ETokenType::INT16		|| TokenType == ETokenType::INT32	|| TokenType == ETokenType::INT64	|| 
 				TokenType == ETokenType::ADDR_T		|| TokenType == ETokenType::FLOAT		|| TokenType == ETokenType::DOUBLE	|| TokenType == ETokenType::BOOL	|| 
@@ -324,7 +324,7 @@ public:
 
 	static inline bool IsFunctionReturnStandardType(ETokenType TokenType) noexcept
 	{ 
-		return IsStandardType(TokenType) && TokenType != ETokenType::ANY;
+		return IsStandardType(TokenType);
 	}
 
 	static inline bool IsFunctionReturnStandardType(const Token& InToken) noexcept
@@ -334,7 +334,7 @@ public:
 
 	static inline bool IsFunctionReturnStandardType(int TypeID) noexcept
 	{ 
-		return IsStandardType(TypeID) && TypeID != EStandardTypesID::ANY_ID; 
+		return IsStandardType(TypeID); 
 	}
 
 	static inline bool IsBuiltinTemplateType(ETokenType TokenType) noexcept
@@ -355,7 +355,6 @@ public:
 		switch( InToken.GetType() )
 		{
 		case ETokenType::VOID:		return EStandardTypesID::VOID_ID;
-		case ETokenType::ANY:		return EStandardTypesID::ANY_ID;
 		case ETokenType::UINT8:		return EStandardTypesID::UINT8_ID;
 		case ETokenType::UINT16:	return EStandardTypesID::UINT16_ID;
 		case ETokenType::UINT32:	return EStandardTypesID::UINT32_ID;
@@ -450,7 +449,6 @@ public:
 			switch( (EStandardTypesID)TypeID )
 			{
 			case EStandardTypesID::VOID_ID:		return "vv";
-			case EStandardTypesID::ANY_ID:		return "a";
 			case EStandardTypesID::UINT8_ID:	return "u8";
 			case EStandardTypesID::UINT16_ID:	return "u16";
 			case EStandardTypesID::UINT32_ID:	return "u32";
