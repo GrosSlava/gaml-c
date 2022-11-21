@@ -27,7 +27,7 @@ struct FGenericPlatform
 		const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
 	)
 	// clang-format on
-	{ 
+	{
 		std::string ConsoleCommand = "";
 
 		switch( CompileOptions.TargetArch )
@@ -96,6 +96,75 @@ struct FGenericPlatform
 
 		ConsoleCommand += " ";
 		ConsoleCommand += FilePath;
+
+		return system(ConsoleCommand.c_str());
+	}
+
+	// clang-format off
+	static int RunThirdPartyLinker
+	(
+		const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
+		const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths
+	)
+	// clang-format on
+	{
+		std::string ConsoleCommand = "";
+
+		if( CompileOptions.TargetArch != FCompilerConfig::DEFAULT_TARGET_ARCH )
+		{
+			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, CompileOptions);
+		}
+
+		ConsoleCommand += "ld";
+
+		switch( CompileOptions.SubsystemType )
+		{
+		case ESubsystemType::Console:
+		{
+			ConsoleCommand += "";
+			break;
+		}
+		case ESubsystemType::Window:
+		{
+			ConsoleCommand += "";
+			break;
+		}
+		default:
+		{
+			FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, CompileOptions);
+			break;
+		}
+		}
+
+		for( const std::string& LLibSearchPath : CompileOptions.AdditionalLibsSearchingDirs )
+		{
+			ConsoleCommand += " -L" + LLibSearchPath;
+		}
+		for( const std::string& LLibFilePath : LibsFilesPaths )
+		{
+			if( LLibFilePath.empty() ) continue;
+			ConsoleCommand += " -l" + LLibFilePath;
+		}
+
+		if( CompileOptions.Freestanding )
+		{
+			ConsoleCommand += " -nostdlib";
+		}
+		else
+		{
+			ConsoleCommand += " -lm -lc -lgcc";
+		}
+		if( !CompileOptions.EntryPoint.empty() ) ConsoleCommand += " -e" + CompileOptions.EntryPoint;
+		if( CompileOptions.IsDebug ) ConsoleCommand += "";
+		if( CompileOptions.IsDLL ) ConsoleCommand += " -shared -fPIC";
+
+		ConsoleCommand += " -o" + OutputFilePath;
+
+		for( const std::string& LObjectFilePath : ObjectFilesPaths )
+		{
+			if( LObjectFilePath.empty() ) continue;
+			ConsoleCommand += " " + LObjectFilePath;
+		}
 
 		return system(ConsoleCommand.c_str());
 	}

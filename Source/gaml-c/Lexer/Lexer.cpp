@@ -451,7 +451,7 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 					CurrentLexeme += LSymbol;
 					// push on next iteration
 				}
-				else if( CurrentLexeme.size() == 1 && FTokenHelperLibrary::IsComplex(CurrentLexeme[0], LSymbol) )
+				else if( CurrentLexeme.size() == 1 && FTokenHelperLibrary::IsPotentialComplex(CurrentLexeme[0], LSymbol) )
 				{
 					CurrentLexeme += LSymbol;
 					// push on next iteration
@@ -463,7 +463,43 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 				}
 				else
 				{
-					PushCurrentLexeme(OutTokens, 1);
+					if( CurrentLexeme.size() == 3 )
+					{
+						if( FTokenHelperLibrary::IsComplex(CurrentLexeme[0], CurrentLexeme[1], CurrentLexeme[2]) )
+						{
+							PushCurrentLexeme(OutTokens, 1);
+						}
+						else if(FTokenHelperLibrary::IsComplex(CurrentLexeme[0], CurrentLexeme[1]))
+						{
+							const std::string Tmp = CurrentLexeme;
+
+							CurrentLexeme = Tmp.substr(0, 2);
+							PushCurrentLexeme(OutTokens, 2);
+
+							CurrentLexeme = Tmp.substr(2, 1);
+							PushCurrentLexeme(OutTokens, 1);
+						}
+						else if( FTokenHelperLibrary::IsComplex(CurrentLexeme[1], CurrentLexeme[2]) )
+						{
+							const std::string Tmp = CurrentLexeme;
+
+							CurrentLexeme = Tmp.substr(0, 1);
+							PushCurrentLexeme(OutTokens, 3);
+
+							CurrentLexeme = Tmp.substr(1, 2);
+							PushCurrentLexeme(OutTokens, 1);
+						}
+						else
+						{
+							PushCurrentLexeme(OutTokens, 1);
+						}
+						
+					}
+					else 
+					{
+						PushCurrentLexeme(OutTokens, 1);
+					}
+					
 
 					CurrentLexeme += LSymbol;
 					// push on next iteration
@@ -510,27 +546,6 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 			Token LToken(CurrentFileInfo, OutTokens[i].GetLexeme() + OutTokens[i + 1].GetLexeme(), OutTokens[i].GetLine(), OutTokens[i].GetPos(), CurrentCompileOptions);
 			LTokens.push_back(LToken);
 			i += 2;
-		}
-
-		if( i >= OutTokens.size() ) break;
-		LTokens.push_back(OutTokens[i]);
-	}
-
-	OutTokens = LTokens;
-	LTokens.clear();
-
-	//.......................................................................//
-
-
-	//....................Merge function description block...................//
-
-	for( size_t i = 0; i < OutTokens.size(); ++i )
-	{
-		while( (i + 2 < OutTokens.size()) && OutTokens[i].GetType() == ETokenType::STAR && OutTokens[i + 1].GetType() == ETokenType::STAR && OutTokens[i + 2].GetType() == ETokenType::STAR )
-		{
-			Token LToken(CurrentFileInfo, OutTokens[i].GetLexeme() + OutTokens[i + 1].GetLexeme() + OutTokens[i + 2].GetLexeme(), OutTokens[i].GetLine(), OutTokens[i].GetPos(), CurrentCompileOptions);
-			LTokens.push_back(LToken);
-			i += 3;
 		}
 
 		if( i >= OutTokens.size() ) break;

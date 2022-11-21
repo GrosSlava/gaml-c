@@ -52,7 +52,7 @@ public:
 	*/
 	inline size_t GetLine() const noexcept { return Line; }
 	/*
-		@return token start position in line.
+		@return token position in line.
 	*/
 	inline size_t GetPos() const noexcept { return Pos; }
 

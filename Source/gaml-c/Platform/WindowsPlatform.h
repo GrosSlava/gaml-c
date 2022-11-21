@@ -27,9 +27,9 @@ struct FGenericPlatform
 	(
 		const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
 		const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
-	) 
+	)
 	// clang-format on
-	{ 
+	{
 		std::string ConsoleCommand = "";
 
 		ConsoleCommand += '\"' + GetMSVCHostDirectory();
@@ -101,6 +101,101 @@ struct FGenericPlatform
 
 		ConsoleCommand += " ";
 		ConsoleCommand += FilePath;
+
+		return system(ConsoleCommand.c_str());
+	}
+
+	// clang-format off
+	static int RunThirdPartyLinker
+	(
+		const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
+		const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths
+	)
+	// clang-format on
+	{
+		std::string ConsoleCommand = "";
+
+		ConsoleCommand += '\"' + GetMSVCHostDirectory();
+
+		switch( CompileOptions.TargetArch )
+		{
+		case ETargetArch::x86:
+		{
+			ConsoleCommand += "\\x86\\link.exe\" -MACHINE:X86";
+			break;
+		}
+		case ETargetArch::x86_64:
+		{
+			ConsoleCommand += "\\x64\\link.exe\" -MACHINE:X64";
+			break;
+		}
+		case ETargetArch::arm:
+		{
+			ConsoleCommand += "\\arm\\link.exe\" -MACHINE:ARM";
+			break;
+		}
+		case ETargetArch::arm_64:
+		{
+			ConsoleCommand += "\\arm64\\link.exe\"-MACHINE:ARM64";
+			break;
+		}
+		default:
+		{
+			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, CompileOptions);
+			break;
+		}
+		}
+
+		ConsoleCommand += " -NOLOGO -DYNAMICBASE -INCREMENTAL";
+
+		switch( CompileOptions.SubsystemType )
+		{
+		case ESubsystemType::Console:
+		{
+			ConsoleCommand += " -SUBSYSTEM:CONSOLE";
+			break;
+		}
+		case ESubsystemType::Window:
+		{
+			ConsoleCommand += " -SUBSYSTEM:WINDOWS";
+			break;
+		}
+		default:
+		{
+			FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, CompileOptions);
+			break;
+		}
+		}
+
+		for( const std::string& LLibSearchPath : CompileOptions.AdditionalLibsSearchingDirs )
+		{
+			ConsoleCommand += " -LIBPATH:" + LLibSearchPath;
+		}
+		for( const std::string& LLibFilePath : LibsFilesPaths )
+		{
+			if( LLibFilePath.empty() ) continue;
+			ConsoleCommand += " " + LLibFilePath;
+		}
+
+		if( CompileOptions.Freestanding )
+		{
+			ConsoleCommand += " -NODEFAULTLIB";
+		}
+		else
+		{
+			// use native tools command prompt for VS
+		}
+		if( !CompileOptions.EntryPoint.empty() ) ConsoleCommand += " -ENTRY:" + CompileOptions.EntryPoint;
+		if( CompileOptions.IsDebug ) ConsoleCommand += " -DEBUG:FULL";
+		if( CompileOptions.IsDLL ) ConsoleCommand += " -DLL";
+
+		ConsoleCommand += " -OUT:" + OutputFilePath;
+
+		for( const std::string& LObjectFilePath : ObjectFilesPaths )
+		{
+			if( LObjectFilePath.empty() ) continue;
+			ConsoleCommand += " " + LObjectFilePath;
+		}
 
 		return system(ConsoleCommand.c_str());
 	}

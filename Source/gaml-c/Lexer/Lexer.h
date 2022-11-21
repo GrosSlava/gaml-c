@@ -65,7 +65,7 @@ private:
 		if( CurrentLexeme.empty() ) return;
 
 		size_t LLine = CurrentLine;
-		size_t LCurrentPos = CurrentPos;
+		size_t LCurrentPos = CurrentPos - CurrentLexeme.size();
 		if( PosBack > CurrentPos )
 		{
 			if( LLine > 0)

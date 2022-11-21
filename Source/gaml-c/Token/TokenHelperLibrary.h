@@ -47,7 +47,7 @@ struct FTokenHelperLibrary
 				('%' == c) || (':' == c) ||
 				('?' == c) || ('&' == c) ||
 				('|' == c) || (';' == c) || 
-				('@' == c) || ('#' == c);
+				('@' == c) || ('#' == c) || ('$' == c);
 		// clang-format on
 	}
 	/*
@@ -94,6 +94,13 @@ struct FTokenHelperLibrary
 		// clang-format on
 
 		return false;
+	}
+	/*
+		Check that c1, c2 are potential two-symbols or three-symbols operator. 
+	*/
+	static inline bool IsPotentialComplex(const char c1, const char c2) noexcept
+	{ 
+		return IsComplex(c1, c2) || IsComplex(c1, c2, '=') || IsComplex(c1, c2, '.') || IsComplex(c1, c2, '*');
 	}
 	/*
 		Check that s is complex token operator.

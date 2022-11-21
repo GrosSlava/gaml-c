@@ -142,7 +142,7 @@ void Compiler::DumpLexemes(const std::vector<Token>& Tokens)
 			LFile.put('\n');
 		}
 
-		const std::string LTypeStr = "[" + LToken.GetTypeAsStr() + "] ";
+		const std::string LTypeStr = "[" + LToken.GetTypeAsStr() + " \"" + LToken.GetLexeme() + "\" " + std::to_string(LToken.GetLine()) + ":" + std::to_string(LToken.GetPos()) + "] ";
 		LFile.write(LTypeStr.c_str(), LTypeStr.size());
 	}
 

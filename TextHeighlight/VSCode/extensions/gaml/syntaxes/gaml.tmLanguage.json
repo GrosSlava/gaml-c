@@ -21,7 +21,7 @@
 				},
 				{
 				"name": "keyword.other.gaml",
-				"match": "\\b(func|lambda|extern_c|cdecl|stdcall|fastcall|thiscall|sizeof|typeof|nameof|alignof|alignas|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|in|is|as|addr|cast|unsafe_cast|assert|static_assert|static_error|static_warning|static_message|import|module|implement|using)\\b"
+				"match": "\\b(func|lambda|param|extern_c|cdecl|stdcall|fastcall|thiscall|sizeof|typeof|nameof|alignof|alignas|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|in|is|as|addr|cast|unsafe_cast|assert|static_assert|static_error|static_warning|static_message|import|module|implement|using)\\b"
 				},
 				
 				{
@@ -40,7 +40,7 @@
 				
 				{
 				"name": "support.type.gaml",
-				"match": "\\b(void|any|class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
+				"match": "\\b(void|class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
 				}
 			]
 		},
