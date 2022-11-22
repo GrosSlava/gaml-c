@@ -2,13 +2,14 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "AST.h"
 #include "../Token/Token.h"
 #include "../Compiler/CompilerFileInfo.h"
 
-#include <string>
-#include <vector>
 #include <unordered_map>
+
 
 
 
@@ -17,6 +18,7 @@
 	Each object(methods/functions...) realization will be in AST.
 	Templates are instantiated into concrete objects after mention in code.
 */
+
 
 
 /*
@@ -34,9 +36,40 @@ struct FSymbolMetaInfo
 	size_t DeclaredAtLine = 0;
 };
 
+/*
+	Standard access modifiers.
+*/
+enum class EAccessModifier : unsigned char
+{
+	Public,
+	Protected,
+	Private
+};
 
+/*
+	Supported function calling conventions.
+*/
+enum class EFunctionCallingConvention : unsigned char
+{
+	DEFAULT, // default for current c-compiler
+	CDECL,	 // equal to thiscall(this - first argument)
+	STDCALL, // equal to pascal
+	FASTCALL,
+	THISCALL
+};
 
-
+/*
+	Structure of OOP.
+*/
+enum class EClassType : unsigned char
+{
+	UNDEFINED,
+	Struct,
+	Interface,
+	Object,
+	Component,
+	Enum
+};
 
 /*
 	ID for standard types.
@@ -45,28 +78,56 @@ enum EStandardTypesID
 {
 	VOID_ID = 0,
 	//CLASS_ID - it is build in template
-	UINT8_ID = 1,
-	UINT16_ID = 2,
-	UINT32_ID = 3,
-	UINT64_ID = 4,
-	INT8_ID = 5,
-	INT16_ID = 6,
-	INT32_ID = 7,
-	INT64_ID = 8,
-	ADDR_T_ID = 9,
-	FLOAT_ID = 10,
-	DOUBLE_ID = 11,
-	BOOL_ID = 12,
-	CHAR_ID = 13,
-	STRING_ID = 14,
+	UINT8_ID,
+	UINT16_ID,
+	UINT32_ID,
+	UINT64_ID,
+	INT8_ID,
+	INT16_ID,
+	INT32_ID,
+	INT64_ID,
+	ADDR_T_ID,
+	FLOAT_ID,
+	DOUBLE_ID,
+	BOOL_ID,
+	CHAR_ID,
+	STRING_ID,
 	//ARRAY_ID - it is build in template
-	VECTOR4D_ID = 15,
-	VECTOR3D_ID = 16,
-	VECTOR2D_ID = 17,
+	VECTOR4D_ID,
+	VECTOR3D_ID,
+	VECTOR2D_ID,
 
 	StandardTypesID_MAX
 };
 
+/*
+	All modifiers. Each language object can have only specific range of them.
+	So, analyser will check it.
+*/
+struct FModfiers
+{
+	EAccessModifier AccessModifier = EAccessModifier::Public;
+
+	bool IsExternC = false;
+	EFunctionCallingConvention CallingConvention = EFunctionCallingConvention::DEFAULT;
+	bool IsConst = false;
+	bool IsMutable = false;
+	bool IsStatic = false;
+	bool IsInline = false;
+	bool IsVirtual = false;
+	bool IsOverride = false;
+	bool IsAbstract = false;
+	bool IsFinal = false;
+	bool IsDeprecated = false;
+	bool IsUnimplemented = false;
+};
+
+
+
+
+/*
+	Symbol types.
+*/
 enum class ETypePathSwitch
 {
 	UNDEFINED,
@@ -74,17 +135,29 @@ enum class ETypePathSwitch
 	EClass,
 	EFunctionSignature
 };
-
+/*
+	Path to information about class.
+*/
 struct FClassTypePath
 {
+	/*
+		Class compile name.
+	*/
 	std::string ClassCompileName = "";
 };
-
+/*
+	Path to information about function signature.
+*/
 struct FFunctionSignaturePath
 {
+	/*
+		Build-time ID of function signature.
+	*/
 	int FunctionSignatureID = -1;
 };
-
+/*
+	Main struct to find path to type.
+*/
 struct FUserTypePath
 {
 	ETypePathSwitch PathSwitch = ETypePathSwitch::UNDEFINED;
@@ -97,89 +170,117 @@ struct FUserTypePath
 
 
 
-enum class EAccessModifier
-{
-	Public,
-	Protected,
-	Private
-};
-
-
-
+/*
+	Information about variable.
+*/
 struct FVariableInfo
 {
+	/*
+		Build-time type id.
+	*/
 	int TypeID = -1;
+	/*
+		Variable name.
+	*/
 	std::string VariableName = "";
 
-	EAccessModifier AccessModifier = EAccessModifier::Public;
-	bool IsConst = false;
-	bool IsMutable = false;
-	bool IsDeprecated = false;
-	bool IsStatic = false;
-
-	AST DefaultValueTree;
-
+	/*
+		Context modifiers.
+	*/
+	FModfiers Modifiers;
+	/*
+		Meta info.
+	*/
 	FSymbolMetaInfo MetaInfo;
+	/*
+		AST for default value.
+	*/
+	AST DefaultValueTree;
 };
 
-
-
-enum class EFunctionCallingConvention
+/*
+	Information about variable with compile-time data.
+*/
+struct FCompilingVariableInfo
 {
-	DEFAULT, // default for current c-compiler
-	CDECL,	 // equal to thiscall(this - first argument)
-	STDCALL, // equal to pascal
-	FASTCALL,
-	THISCALL
+	/*
+		Variable info.
+	*/
+	FVariableInfo VariableInfo;
+	/*
+		This variable declared in current translating module.
+	*/
+	bool IsInThisModule = false;
 };
 
+
+/*
+	Information about function signature.
+*/
 struct FFunctionSignatureInfo
 {
-	EFunctionCallingConvention FunctionCallingConvention = EFunctionCallingConvention::DEFAULT;
-	int ReturnTypeID = -1;
-	bool ReturnTypeIsConst = false;
+	/*
+		Info about function return.
+	*/
+	FVariableInfo Return;
+	/*
+		Info about function inputs.
+	*/
 	std::vector<FVariableInfo> Inputs;
 
-	EAccessModifier AccessModifier = EAccessModifier::Public;
-	bool IsStatic = false;
-	bool IsDeprecated = false;
-	bool IsUnimplemented = false;
-	bool IsInline = false;
-	bool IsVirtual = false;
-	bool IsConst = false;
-	bool IsAbstract = false;
-	bool IsOverride = false;
-	bool IsFinal = false;
-	bool IsExternC = false;
-
-	AST StaticCodeTree;
-
+	/*
+		Context modifiers.
+	*/
+	FModfiers Modifiers;
+	/*
+		Meta info.
+	*/
 	FSymbolMetaInfo MetaInfo;
+	/*
+		AST for function static code.
+	*/
+	AST StaticCodeTree;
 };
 
-
-
-enum class EClassType
+/*
+	Information about function for compile-time.
+	Function info is 2 parts: Signature and realization.
+*/
+struct FCompilingFunctionInfo
 {
-	UNDEFINED,
-	Struct,
-	Interface,
-	Object,
-	Component,
-	Enum
+	/*
+		Function realization AST.
+	*/
+	AST FunctionCodeTree;
 };
 
+
+/*
+	Information about class.
+*/
 struct FClassInfo
 {
+	/*
+		Class specialization.
+	*/
 	EClassType ClassType = EClassType::UNDEFINED;
+	/*
+		Array of parent build-time type IDs.
+	*/
 	std::vector<int> ParentTypesID;
+	/*
+		Data align. -1 means default.
+	*/
 	int Align = -1;
 
-	EAccessModifier AccessModifier = EAccessModifier::Public;
-	bool IsAbstract = false;
-	bool IsFinal = false;
-	bool IsDeprecated = false;
-	bool IsStatic = false;
+	/*
+		Context modifiers.
+	*/
+	FModfiers Modifiers;
+	/*
+		Meta info.
+	*/
+	FSymbolMetaInfo MetaInfo;
 
 	/*
 		After semantic analis there will be all variables from all parent classes.
@@ -197,12 +298,12 @@ struct FClassInfo
 		Value - compile function name.
 	*/
 	std::unordered_map<std::string, std::string> VirtualFunctionsTable;
-
-	FSymbolMetaInfo MetaInfo;
 };
 
 
-
+/*
+	Information about module.
+*/
 struct FModuleInfo
 {
 	/*
@@ -215,37 +316,39 @@ struct FModuleInfo
 	*/
 	std::unordered_map<std::string, std::string> ImportedModuleNameAliases;
 
-	bool IsDeprecated = false;
-	bool IsStatic = false;
-
+	/*
+		Context modifiers.
+	*/
+	FModfiers Modifiers;
+	/*
+		Meta info.
+	*/
 	FSymbolMetaInfo MetaInfo;
 };
 
 
-
-
-
+/*
+	Information about template code.
+*/
 struct FTemplateCodeInfo
 {
+	/*
+		Array of template arguments names.
+	*/
 	std::vector<std::string> TemplateArguments;
+	/*
+		Template static code AST.
+	*/
 	AST StaticCodeTree;
+	/*
+		Template code in tokens for lazy instantiation.
+	*/
 	std::vector<Token> TemplateCode;
-	bool DeclareFirst = false;
 
+	/*
+		Meta info.
+	*/
 	FSymbolMetaInfo MetaInfo;
-};
-
-
-
-struct FCompilingFunctionInfo
-{
-	AST FunctionCodeTree;
-};
-
-struct FCompilingVariableInfo
-{
-	FVariableInfo VariableInfo;
-	bool IsInThisModule = false;
 };
 
 
@@ -274,19 +377,6 @@ public:
 public:
 
 	/*
-		Key - class compile name.
-		Value - class info.
-	*/
-	std::unordered_map<std::string, FClassInfo> Classes;
-	/*
-		Key - function compile name.
-		Value - function signature info.
-	*/
-	std::unordered_map<std::string, FFunctionSignatureInfo> Functions;
-
-
-
-	/*
 		The name of the module, if we compile the module, otherwise we compile the executable file(tmp name "main"). 
 	*/
 	std::string MainModuleName = "";
@@ -297,8 +387,32 @@ public:
 	std::unordered_map<std::string, FModuleInfo> ImportedModulesInfo;
 
 
+	//........................Declaration information from all modules............................//
 
 	/*
+		All used classes in program.
+
+		Key - class compile name.
+		Value - class info.
+	*/
+	std::unordered_map<std::string, FClassInfo> Classes;
+	/*
+		All used functions in program.
+		Class methods are functions too.
+
+		Key - function compile name.
+		Value - function signature info.
+	*/
+	std::unordered_map<std::string, FFunctionSignatureInfo> Functions;
+	/*
+		Key - template code compile name.
+		Value - template code info.
+	*/
+	std::unordered_map<std::string, FTemplateCodeInfo> TemplateCode;
+
+	/*
+		Unique function signatures. Each new signature is new type with unique id.
+
 		Key - signature id.
 		Value - function signature.
 	*/
@@ -309,15 +423,18 @@ public:
 	*/
 	std::unordered_map<std::string, size_t> TypeAliases;
 	/*
-		Key - type id.
-		Value - path to type.
-
 		All types in compiling process will be cached here.
 		Function signatures id too.
+
+		Key - type id.
+		Value - path to type.
 	*/
 	std::vector<FUserTypePath> TypesMap;
 
+	//............................................................................................//
 
+
+	//.............................Translation information........................................//
 
 	/*
 		Key - function compile name.
@@ -325,23 +442,9 @@ public:
 	*/
 	std::unordered_map<std::string, FCompilingFunctionInfo> CompilingFunctionsAST;
 	/*
-		Index of available ID for new lambda function in this module.
-	*/
-	int CompilingLambdaFunctionsNum = 0;
-	/*
-		All lambda functions take first argument "void*".
-
-		Key - lambda function compile name.
-		Value - lambda data context class compile name.
-	*/
-	std::unordered_map<std::string, std::string> CompilingLambdaFunctionsToContextData;
-	/*
 		Cached static variables from all classes.
 	*/
 	std::vector<FCompilingVariableInfo> CompilingStaticVariables;
-	/*
-		Key - template code compile name.
-		Value - template code info.
-	*/
-	std::unordered_map<std::string, FTemplateCodeInfo> TemplateCode;
+
+	//............................................................................................//
 };

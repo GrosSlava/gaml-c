@@ -89,13 +89,13 @@ std::string ReduceCGenerator::GetFunctionSignatureCStr(const std::string& Functi
 
 
 	FVariableInfo LReturnVariableInfo;
-	LReturnVariableInfo.IsConst = FunctionInfo.ReturnTypeIsConst;
-	LReturnVariableInfo.TypeID = FunctionInfo.ReturnTypeID;
+	LReturnVariableInfo.Modifiers.IsConst = FunctionInfo.Return.Modifiers.IsConst;
+	LReturnVariableInfo.TypeID = FunctionInfo.Return.TypeID;
 
 	// We can't return pointer to function from function, only lambda. So, recursion will stop.
 	LResult += GetVariableDeclarationCStr(LReturnVariableInfo, true, false, false, ProgramInfo) + " ";
 
-	if( FunctionInfo.FunctionCallingConvention != EFunctionCallingConvention::DEFAULT ) LResult += GetCallingConventionCStr(FunctionInfo.FunctionCallingConvention) + " ";
+	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT ) LResult += GetCallingConventionCStr(FunctionInfo.Modifiers.CallingConvention) + " ";
 
 	LResult += FunctionCompileName;
 
@@ -139,12 +139,12 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 	{
 	case ETypePathSwitch::EStandard:
 	{
-		if( VariableInfo.IsConst && IncludeConst ) LResult += "const ";
+		if( VariableInfo.Modifiers.IsConst && IncludeConst ) LResult += "const ";
 
 		LResult += GetStandardTypeNameCStr(VariableInfo.TypeID);
 		if( 
 			IsFunctionArgument && 
-			((VariableInfo.IsConst && VariableInfo.TypeID == EStandardTypesID::STRING_ID) || VariableInfo.IsMutable)
+			((VariableInfo.Modifiers.IsConst && VariableInfo.TypeID == EStandardTypesID::STRING_ID) || VariableInfo.Modifiers.IsMutable)
 		  )
 		{
 			LResult += "*";
@@ -163,7 +163,7 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 		const std::string& LClassCompileName = LTypePath.ClassPath.ClassCompileName;
 		const FClassInfo& LClassInfo = ProgramInfo.Classes.at(LClassCompileName);
 
-		if( VariableInfo.IsConst && IncludeConst ) LResult += "const ";
+		if( VariableInfo.Modifiers.IsConst && IncludeConst ) LResult += "const ";
 
 		if( LClassInfo.ClassType == EClassType::Enum )
 		{
@@ -174,7 +174,7 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 			LResult += "struct " + LClassCompileName;
 		}
 
-		if( IsFunctionArgument && VariableInfo.IsMutable )
+		if( IsFunctionArgument && VariableInfo.Modifiers.IsMutable )
 		{
 			LResult += "*";
 		}
@@ -182,7 +182,7 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 		{
 			LResult += "*";
 		}
-		else if( IsFunctionArgument && VariableInfo.IsConst && LClassInfo.ClassType == EClassType::Struct )
+		else if( IsFunctionArgument && VariableInfo.Modifiers.IsConst && LClassInfo.ClassType == EClassType::Struct )
 		{
 			LResult += "*";
 		}
@@ -240,15 +240,15 @@ std::string ReduceCGenerator::GetFunctionPointerCStr(const std::string& Name, co
 	std::string LResult = "";
 
 	FVariableInfo LReturnVariableInfo;
-	LReturnVariableInfo.IsConst = FunctionInfo.ReturnTypeIsConst;
-	LReturnVariableInfo.TypeID = FunctionInfo.ReturnTypeID;
+	LReturnVariableInfo.Modifiers.IsConst = FunctionInfo.Return.Modifiers.IsConst;
+	LReturnVariableInfo.TypeID = FunctionInfo.Return.TypeID;
 
 	// We can't return pointer to function from function, only lambda. So, recursion will stop.
 	LResult += GetVariableDeclarationCStr(LReturnVariableInfo, true, false, false, ProgramInfo);
 	LResult += "(";
-	if( FunctionInfo.FunctionCallingConvention != EFunctionCallingConvention::DEFAULT ) LResult += GetCallingConventionCStr(FunctionInfo.FunctionCallingConvention) + " ";
+	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT ) LResult += GetCallingConventionCStr(FunctionInfo.Modifiers.CallingConvention) + " ";
 	LResult += "*";
-	if( FunctionInfo.IsConst && IncludeConst )
+	if( FunctionInfo.Modifiers.IsConst && IncludeConst )
 	{
 		LResult += "const";
 		if( !Name.empty() ) LResult += " ";
@@ -281,7 +281,7 @@ std::string ReduceCGenerator::GetClassVariablesCStr(const FClassInfo& ClassInfo,
 
 	for( const std::pair<std::string, FVariableInfo>& LVariableInfo : ClassInfo.Variables )
 	{
-		if( LVariableInfo.second.IsStatic ) continue; // static variables compile on another stage
+		if( LVariableInfo.second.Modifiers.IsStatic ) continue; // static variables compile on another stage
 
 		LResult += "\t" + GetVariableDeclarationCStr(LVariableInfo.second, false, true, false, ProgramInfo) + ";\n";
 	}

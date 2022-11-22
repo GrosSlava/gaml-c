@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "../Token/Token.h"
 #include "ProgramSymbols.h"
-
-#include <string>
 
 
 
@@ -20,22 +20,35 @@ const static std::string NameSeparator = "_0";
 */
 struct FParserHelperLibrary
 {
-public:
-
+	/*
+		Check that given token is open pair.
+	*/
 	static inline bool IsOpenPairToken(const Token& InToken) noexcept
 	{
 		const ETokenType LTokenType = InToken.GetType();
 
-		return LTokenType == ETokenType::LBRA || LTokenType == ETokenType::LPAR || LTokenType == ETokenType::LSQR || LTokenType == ETokenType::LTRI;
+		// clang-format off
+		return	LTokenType == ETokenType::LBRA || LTokenType == ETokenType::LPAR || 
+				LTokenType == ETokenType::LSQR || LTokenType == ETokenType::LTRI || 
+				LTokenType == ETokenType::DESCRIPTION_BLOCK;
+		// clang-format on
 	}
-
+	/*
+		Check that given token is close pair.
+	*/
 	static inline bool IsClosePairToken(const Token& InToken) noexcept
 	{
 		const ETokenType LTokenType = InToken.GetType();
 
-		return LTokenType == ETokenType::RBRA || LTokenType == ETokenType::RPAR || LTokenType == ETokenType::RSQR || LTokenType == ETokenType::RTRI;
+		// clang-format off
+		return	LTokenType == ETokenType::RBRA || LTokenType == ETokenType::RPAR ||
+				LTokenType == ETokenType::RSQR || LTokenType == ETokenType::RTRI || 
+				LTokenType == ETokenType::DESCRIPTION_BLOCK;
+		// clang-format on
 	}
-
+	/*
+		@return close pair based on given open pair.
+	*/
 	static inline ETokenType GetMatchClosePairType(const Token& InToken) noexcept
 	{
 		const ETokenType LTokenType = InToken.GetType();
@@ -46,11 +59,14 @@ public:
 		case ETokenType::LPAR: return ETokenType::RPAR;
 		case ETokenType::LSQR: return ETokenType::RSQR;
 		case ETokenType::LTRI: return ETokenType::RTRI;
+		case ETokenType::DESCRIPTION_BLOCK: return ETokenType::DESCRIPTION_BLOCK;
 		}
-		
+
 		return ETokenType::IDENTIFIER; // undefined
 	}
-
+	/*
+		@return open pair based on given close pair.
+	*/
 	static inline ETokenType GetMatchOpenPairType(const Token& InToken) noexcept
 	{
 		const ETokenType LTokenType = InToken.GetType();
@@ -61,13 +77,16 @@ public:
 		case ETokenType::RPAR: return ETokenType::LPAR;
 		case ETokenType::RSQR: return ETokenType::LSQR;
 		case ETokenType::RTRI: return ETokenType::LTRI;
+		case ETokenType::DESCRIPTION_BLOCK: return ETokenType::DESCRIPTION_BLOCK;
 		}
 
 		return ETokenType::IDENTIFIER; // undefined
 	}
-
+	/*
+		Check that pair TokenA matchs pair TokenB.
+	*/
 	static inline bool DoesPairTokensMatch(const Token& TokenA, const Token& TokenB) noexcept
-	{ 
+	{
 		ETokenType LLeftTokenType = ETokenType::IDENTIFIER;
 		ETokenType LRightTokenType = ETokenType::IDENTIFIER;
 
@@ -89,18 +108,29 @@ public:
 			LRightTokenType = TokenB.GetType();
 		}
 
+		// check that both of tokens set.
 		if( LLeftTokenType == ETokenType::IDENTIFIER || LRightTokenType == ETokenType::IDENTIFIER ) return false;
-		
 
+		// clang-format off
 		return	(LLeftTokenType == ETokenType::LBRA && LRightTokenType == ETokenType::RBRA) || 
 				(LLeftTokenType == ETokenType::LPAR && LRightTokenType == ETokenType::RPAR) ||
 				(LLeftTokenType == ETokenType::LSQR && LRightTokenType == ETokenType::RSQR) || 
 				(LLeftTokenType == ETokenType::LTRI && LRightTokenType == ETokenType::RTRI);
+		// clang-format on
 	}
 
 
 
-	static inline std::string GetClassCompileName(const std::string& ModuleName, const std::string& ClassName, const std::vector<std::string>& TemplateArgumentNames)
+
+	/*
+		Construct class compile name.
+
+		@param ModuleName - name of class module.
+		@param ClassName - class original name.
+		@param TemplateArgumentNames - array of template arguments if class instantiated from template.
+		@return constructed class name.
+	*/
+	static inline std::string GetClassCompileName(const std::string& ModuleName, const std::string& ClassName, const std::vector<std::string>& TemplateArgumentNames) noexcept
 	{
 		if( ClassName.empty() ) return "";
 
@@ -120,11 +150,22 @@ public:
 
 		return LClassCompileName;
 	}
+	/*
+		Construct function compile name.
 
+		@param ModuleName - name of function module.
+		@param ClassName - class original name.
+		@param OriginalName - function original name.
+		@param IsConst - function const overload.
+		@param ArgumentTypeNames - array of function argument types names.
+		@return constructed function name.
+	*/
+	// clang-format off
 	static inline std::string GetFunctionCompileName(
 														const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName, 
 														bool IsConst, const std::vector<std::string>& ArgumentTypeNames
-													)
+													) noexcept
+	// clang-format on
 	{
 		if( OriginalName.empty() ) return "";
 
@@ -154,11 +195,22 @@ public:
 
 		return LFunctionCompileName;
 	}
+	/*
+		Construct function compile name.
 
+		@param ModuleName - name of function module.
+		@param ClassName - class original name.
+		@param OriginalName - function original name.
+		@param FunctionSignatureInfo - function signature info.
+		@param ProgramInfo - current program info.
+		@return constructed function name.
+	*/
+	// clang-format off
 	static inline std::string GetFunctionCompileName(	
 														const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName,
 														const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
-													)
+													) noexcept
+	// clang-format on
 	{
 		std::vector<std::string> LArgumentsNames;
 
@@ -171,26 +223,17 @@ public:
 			LArgumentsNames.push_back(LTypeName);
 		}
 
-		return GetFunctionCompileName(ModuleName, ClassName, OriginalName, FunctionSignatureInfo.IsConst, LArgumentsNames);
+		return GetFunctionCompileName(ModuleName, ClassName, OriginalName, FunctionSignatureInfo.Modifiers.IsConst, LArgumentsNames);
 	}
+	/*
+		Construct static variable compile name.
 
-	static inline std::string GetLambdaCompileName(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo)
-	{
-		return GetFunctionCompileName("", "", "lam", FunctionSignatureInfo, ProgramInfo);
-	}
-
-	static inline std::string GetLambdaFunctionCompileName(const std::string& ModuleName, const FFunctionSignatureInfo& FunctionSignatureInfo, int LambdaID, const FProgramInfo& ProgramInfo)
-	{
-		const std::string LLambdaFunctionPureName = "lam_f" + std::to_string(LambdaID);
-		return GetFunctionCompileName(ModuleName, "", LLambdaFunctionPureName, FunctionSignatureInfo, ProgramInfo);
-	}
-
-	static inline std::string GetLambdaContextInfoCompileName(const std::string& ModuleName, const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo)
-	{
-		return GetFunctionCompileName(ModuleName, "", "lam_c", FunctionSignatureInfo, ProgramInfo);
-	}
-
-	static inline std::string GetStaticVariableCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName)
+		@param ModuleName - name of static variable module.
+		@param ClassName - class original name.
+		@param OriginalName - static variable original name.
+		@return constructed static variable name.
+	*/
+	static inline std::string GetStaticVariableCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName) noexcept
 	{
 		if( OriginalName.empty() ) return "";
 
@@ -210,8 +253,14 @@ public:
 
 		return VariableCompileName;
 	}
+	/*
+		Construct static variable compile name.
 
-	static inline std::string GetStaticVariableCompileName(const std::string& FunctionCompileName, const std::string& OriginalName)
+		@param FunctionCompileName - compile name of function where declared variable.
+		@param OriginalName - static variable original name.
+		@return constructed static variable name.
+	*/
+	static inline std::string GetStaticVariableCompileName(const std::string& FunctionCompileName, const std::string& OriginalName) noexcept
 	{
 		if( OriginalName.empty() ) return "";
 
@@ -227,8 +276,16 @@ public:
 
 		return VariableCompileName;
 	}
+	/*
+		Construct type alias compile name.
 
-	static std::string GetTypeAliasCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& FunctionName, const std::string& AliasName)
+		@param ModuleName - name of alias module.
+		@param ClassName - class original name.
+		@param FunctionName - function original name.
+		@param AliasName - alias original name.
+		@return constructed alias name.
+	*/
+	static inline std::string GetTypeAliasCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& FunctionName, const std::string& AliasName) noexcept
 	{
 		if( AliasName.empty() ) return "";
 
@@ -252,11 +309,22 @@ public:
 
 		return LAliasCompileName;
 	}
+	/*
+		Construct template compile name.
 
+		@param ModuleName - name of template module.
+		@param ClassName - class original name.
+		@param FunctionName - function original name.
+		@param TemplateCodeName - template original name.
+		@param TemplateArgumentNames - array of template arguments names.
+		@return constructed template name.
+	*/
+	// clang-format off
 	static inline std::string GetTemplateCodeCompileName(
 															const std::string& ModuleName, const std::string& ClassName, const std::string& FunctionName, 
 															const std::string& TemplateCodeName, const std::vector<std::string>& TemplateArgumentNames
-														)
+														) noexcept
+	// clang-format on
 	{
 		if( TemplateCodeName.empty() ) return "";
 
@@ -287,71 +355,71 @@ public:
 
 
 
+
+	/*
+		Check that given token is standard type.
+	*/
 	static inline bool IsStandardType(ETokenType TokenType) noexcept
 	{
+		// clang-format off
 		return	TokenType == ETokenType::VOID		|| 
 				TokenType == ETokenType::UINT8		|| TokenType == ETokenType::UINT16		|| TokenType == ETokenType::UINT32	|| TokenType == ETokenType::UINT64	||
 				TokenType == ETokenType::INT8		|| TokenType == ETokenType::INT16		|| TokenType == ETokenType::INT32	|| TokenType == ETokenType::INT64	|| 
 				TokenType == ETokenType::ADDR_T		|| TokenType == ETokenType::FLOAT		|| TokenType == ETokenType::DOUBLE	|| TokenType == ETokenType::BOOL	|| 
 				TokenType == ETokenType::CHAR		|| TokenType == ETokenType::STRING		||
 				TokenType == ETokenType::VECTOR4D	|| TokenType == ETokenType::VECTOR3D	|| TokenType == ETokenType::VECTOR2D;
+		// clang-format on
 	}
-
-	static inline bool IsStandardType(const Token& InToken) noexcept
-	{
-		return IsStandardType(InToken.GetType());
-	}
-
-	static inline bool IsStandardType(int TypeID) noexcept 
-	{ 
-		return TypeID >= 0 && TypeID < EStandardTypesID::StandardTypesID_MAX;
-	}
-
-	static inline bool IsVariableStandardType(ETokenType TokenType) noexcept 
-	{ 
-		return IsStandardType(TokenType) && TokenType != ETokenType::VOID;
-	}
-
-	static inline bool IsVariableStandardType(const Token& InToken) noexcept 
-	{ 
-		return IsVariableStandardType(InToken.GetType());
-	}
-
-	static inline bool IsVariableStandardType(int TypeID) noexcept 
-	{ 
-		return IsStandardType(TypeID) && TypeID != EStandardTypesID::VOID_ID; 
-	}
-
-	static inline bool IsFunctionReturnStandardType(ETokenType TokenType) noexcept
-	{ 
-		return IsStandardType(TokenType);
-	}
-
-	static inline bool IsFunctionReturnStandardType(const Token& InToken) noexcept
-	{ 
-		return IsFunctionReturnStandardType(InToken.GetType());
-	}
-
-	static inline bool IsFunctionReturnStandardType(int TypeID) noexcept
-	{ 
-		return IsStandardType(TypeID); 
-	}
-
-	static inline bool IsBuiltinTemplateType(ETokenType TokenType) noexcept
-	{ 
-		return TokenType == ETokenType::ARRAY || TokenType == ETokenType::CLASS;
-	}
-
-	static inline bool IsBuiltinTemplateType(const Token& InToken) noexcept 
-	{ 
-		return IsBuiltinTemplateType(InToken.GetType());
-	}
+	/*
+		Check that given token is standard type.
+	*/
+	static inline bool IsStandardType(const Token& InToken) noexcept { return IsStandardType(InToken.GetType()); }
+	/*
+		Check that given type ID is standard type.
+	*/
+	static inline bool IsStandardType(int TypeID) noexcept { return TypeID >= 0 && TypeID < EStandardTypesID::StandardTypesID_MAX; }
+	/*
+		Check that given token is standard type and can be used as variable type.
+	*/
+	static inline bool IsVariableStandardType(ETokenType TokenType) noexcept { return IsStandardType(TokenType) && TokenType != ETokenType::VOID; }
+	/*
+		Check that given token is standard type and can be used as variable type.
+	*/
+	static inline bool IsVariableStandardType(const Token& InToken) noexcept { return IsVariableStandardType(InToken.GetType()); }
+	/*
+		Check that given type ID is standard type and can be used as variable type.
+	*/
+	static inline bool IsVariableStandardType(int TypeID) noexcept { return IsStandardType(TypeID) && TypeID != EStandardTypesID::VOID_ID; }
+	/*
+		Check that given token is standard type and can be used as function return type.
+	*/
+	static inline bool IsFunctionReturnStandardType(ETokenType TokenType) noexcept { return IsStandardType(TokenType); }
+	/*
+		Check that given token is standard type and can be used as function return type.
+	*/
+	static inline bool IsFunctionReturnStandardType(const Token& InToken) noexcept { return IsFunctionReturnStandardType(InToken.GetType()); }
+	/*
+		Check that given type ID is standard type and can be used as function return type.
+	*/
+	static inline bool IsFunctionReturnStandardType(int TypeID) noexcept { return IsStandardType(TypeID); }
+	/*
+		Check that given token is builtin template type.
+	*/
+	static inline bool IsBuiltinTemplateType(ETokenType TokenType) noexcept { return TokenType == ETokenType::ARRAY || TokenType == ETokenType::CLASS; }
+	/*
+		Check that given token is builtin template type.
+	*/
+	static inline bool IsBuiltinTemplateType(const Token& InToken) noexcept { return IsBuiltinTemplateType(InToken.GetType()); }
 
 
 
 
+	/*
+		Try to convert token into standard type ID.
+	*/
 	static inline int GetStandardTypeID(const Token& InToken) noexcept
 	{
+		// clang-format off
 		switch( InToken.GetType() )
 		{
 		case ETokenType::VOID:		return EStandardTypesID::VOID_ID;
@@ -373,12 +441,15 @@ public:
 		case ETokenType::VECTOR3D:	return EStandardTypesID::VECTOR3D_ID;
 		case ETokenType::VECTOR2D:	return EStandardTypesID::VECTOR2D_ID;
 		}
+		// clang-format on
 
 		return -1;
 	}
-
+	/*
+		Try to get function signature ID.
+	*/
 	static inline int GetFunctionSignatureID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
-	{ 
+	{
 		for( int i = 0; i < ProgramInfo.FunctionSignaturesTypesMap.size(); ++i )
 		{
 			if( AreFunctionSignaturesSame(FunctionSignatureInfo, ProgramInfo.FunctionSignaturesTypesMap[i]) )
@@ -389,16 +460,20 @@ public:
 
 		return -1;
 	}
-
-	static inline int GetFunctionSignatureID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo)
+	/*
+		Try to get function signature ID.
+	*/
+	static inline int GetFunctionSignatureID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept
 	{
 		auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
 		if( LFunctionInfoIterator == ProgramInfo.Functions.end() ) return -1;
 
 		return GetFunctionSignatureID(LFunctionInfoIterator->second, ProgramInfo);
 	}
-
-	static inline int GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo)
+	/*
+		Try to get function signature as type ID.
+	*/
+	static inline int GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
 	{
 		const int LFunctionSignatureID = GetFunctionSignatureID(FunctionSignatureInfo, ProgramInfo);
 		if( LFunctionSignatureID < 0 ) return -1;
@@ -413,15 +488,19 @@ public:
 
 		return -1;
 	}
-
-	static inline int GetFunctionSignatureTypeID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo)
+	/*
+		Try to get function signature as type ID.
+	*/
+	static inline int GetFunctionSignatureTypeID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept
 	{
 		auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
 		if( LFunctionInfoIterator == ProgramInfo.Functions.end() ) return -1;
 
 		return GetFunctionSignatureTypeID(LFunctionInfoIterator->second, ProgramInfo);
 	}
-
+	/*
+		Try to get class as type ID.
+	*/
 	static inline int GetClassTypeID(const std::string& ClassCompileName, const FProgramInfo& ProgramInfo) noexcept
 	{
 		for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
@@ -434,8 +513,10 @@ public:
 
 		return -1;
 	}
-
-	static inline std::string GetTypeName(int TypeID, const FProgramInfo& ProgramInfo)
+	/*
+		Try to get type as string.
+	*/
+	static inline std::string GetTypeName(int TypeID, const FProgramInfo& ProgramInfo) noexcept
 	{
 		if( TypeID < 0 || TypeID >= ProgramInfo.TypesMap.size() ) return "";
 
@@ -446,7 +527,8 @@ public:
 		{
 		case ETypePathSwitch::EStandard:
 		{
-			switch( (EStandardTypesID)TypeID )
+			// clang-format off
+			switch( static_cast<EStandardTypesID>(TypeID) )
 			{
 			case EStandardTypesID::VOID_ID:		return "vv";
 			case EStandardTypesID::UINT8_ID:	return "u8";
@@ -467,6 +549,7 @@ public:
 			case EStandardTypesID::VECTOR3D_ID: return "v3";
 			case EStandardTypesID::VECTOR2D_ID: return "v2";
 			}
+			// clang-format on
 		}
 		case ETypePathSwitch::EClass:
 		{
@@ -482,56 +565,51 @@ public:
 		return "";
 	}
 
-	
-	
-	static inline bool IsFunctionLeftCpecifier(ETokenType TokenType) noexcept
-	{
-		return	TokenType == ETokenType::EXTERN_C || TokenType == ETokenType::INLINE || TokenType == ETokenType::VIRTUAL ||
-				TokenType == ETokenType::CDECL || TokenType == ETokenType::STDCALL || TokenType == ETokenType::FASTCALL || TokenType == ETokenType::THISCALL;
-				
-	}
 
-	static inline bool IsFunctionLeftCpecifier(const Token& InToken) noexcept
-	{
-		return IsFunctionLeftCpecifier(InToken.GetType());
-	}
 
-	static inline bool IsFunctionRightCpecifier(ETokenType TokenType) noexcept
-	{
-		return TokenType == ETokenType::CONST || TokenType == ETokenType::OVERRIDE || TokenType == ETokenType::ABSTRACT || TokenType == ETokenType::FINAL || TokenType == ETokenType::UNIMPLEMENTED;
-	}
 
-	static inline bool IsFunctionRightCpecifier(const Token& InToken) noexcept
+	/*
+		Check that given token is modifier.
+	*/
+	static inline bool IsModifierToken(ETokenType TokenType) noexcept
 	{
-		return IsFunctionRightCpecifier(InToken.GetType());
+		// clang-format off
+		return	TokenType == ETokenType::EXTERN_C || 
+				TokenType == ETokenType::CDECL || TokenType == ETokenType::STDCALL || TokenType == ETokenType::FASTCALL || TokenType == ETokenType::THISCALL || 
+				TokenType == ETokenType::CONST || TokenType == ETokenType::MUTABLE || TokenType == ETokenType::STATIC ||  
+				TokenType == ETokenType::INLINE || TokenType == ETokenType::VIRTUAL || TokenType == ETokenType::OVERRIDE || 
+				TokenType == ETokenType::ABSTRACT || TokenType == ETokenType::FINAL	|| 
+				TokenType == ETokenType::DEPRECATED || TokenType == ETokenType::UNIMPLEMENTED;
+		// clang-format on
 	}
+	/*
+		Check that given token is modifier.
+	*/
+	static inline bool IsModifierToken(const Token& InToken) noexcept { return IsModifierToken(InToken.GetType()); }
 
-	static inline bool IsFunctionArgumentCpecifier(ETokenType TokenType) noexcept
-	{
-		return TokenType == ETokenType::CONST || TokenType == ETokenType::MUTABLE || IsVariableStandardType(TokenType);
-	}
 
-	static inline bool IsFunctionArgumentCpecifier(const Token& InToken) noexcept
-	{
-		return IsFunctionArgumentCpecifier(InToken.GetType());
-	}
 
+
+	/*
+		Check that given function signatures are same.
+	*/
 	static inline bool AreFunctionSignaturesSame(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept
 	{
 		if( FS1.Inputs.size() != FS2.Inputs.size() ) return false;
 
-		for( int i = 0; i < FS1.Inputs.size(); ++i)
+		for( int i = 0; i < FS1.Inputs.size(); ++i )
 		{
 			if( FS1.Inputs[i].TypeID != FS2.Inputs[i].TypeID ) return false;
 		}
 
-		if( FS1.IsConst != FS2.IsConst ) return false;
+		if( FS1.Modifiers.IsConst != FS2.Modifiers.IsConst ) return false;
 
 		return true;
 	}
 
-
-
+	/*
+		Find first module name declaration in tokens array.
+	*/
 	static inline std::string GetFirstModuleName(const std::vector<Token>& Tokens) noexcept
 	{
 		if( Tokens.empty() ) return "";

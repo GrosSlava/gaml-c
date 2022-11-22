@@ -34,7 +34,7 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 			LPairTokensStack.push_back(LToken);
 			continue;
 		}
-		
+
 		if( FParserHelperLibrary::IsClosePairToken(LToken) )
 		{
 			if( LPairTokensStack.empty() )
@@ -59,6 +59,11 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 				case ETokenType::LTRI:
 				{
 					RaiseError(EErrorMessageType::EXPECTED_LTRI, LToken);
+					return;
+				}
+				case ETokenType::DESCRIPTION_BLOCK:
+				{
+					RaiseError(EErrorMessageType::EXPECTED_DESCRIPTION_BLOCK, LToken);
 					return;
 				}
 				}
@@ -88,6 +93,11 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 				case ETokenType::RTRI:
 				{
 					RaiseError(EErrorMessageType::EXPECTED_RTRI, LToken);
+					return;
+				}
+				case ETokenType::DESCRIPTION_BLOCK:
+				{
+					RaiseError(EErrorMessageType::EXPECTED_DESCRIPTION_BLOCK, LToken);
 					return;
 				}
 				}
@@ -120,10 +130,12 @@ void Parser::ProcessSymbolsScanning(const std::vector<Token>& Tokens, FProgramIn
 		if( LState == nullptr )
 		{
 			RaiseError(EErrorMessageType::INVALID_STATE, LToken);
+			return;
 		}
 	}
 	if( LState != LParserStates.GDefault_ParserState )
 	{
 		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, CurrentFileInfo.GetFileFullPath(), 0, 0, CurrentCompileOptions);
+		return;
 	}
 }

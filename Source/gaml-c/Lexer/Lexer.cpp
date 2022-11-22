@@ -26,7 +26,7 @@ void Lexer::Process(const std::string& Code, const FGamlFileInfo& FileInfo, cons
 
 
 
-enum class ESpiltCommentState
+enum class ESpiltCommentState : unsigned char
 {
 	DEFAULT,
 	PossibleInComment,
@@ -36,14 +36,14 @@ enum class ESpiltCommentState
 	CommentEnd
 };
 
-enum class ESpiltStringState
+enum class ESpiltStringState : unsigned char
 {
 	DEFAULT,
 	CharOpen,
 	StringOpen
 };
 
-enum class ESpiltNumberState
+enum class ESpiltNumberState : unsigned char
 {
 	DEFAULT,
 	HasNumber,

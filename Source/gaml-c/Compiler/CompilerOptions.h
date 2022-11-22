@@ -13,7 +13,7 @@
 /*
 	Types of code optimization.
 */
-enum class EOptimizationLevel
+enum class EOptimizationLevel : unsigned char
 {
 	NoOptimization = 0,
 	SizeOptimization = 1,
@@ -23,7 +23,7 @@ enum class EOptimizationLevel
 /*
 	Types of severity of the warning.
 */
-enum class EWarningLevel
+enum class EWarningLevel : unsigned char
 {
 	NoWarnings = 0,
 	SeriousWarning = 1,
@@ -34,7 +34,7 @@ enum class EWarningLevel
 /*
 	Types of available code generations.
 */
-enum class ECodeGenerationType
+enum class ECodeGenerationType : unsigned char
 {
 	ReduceC,
 	LLVM,
@@ -44,7 +44,7 @@ enum class ECodeGenerationType
 /*
 	Type of subsystem for which the executable file is intended.
 */
-enum class ESubsystemType
+enum class ESubsystemType : unsigned char
 {
 	Console,
 	Window

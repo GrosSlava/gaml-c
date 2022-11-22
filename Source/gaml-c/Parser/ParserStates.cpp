@@ -143,8 +143,8 @@ IParserState* DeclareAnyDeprecated_ParserState::Process(FParserStates& InParserS
 	{
 	case ETokenType::MODULE:
 	{
-		InParserStates.ModuleDeclarationContext.ModuleInfo.IsDeprecated = true;
-		InParserStates.ModuleDeclarationContext.ModuleInfo.IsStatic = InParserStates.IsStaticContext;
+		InParserStates.ModuleDeclarationContext.ModuleInfo.Modifiers.IsDeprecated = true;
+		InParserStates.ModuleDeclarationContext.ModuleInfo.Modifiers.IsStatic = InParserStates.IsStaticContext;
 
 		return InParserStates.GStartDeclareModule_ParserState;
 	}
@@ -152,9 +152,9 @@ IParserState* DeclareAnyDeprecated_ParserState::Process(FParserStates& InParserS
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
-		InParserStates.FunctionDeclarationContext.SignatureInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.FunctionDeclarationContext.SignatureInfo.IsDeprecated = true;
-		InParserStates.FunctionDeclarationContext.SignatureInfo.IsStatic = InParserStates.IsStaticContext;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsDeprecated = true;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsStatic = InParserStates.IsStaticContext;
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
@@ -164,9 +164,9 @@ IParserState* DeclareAnyDeprecated_ParserState::Process(FParserStates& InParserS
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = true;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = InParserStates.IsStaticContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = InParserStates.IsStaticContext;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -176,9 +176,9 @@ IParserState* DeclareAnyDeprecated_ParserState::Process(FParserStates& InParserS
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = true;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = InParserStates.IsStaticContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = InParserStates.IsStaticContext;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -188,9 +188,9 @@ IParserState* DeclareAnyDeprecated_ParserState::Process(FParserStates& InParserS
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = true;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = InParserStates.IsStaticContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = InParserStates.IsStaticContext;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -200,9 +200,9 @@ IParserState* DeclareAnyDeprecated_ParserState::Process(FParserStates& InParserS
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = true;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = InParserStates.IsStaticContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = InParserStates.IsStaticContext;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -212,9 +212,9 @@ IParserState* DeclareAnyDeprecated_ParserState::Process(FParserStates& InParserS
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = true;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = InParserStates.IsStaticContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = InParserStates.IsStaticContext;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -237,8 +237,8 @@ IParserState* DeclareAnyStatic_ParserState::Process(FParserStates& InParserState
 	{
 	case ETokenType::MODULE:
 	{
-		InParserStates.ModuleDeclarationContext.ModuleInfo.IsDeprecated = InParserStates.IsDeprecatedContext;
-		InParserStates.ModuleDeclarationContext.ModuleInfo.IsStatic = true;
+		InParserStates.ModuleDeclarationContext.ModuleInfo.Modifiers.IsDeprecated = InParserStates.IsDeprecatedContext;
+		InParserStates.ModuleDeclarationContext.ModuleInfo.Modifiers.IsStatic = true;
 
 		return InParserStates.GStartDeclareModule_ParserState;
 	}
@@ -246,9 +246,9 @@ IParserState* DeclareAnyStatic_ParserState::Process(FParserStates& InParserState
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
-		InParserStates.FunctionDeclarationContext.SignatureInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.FunctionDeclarationContext.SignatureInfo.IsDeprecated = InParserStates.IsDeprecatedContext;
-		InParserStates.FunctionDeclarationContext.SignatureInfo.IsStatic = true;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsDeprecated = InParserStates.IsDeprecatedContext;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsStatic = true;
 
 
 		return InParserStates.GStartDeclareFunction_ParserState;
@@ -259,9 +259,9 @@ IParserState* DeclareAnyStatic_ParserState::Process(FParserStates& InParserState
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = InParserStates.IsDeprecatedContext;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = InParserStates.IsDeprecatedContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = true;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -271,9 +271,9 @@ IParserState* DeclareAnyStatic_ParserState::Process(FParserStates& InParserState
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = InParserStates.IsDeprecatedContext;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = InParserStates.IsDeprecatedContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = true;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -283,9 +283,9 @@ IParserState* DeclareAnyStatic_ParserState::Process(FParserStates& InParserState
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = InParserStates.IsDeprecatedContext;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = InParserStates.IsDeprecatedContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = true;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -295,9 +295,9 @@ IParserState* DeclareAnyStatic_ParserState::Process(FParserStates& InParserState
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = InParserStates.IsDeprecatedContext;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = InParserStates.IsDeprecatedContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = true;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -307,9 +307,9 @@ IParserState* DeclareAnyStatic_ParserState::Process(FParserStates& InParserState
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = InParserStates.AccessModifierContextType;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsDeprecated = InParserStates.IsDeprecatedContext;
-		InParserStates.ClassDeclarationContext.ClassInfo.IsStatic = true;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsDeprecated = InParserStates.IsDeprecatedContext;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.IsStatic = true;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -329,7 +329,7 @@ IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParse
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
-		InParserStates.FunctionDeclarationContext.SignatureInfo.AccessModifier = EAccessModifier::Public;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.AccessModifier = EAccessModifier::Public;
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
@@ -339,7 +339,7 @@ IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParse
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -349,7 +349,7 @@ IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParse
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -359,7 +359,7 @@ IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParse
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -369,7 +369,7 @@ IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParse
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -379,7 +379,7 @@ IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParse
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -409,7 +409,7 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
-		InParserStates.FunctionDeclarationContext.SignatureInfo.AccessModifier = EAccessModifier::Private;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.AccessModifier = EAccessModifier::Private;
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
@@ -419,7 +419,7 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -429,7 +429,7 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -439,7 +439,7 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -449,7 +449,7 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -459,7 +459,7 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
-		InParserStates.ClassDeclarationContext.ClassInfo.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -639,114 +639,115 @@ IParserState* ImportModule3_ParserState::Process(FParserStates& InParserStates, 
 
 IParserState* StartDeclareFunction_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	if( FParserHelperLibrary::IsFunctionLeftCpecifier(InToken) )
+	//if( FParserHelperLibrary::IsFunctionLeftCpecifier(InToken) )
+	if( false )
 	{
 		switch( InToken.GetType() )
 		{
 		case ETokenType::EXTERN_C:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsExternC )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsExternC )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsExternC = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsExternC = true;
 			return InParserStates.GStartDeclareFunction_ParserState;
 		}
 		case ETokenType::CDECL:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention != EFunctionCallingConvention::DEFAULT )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention = EFunctionCallingConvention::CDECL;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention = EFunctionCallingConvention::CDECL;
 			return InParserStates.GStartDeclareFunction_ParserState;
 		}
 		case ETokenType::STDCALL:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention != EFunctionCallingConvention::DEFAULT )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention = EFunctionCallingConvention::STDCALL;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention = EFunctionCallingConvention::STDCALL;
 			return InParserStates.GStartDeclareFunction_ParserState;
 		}
 		case ETokenType::FASTCALL:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention != EFunctionCallingConvention::DEFAULT )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention = EFunctionCallingConvention::FASTCALL;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention = EFunctionCallingConvention::FASTCALL;
 			return InParserStates.GStartDeclareFunction_ParserState;
 		}
 		case ETokenType::THISCALL:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention != EFunctionCallingConvention::DEFAULT )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.FunctionCallingConvention = EFunctionCallingConvention::THISCALL;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.CallingConvention = EFunctionCallingConvention::THISCALL;
 			return InParserStates.GStartDeclareFunction_ParserState;
 		}
 		case ETokenType::INLINE:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsInline )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsInline )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsInline = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsInline = true;
 			return InParserStates.GStartDeclareFunction_ParserState;
 		}
 		case ETokenType::VIRTUAL:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsVirtual )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsVirtual )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsVirtual = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsVirtual = true;
 			return InParserStates.GStartDeclareFunction_ParserState;
 		}
 		}
 	}
 	else if( InToken.GetType() == ETokenType::CONST )
 	{
-		if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID != -1 )
+		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Return.TypeID != -1 )
 		{
 			InParserStates.RaiseError(EErrorMessageType::EXPECTED_FUNCTION_NAME, InToken);
 			return nullptr;
 		}
-		else if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeIsConst )
+		else if( InParserStates.FunctionDeclarationContext.SignatureInfo.Return.Modifiers.IsConst )
 		{
 			InParserStates.RaiseError(EErrorMessageType::FUNCTION_RETURN_TYPE_DOUBLE_CPECIFIER, InToken);
 			return nullptr;
 		}
 
-		InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeIsConst = true;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Return.Modifiers.IsConst = true;
 		return InParserStates.GDeclareFunction1_ParserState;
 	}
 	else if( FParserHelperLibrary::IsFunctionReturnStandardType(InToken) )
 	{
-		if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID != -1 )
+		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Return.TypeID != -1 )
 		{
 			InParserStates.RaiseError(EErrorMessageType::EXPECTED_FUNCTION_NAME, InToken);
 			return nullptr;
 		}
 
-		InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Return.TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
 		return InParserStates.GDeclareFunction2_ParserState;
 	}
 	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
@@ -755,7 +756,7 @@ IParserState* StartDeclareFunction_ParserState::Process(FParserStates& InParserS
 	}
 	else if( InToken.GetType() == ETokenType::IDENTIFIER )
 	{
-		if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID != -1 )
+		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Return.TypeID != -1 )
 		{
 			InParserStates.RaiseError(EErrorMessageType::EXPECTED_FUNCTION_NAME, InToken);
 			return nullptr;
@@ -777,13 +778,13 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 {
 	if( FParserHelperLibrary::IsFunctionReturnStandardType(InToken) )
 	{
-		if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID != -1 )
+		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Return.TypeID != -1 )
 		{
 			InParserStates.RaiseError(EErrorMessageType::EXPECTED_FUNCTION_NAME, InToken);
 			return nullptr;
 		}
 
-		InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Return.TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
 		return InParserStates.GDeclareFunction2_ParserState;
 	}
 	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
@@ -792,7 +793,7 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 	}
 	else if( InToken.GetType() == ETokenType::IDENTIFIER )
 	{
-		if( InParserStates.FunctionDeclarationContext.SignatureInfo.ReturnTypeID != -1 )
+		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Return.TypeID != -1 )
 		{
 			InParserStates.RaiseError(EErrorMessageType::EXPECTED_FUNCTION_NAME, InToken);
 			return nullptr;
@@ -877,7 +878,7 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.empty() )
 		{
 			FVariableInfo LVariableInfo;
-			LVariableInfo.IsConst = true;
+			LVariableInfo.Modifiers.IsConst = true;
 			InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.push_back(LVariableInfo);
 		}
 		else
@@ -892,14 +893,14 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 				InParserStates.RaiseError(EErrorMessageType::EXPECTED_ARGUMENT_NAME, InToken);
 				return nullptr;
 			}
-			else if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().IsConst )
+			else if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().Modifiers.IsConst )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_MEMBER_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 			else
 			{
-				InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().IsConst = true;
+				InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().Modifiers.IsConst = true;
 			}
 		}
 
@@ -910,7 +911,7 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 		if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.empty() )
 		{
 			FVariableInfo LVariableInfo;
-			LVariableInfo.IsMutable = true;
+			LVariableInfo.Modifiers.IsMutable = true;
 			InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.push_back(LVariableInfo);
 		}
 		else
@@ -925,14 +926,14 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 				InParserStates.RaiseError(EErrorMessageType::EXPECTED_ARGUMENT_NAME, InToken);
 				return nullptr;
 			}
-			else if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().IsMutable )
+			else if( InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().Modifiers.IsMutable )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_MEMBER_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 			else
 			{
-				InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().IsMutable = true;
+				InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs.back().Modifiers.IsMutable = true;
 			}
 		}
 
@@ -1098,63 +1099,64 @@ IParserState* DeclareFunction5_ParserState::Process(FParserStates& InParserState
 
 IParserState* DeclareFunction6_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	if( FParserHelperLibrary::IsFunctionRightCpecifier(InToken) )
+	//if( FParserHelperLibrary::IsFunctionRightCpecifier(InToken) )
+	if( false )
 	{
 		switch( InToken.GetType() )
 		{
 		case ETokenType::CONST:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsConst )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsConst )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsConst = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsConst = true;
 			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::OVERRIDE:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsOverride )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsOverride )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsOverride = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsOverride = true;
 			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::ABSTRACT:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsAbstract )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsAbstract )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsAbstract = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsAbstract = true;
 			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::FINAL:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsFinal )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsFinal )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsFinal = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsFinal = true;
 			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		case ETokenType::UNIMPLEMENTED:
 		{
-			if( InParserStates.FunctionDeclarationContext.SignatureInfo.IsUnimplemented )
+			if( InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsUnimplemented )
 			{
 				InParserStates.RaiseError(EErrorMessageType::FUNCTION_DOUBLE_SPECIFIER, InToken);
 				return nullptr;
 			}
 
-			InParserStates.FunctionDeclarationContext.SignatureInfo.IsUnimplemented = true;
+			InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.IsUnimplemented = true;
 			return InParserStates.GDeclareFunction6_ParserState;
 		}
 		}
@@ -1997,7 +1999,7 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 
 	OutProgramInfo.Functions.insert(std::pair<std::string, FFunctionSignatureInfo>(LFunctionCompileName, FunctionDeclarationContext.SignatureInfo));
 
-	if( StateContextType == EStateContextType::InClass && FunctionDeclarationContext.SignatureInfo.IsVirtual || FunctionDeclarationContext.SignatureInfo.IsOverride )
+	if( StateContextType == EStateContextType::InClass && FunctionDeclarationContext.SignatureInfo.Modifiers.IsVirtual || FunctionDeclarationContext.SignatureInfo.Modifiers.IsOverride )
 	{
 		ClassDeclarationContext.ClassInfo.VirtualFunctionsTable.insert(std::pair<std::string, std::string>(FunctionDeclarationContext.FunctionName, LFunctionCompileName));
 	}
@@ -2160,7 +2162,7 @@ bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutP
 
 std::string FParserStates::GetCTXFunctionCompileName(const FProgramInfo& OutProgramInfo) const
 {
-	if( FunctionDeclarationContext.SignatureInfo.IsExternC )
+	if( FunctionDeclarationContext.SignatureInfo.Modifiers.IsExternC )
 	{
 		return FParserHelperLibrary::GetFunctionCompileName("", "", FunctionDeclarationContext.FunctionName, FunctionDeclarationContext.SignatureInfo, OutProgramInfo);
 	}
