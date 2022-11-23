@@ -3,7 +3,11 @@ import MyModule as M; // import our module with alias, alias is visible only in 
 
 
 
-func void main()
+
+***
+    // Program entry point.
+***
+func main
 {
     // call our module functions
     M::foo();

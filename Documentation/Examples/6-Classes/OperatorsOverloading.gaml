@@ -9,46 +9,54 @@
 
 struct FMyStruct 
 {
+    ***
+        /*
+            Overloading binary operator. 
+            Result will be new copy of struct.
+        */
 
-    /*
-        Overloading binary operator. 
-        Result will be new copy of struct.
-    */
-    func FMyStruct operator+(const FMyStruct A, const FMyStruct B)
+        @param A: const FMyStruct
+        @param B: const FMyStruct
+        @return Result: FMyStruct
+    ***
+    func operator+
     {
-        FMyStruct LResult;
-
-        // do stuff... LResult = A + B
-
-        return LResult;
+        // do stuff... Result = A + B
     }
 
-    /*
-        Overloading binary operator. 
-        Result will be assign to this struct.
-    */
-    func void operator+(const FMyStruct B)
+    ***
+        /*
+            Overloading binary operator. 
+            Result will be assign to this struct.
+        */
+
+        @param B: const FMyStruct
+    ***
+    func operator+
     {
         // do stuff... this + B
     }
 
-    /*
-        Overloading unary operator. 
-        Result will be new copy of struct.
-    */
-    func FMyStruct operator++(const FMyStruct A)
+    ***
+        /*
+            Overloading unary operator. 
+            Result will be new copy of struct.
+        */
+        @param A: const FMyStruct
+        @return Result: FMyStruct
+    ***
+    func operator++
     {
-        FMyStruct LResult = A;
-        // do stuff... LResult = A++
-
-        return A;
+        // do stuff... Result = A++
     }
 
-    /*
-        Overloading unary operator. 
-        Result will be assign to this struct.
-    */
-    func void operator++()
+    ***
+        /*
+            Overloading unary operator. 
+            Result will be assign to this struct.
+        */
+    ***
+    func operator++
     {
         // do stuff... this++
     }
@@ -60,7 +68,22 @@ struct FMyStruct
 
 
     Builtin methods(like operator overloading for struct and enum):
-        func [type] first(); // get first element for iteration
-        func [type] next([type] current); // get next element for iteration
-        func [type] end(); // get last element for stop iteration
+
+        ***
+            // get first element for iteration
+            @return Result: [type]
+        ***
+        func first; 
+
+        ***
+            // get next element for iteration
+            @return Result: [type]
+        ***
+        func next; 
+
+        ***
+            // get last element for stop iteration
+            @return Result: [type]
+        ***
+        func end; 
 */

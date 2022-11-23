@@ -1,8 +1,11 @@
 
 // We describe module in .gh file, which can't be compiled, but can be imported to .gaml file.
 
+
+***
+    //@deprecated // we can add deprecated modifier to mark this module as deprecated
+***
 module MyModule; // set the module name, it must match the file name
-// we can add deprecated modifier to mark this module as deprecated
 
 // can import other modules if module depends on them
 
@@ -26,14 +29,15 @@ static_assert(sizeof(MyUnsignedType) == 8, "Assert triggered!");
 
 
 
+***
+    // Function declared and implementated in this module.
+***
+func foo {}
 
-/*
-    Function declared and implementated in this module.
-*/
-func void foo() {}
-
-/*
-    Only function declaration. Implementation will be in module realization.
-    See MyModule.gaml
-*/
-func void foo2();
+***
+    /*
+        Only function declaration. Implementation will be in module realization.
+        See MyModule.gaml
+    */
+***
+func foo2;

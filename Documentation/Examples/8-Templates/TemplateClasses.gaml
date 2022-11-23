@@ -27,7 +27,7 @@ struct<|int32|> TMyStruct
 
 
 
-func void main()
+func main
 {
     TMyStruct<|uint8|> LStruct; // TMyStruct with specialization uint8 will be declared in this module
     TMyStruct<|int32|> LStruct2; // this specialization already exists

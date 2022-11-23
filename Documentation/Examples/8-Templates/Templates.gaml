@@ -11,10 +11,19 @@
 */
 template<|Name|> TFooGen
 {
-    func uint8 $Name$() { return 5; }
+    ***
+        @return Result: uint8
+    ***
+    func $Name$ { return 5; }
 }
 
-TFooGen<foo>; // func uint8 foo() { return 5; }
+/*
+    ***
+        @return Result: uint8
+    ***
+    func $foo$ { return 5; }
+*/
+TFooGen<|foo|>;
 
 
 

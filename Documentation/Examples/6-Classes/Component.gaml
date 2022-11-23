@@ -15,27 +15,43 @@ component UMyComponent // component can be inhereted only from interface(many) o
 
 private: // start private block, by default we are in the public block
 
-    // declare method, it is public, but we not leave private block
-    public func void foo() {}
+    ***
+        // declare method, it is public, but we not leave private block
+    ***
+    public func foo {}
 
 public:
 
-    // declare virtual function, which can be overridden by a child
-    func virtual void bar() {} 
+    ***
+        @virtual // declare virtual function, which can be overridden by a child
+    ***
+    func bar {} 
 
-    // default constructor(each component has empty constructor by default)
-    func void UMyComponent() {}
-    func void UMyComponent(const UMyComponent OtherComponent) {}
-    // constructor overloading
-    func void UMyComponent(int32 A) { this->A = A; } // use keyword 'this' to get access the current instance fields
+    ***
+        // default constructor(each component has empty constructor by default)
+    ***
+    func UMyComponent {}
+    ***
+         // constructor overloading
+        @param OtherComponent: const UMyComponent
+    ***
+    func UMyComponent {}
+    ***
+        // constructor overloading
+        @param A: int32
+    ***
+    func UMyComponent { this->A = A; } // use keyword 'this' to get access the current instance fields
 } // not need ';' unlike C
 
 component UMyComponent2 : UMyComponent 
 {
-    // func void bar() {} // we can't declare method with the same name as parent method
+    func bar {} // we can declare method with the same name as parent method, but it is not virtual
 
-    // override parent methoad and set it as final, which means that this method can't be overridden by child
-    func void bar() override final 
+    ***
+        @final
+        @override // override parent methoad and set it as final, which means that this method can't be overridden by child
+    ***
+    func bar 
     {
         super::bar(); // use parent method version
     } 
@@ -43,7 +59,8 @@ component UMyComponent2 : UMyComponent
 
 
 
-func void main()
+
+func main
 {
     UMyComponent A; // create local uninitialized variable which can contains any UMyComponent child object
     static_assert(A is None); // each component variable is a pointer, we didn't create an instance of a component, so there will be None 

@@ -11,8 +11,11 @@ enum EMyEnum : uint8 // enum can be inhereted from any integer type(by default u
     Two = 3,    // we can give custom number for field
     Three       // there will be 4
 
-    // enum as a class can have methods, but only static
-    static func void foo() {}
+    ***
+        // enum as a class can have methods, but only static
+        @static
+    ***
+    func foo {}
 
     // all enum members are public, you can't change its access modifier
 } // not need ';' unlike C
@@ -26,7 +29,7 @@ enum EMyStringEnum : string // enum can be inhereted from string
 
 
 
-func void main()
+func main
 {
     EMyEnum m; // create local variable with EMyEnum type
 

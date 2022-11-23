@@ -17,29 +17,40 @@ alignas(16) // set structure memory align
 private: // start private block, by default we are in the public block
 
     // declare method, it is public, but we not leave private block
-    public func void foo() {}
+    public func foo {}
 
 public:
 
     // declare method without implementation
-    func void bar();
+    func bar;
 
-    // default constructor(each struct has empty constructor by default)
-    func void FMyStruct() {}
-    func void FMyStruct(const FMyStruct OtherStruct) { }
-    // constructor overloading
-    func void FMyStruct(int32 A) { this->A = A; } // use keyword 'this' to get access the current instance fields
+    ***
+        // default constructor(each struct has empty constructor by default)
+    ***
+    func FMyStruct {}
+    ***
+        // constructor overloading
+
+        @param OtherStruct: const FMyStruct
+    ***
+    func FMyStruct {}
+    ***
+        // constructor overloading
+
+        @param A: int32
+    ***
+    func FMyStruct { this->A = A; } // use keyword 'this' to get access the current instance fields
 } // not need ';' unlike C
 
-// implement struct method 
-func void FMyStruct::bar()
-{
 
-}
+***
+    // implement struct method 
+***
+func FMyStruct::bar { }
 
 
 
-func void main()
+func main
 {
     FMyStruct m; // create local variable with FMyStruct type
     m.A = 99; // access to struct member

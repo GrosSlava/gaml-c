@@ -1,10 +1,9 @@
 // This examples show features of standard types
 
 
-func void main()
+func main
 {
     // void - can't be as function argument or variable type. Only for function return.
-    any A       // pointer to any data, can't be as function return type
 
     uint8 a;    // 8-bit unsigned integer [0 - 255]
     uint16 b;   // 16-bit unsigned integer [0 - 65 535]
@@ -21,7 +20,7 @@ func void main()
 
     /* 
         Make sure that all numeric types depends on system architecture. 
-        So, if your system(e.g 32 bit machine) not support 64-bit types they will be interpreted as nearest highest type(32-bit).
+        So, if your system(e.g 32 bit machine) not support 64-bit types they will cause compile error.
     */
 
     bool g;     // 8-bit logic type

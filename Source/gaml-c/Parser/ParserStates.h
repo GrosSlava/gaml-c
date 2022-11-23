@@ -2,17 +2,20 @@
 
 #pragma once
 
+#include "../CoreMinimal.h"
+
 #include "ProgramSymbols.h"
 #include "../Token/Token.h"
+
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
+
 #include "../Logger/ErrorLogger.h"
 
-#include <string>
-#include <vector>
 
 
 
+//..................................................States.................................................................//
 
 struct FParserStates;
 
@@ -37,20 +40,14 @@ public:
 
 
 
-
+//;|module|implement|import|func|struct|interface|object|component|enum|using|public|private|static_assert|template|***
 DECLARE_STATE_CLASS(Default)
 
-// deprecated module|func|interface|object|component|struct|enum|static
-DECLARE_STATE_CLASS(DeclareAnyDeprecated) // deprecated -> module|func|interface|object|component|struct|enum|static
+// public func|interface|object|component|struct|enum
+DECLARE_STATE_CLASS(DeclareAnyGlobalPublic) // public -> func|interface|object|component|struct|enum
 
-// static module|func|interface|object|component|struct|enum
-DECLARE_STATE_CLASS(DeclareAnyStatic) // static -> module|func|interface|object|component|struct|enum
-
-// public func|interface|object|component|struct|enum|deprecated|static
-DECLARE_STATE_CLASS(DeclareAnyGlobalPublic) // public -> func|interface|object|component|struct|enum|deprecated|static
-
-// private func|interface|object|component|struct|enum|deprecated|static
-DECLARE_STATE_CLASS(DeclareAnyGlobalPrivate) // private -> func|interface|object|component|struct|enum|deprecated|static
+// private func|interface|object|component|struct|enum
+DECLARE_STATE_CLASS(DeclareAnyGlobalPrivate) // private -> func|interface|object|component|struct|enum
 
 
 
@@ -70,17 +67,12 @@ DECLARE_STATE_CLASS(ImportModule3)		// [IDENTIFIER] -> ; -> [Default]
 
 
 
-// func [specifiers...] [return type]|[IDENTIFIER] [IDENTIFIER] ([params...]) [specifiers...];
-DECLARE_STATE_CLASS(StartDeclareFunction)	// func -> [specifiers...]|const|[stadrad type]|[user type] -> const|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareFunction1)		// const -> [stadrad type]|[user type] -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareFunction2)		// [stadrad type]|[user type] -> [IDENTIFIER] -> (|::
-DECLARE_STATE_CLASS(DeclareFunction3)		// [IDENTIFIER] -> ( -> )|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareFunction4)		// ( -> [stadrad type]|[user type] -> )|=|,|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareFunction5)		// = -> [tokens...] -> ,|)
-DECLARE_STATE_CLASS(DeclareFunction6)		// (|[stadrad type]|[user type] -> ) -> [specifiers...]|;|[|{
-DECLARE_STATE_CLASS(DeclareFunction7)		// ) -> [ -> ]
-DECLARE_STATE_CLASS(DeclareFunction8)		// ] -> ;|{ -> [Default]
-DECLARE_STATE_CLASS(DeclareFunction9)		// )|] -> { -> }
+// func [IDENTIFIER];
+DECLARE_STATE_CLASS(StartDeclareFunction)	// func -> [IDENTIFIER] -> ::|;|[|{
+DECLARE_STATE_CLASS(DeclareFunction1)		// [IDENTIFIER] -> ::|;|[|{ -> [IDENTIFIER]|[Default]|]|}
+DECLARE_STATE_CLASS(DeclareFunction2)		// [IDENTIFIER] -> [ -> ]
+DECLARE_STATE_CLASS(DeclareFunction3)		// ] -> ;|{ -> [Default]|}
+DECLARE_STATE_CLASS(DeclareFunction4)		// [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
 DECLARE_STATE_CLASS(StartDeclareClass)
@@ -101,9 +93,9 @@ DECLARE_STATE_CLASS(StaticAssert2)		// ) -> ; -> [Default]
 // template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
 DECLARE_STATE_CLASS(StartDefineTemplate)
 
+//.........................................................................................................................//
 
-//.........................................................................................................................//
-//.........................................................................................................................//
+
 
 
 struct FModuleDeclarationContext
@@ -163,8 +155,6 @@ public:
 	{
 		SignatureInfo = FFunctionSignatureInfo();
 		FunctionName.clear();
-		LastInputDefaultValueTokens.clear();
-		DefaultValueOpenBracketLayer = 0;
 		ClassDeclarationNamespace.clear();
 		StaticCodeTokens.clear();
 		StaticCodeOpenBracketLayer = 0;
@@ -176,8 +166,6 @@ public:
 	FFunctionSignatureInfo SignatureInfo;
 	std::string ClassDeclarationNamespace = "";
 	std::string FunctionName = "";
-	std::vector<Token> LastInputDefaultValueTokens;
-	int DefaultValueOpenBracketLayer = 0;
 
 	std::vector<Token> StaticCodeTokens;
 	int StaticCodeOpenBracketLayer = 0;
@@ -278,7 +266,7 @@ public:
 
 
 
-enum class EStateContextType
+enum class EStateContextType : unsigned char
 {
 	Global,
 	InClass
@@ -308,10 +296,6 @@ public:
 
 	DECLARE_STATE(Default)
 
-	DECLARE_STATE(DeclareAnyDeprecated)
-
-	DECLARE_STATE(DeclareAnyStatic)
-
 	DECLARE_STATE(DeclareAnyGlobalPublic)
 
 	DECLARE_STATE(DeclareAnyGlobalPrivate)
@@ -334,11 +318,6 @@ public:
 	DECLARE_STATE(DeclareFunction2)
 	DECLARE_STATE(DeclareFunction3)
 	DECLARE_STATE(DeclareFunction4)
-	DECLARE_STATE(DeclareFunction5)
-	DECLARE_STATE(DeclareFunction6)
-	DECLARE_STATE(DeclareFunction7)
-	DECLARE_STATE(DeclareFunction8)
-	DECLARE_STATE(DeclareFunction9)
 
 	DECLARE_STATE(StartDeclareClass)
 
@@ -368,8 +347,6 @@ public:
 
 	inline void ClearContexts() noexcept
 	{
-		IsDeprecatedContext = false;
-		IsStaticContext = false;
 		AccessModifierContextType = EAccessModifier::Public;
 
 		ModuleDeclarationContext.Clear();
@@ -405,6 +382,7 @@ private:
 
 
 
+
 private:
 
 	FGamlFileInfo FileInfo;
@@ -416,8 +394,6 @@ public:
 	bool ModuleNameDeclared = false;
 	EStateContextType StateContextType = EStateContextType::Global;
 
-	bool IsDeprecatedContext = false;
-	bool IsStaticContext = false;
 	EAccessModifier AccessModifierContextType = EAccessModifier::Public;
 
 	FModuleDeclarationContext ModuleDeclarationContext;

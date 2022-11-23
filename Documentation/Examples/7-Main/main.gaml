@@ -11,28 +11,28 @@ module main; // main - it is reserved name of main module, by default all .gaml 
     It is reserved name of function, which is called at the begin of program, before main.
     For dll it called at first load.
 */
-func void init_module()
+func init_module
 {
 
 }
-//func void init_module_internal() {} // we can't override this function, it is reserved
+//func init_module_internal {} // we can't override this function, it is reserved
 
 /*
     It is reserved name of function, which is called at the end of program.
     For dll it called when unload.
 */
-func void deinit_module()
+func deinit_module
 {
 
 }
-//func void deinit_module_internal() {} // we can't override this function, it is reserved
+//func deinit_module_internal {} // we can't override this function, it is reserved
 
 
 /*
     It is entry point of program if we build this gaml file as executable.
     Signature depends on selected subsystem.
 */
-func void main()
+func main
 {
 
 }

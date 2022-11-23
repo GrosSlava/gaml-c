@@ -20,28 +20,47 @@ object UMyObject // object can be inhereted only from interface(many) or other o
 
 private: // start private block, by default we are in the public block
 
-    // declare method, it is public, but we not leave private block
-    public func void foo() {}
+    ***
+        // declare method, it is public, but we not leave private block
+    ***
+    public func foo {}
 
 public:
 
-    // declare virtual function, which can be overridden by a child
-    func virtual void bar() {} 
+    ***
+        @virtual // declare virtual function, which can be overridden by a child
+    ***
+    func bar {} 
 
-    // default constructor(each object has empty constructor by default)
-    func void UMyObject() { Comp3 = UMyComponent(); }
-    func void UMyObject(const UMyObject OtherObject) {}
-    // constructor overloading
-    func void UMyObject(int32 A) { Comp3 = UMyComponent(); this->A = A; } // use keyword 'this' to get access the current instance fields
+    ***
+        // default constructor(each object has empty constructor by default)
+    ***
+    func UMyObject { Comp3 = UMyComponent(); }
+    ***
+        // constructor overloading
+
+        @param OtherObject: const UMyObject
+    ***
+    func UMyObject {}
+    ***
+        // constructor overloading
+        
+        @param A: int32
+    ***
+    func UMyObject { Comp3 = UMyComponent(); this->A = A; } // use keyword 'this' to get access the current instance fields
 } // not need ';' unlike C
 
 
 object UMyObject2 : UMyObject 
 {
-    // func void bar() {} // we can't declare method with the same name as parent method
+    func bar {} // we can declare method with the same name as parent method, but it is not virtual
 
-    // override parent methoad and set it as final, which means that this method can't be overridden by child
-    func void bar() override final 
+
+    ***
+        @final
+        @override // override parent methoad and set it as final, which means that this method can't be overridden by child
+    ***
+    func bar
     {
         super::bar(); // use parent method version
     } 
@@ -51,26 +70,36 @@ object UMyObject2 : UMyObject
 // we don't need to use forward declaration unlike C
 component UMyComponent { }
 
+***
+    /*
+        static modifiers marks that this object can be instantiated only once,
+        each new instance will be pointing to one object
 
-/*
-    static modifiers marks that this object can be instantiated only once,
-    each new instance will be pointing to one object
-
-    static modifier works only with object
-*/
-static object UMyStaticObject
+        static modifier works only with object
+    */
+    @static
+***
+object UMyStaticObject
 {
 
 }
 
-/*
-    same to UMyStaticObject, but you need to call UMySingletonObject::Get() method to get instance
-*/
-static object UMySingletonObject
+***
+    /*
+        same to UMyStaticObject, but you need to call UMySingletonObject::Get() method to get instance
+    */
+    @static
+***
+object UMySingletonObject
 {
-    private UMySingletonObject() {}
+    private func UMySingletonObject {}
 
-    public static func UMySingletonObject Get()
+    ***
+        @static
+
+        @return Result: UMySingletonObject
+    ***
+    public func Get
     {
         static UMySingletonObject = UMySingletonObject();
         return UMySingletonObject;
@@ -80,7 +109,7 @@ static object UMySingletonObject
 
 
 
-func void main()
+func main
 {
     UMyObject A; // create local uninitialized variable which can contains any UMyObject child object
     static_assert(A is None); // each object variable is a pointer, we didn't create an instance of an object, so there will be None 

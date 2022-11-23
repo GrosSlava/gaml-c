@@ -12,7 +12,7 @@ object UMyObject2 : UMyObject
 }
 
 
-func void main()
+func main
 {
     class<|UMyObject|> LClass; // by default here will be None
     LClass = UMyObject2::StaticClass(); // set local class container with UMyObject2 class

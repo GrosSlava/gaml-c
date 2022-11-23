@@ -1,16 +1,25 @@
 // This examples show features of functions implementation
 
 
-func void bar(uint8 a, const string s) {}
+***
+    @param a: uint8
+    @param s: const string
+***
+func bar {}
 
 
-
-func uint8 foo() 
+***
+    @return Result: uint8
+***
+func foo
 [
     // here we can write static code that is executed at compile time every time the function is used
 ];
 
-func uint8 foo()
+***
+    @return Result: uint8
+***
+func foo
 //[
     // as we already have function declaration, we can't override static code
 //]
@@ -138,5 +147,6 @@ func uint8 foo()
 
 
     return 0; // each function must return a value (if its return type is not void)
+    // Result = 0; // set result, but not return from function
 }
 

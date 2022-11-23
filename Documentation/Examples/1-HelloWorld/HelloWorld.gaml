@@ -4,7 +4,7 @@ import std.stdio; // import module with read/write functions
 
 
 
-func void main()
+func main
 {
     std.stdio::print("Hello world!");
 

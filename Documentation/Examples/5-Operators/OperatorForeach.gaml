@@ -2,7 +2,7 @@
 
 
 
-func void main()
+func main
 {
 
     const string s = "Hello world";

@@ -2,7 +2,7 @@
 
 
 
-func void main()
+func main
 {
     /*
         switch/case is similar to c/c++ switch/case, but cases don't need break at the end

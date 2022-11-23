@@ -29,8 +29,7 @@ struct FParserHelperLibrary
 
 		// clang-format off
 		return	LTokenType == ETokenType::LBRA || LTokenType == ETokenType::LPAR || 
-				LTokenType == ETokenType::LSQR || LTokenType == ETokenType::LTRI || 
-				LTokenType == ETokenType::DESCRIPTION_BLOCK;
+				LTokenType == ETokenType::LSQR || LTokenType == ETokenType::LTRI;
 		// clang-format on
 	}
 	/*
@@ -42,8 +41,7 @@ struct FParserHelperLibrary
 
 		// clang-format off
 		return	LTokenType == ETokenType::RBRA || LTokenType == ETokenType::RPAR ||
-				LTokenType == ETokenType::RSQR || LTokenType == ETokenType::RTRI || 
-				LTokenType == ETokenType::DESCRIPTION_BLOCK;
+				LTokenType == ETokenType::RSQR || LTokenType == ETokenType::RTRI; 
 		// clang-format on
 	}
 	/*
@@ -59,7 +57,6 @@ struct FParserHelperLibrary
 		case ETokenType::LPAR: return ETokenType::RPAR;
 		case ETokenType::LSQR: return ETokenType::RSQR;
 		case ETokenType::LTRI: return ETokenType::RTRI;
-		case ETokenType::DESCRIPTION_BLOCK: return ETokenType::DESCRIPTION_BLOCK;
 		}
 
 		return ETokenType::IDENTIFIER; // undefined
@@ -77,7 +74,6 @@ struct FParserHelperLibrary
 		case ETokenType::RPAR: return ETokenType::LPAR;
 		case ETokenType::RSQR: return ETokenType::LSQR;
 		case ETokenType::RTRI: return ETokenType::LTRI;
-		case ETokenType::DESCRIPTION_BLOCK: return ETokenType::DESCRIPTION_BLOCK;
 		}
 
 		return ETokenType::IDENTIFIER; // undefined

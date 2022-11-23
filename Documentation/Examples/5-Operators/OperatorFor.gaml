@@ -2,7 +2,7 @@
 
 
 
-func void main()
+func main
 {
     /*
         for is similar to c/c++, but we don't have version without brackets

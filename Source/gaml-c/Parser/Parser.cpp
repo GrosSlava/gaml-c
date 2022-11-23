@@ -29,6 +29,20 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 
 	for( const Token& LToken : Tokens )
 	{
+		if( LToken.GetType() == ETokenType::DESCRIPTION_BLOCK)
+		{
+			if( LPairTokensStack.empty() || LPairTokensStack.back().GetType() != ETokenType::DESCRIPTION_BLOCK )
+			{
+				LPairTokensStack.push_back(LToken);
+				continue;
+			}
+			else
+			{
+				LPairTokensStack.pop_back();
+				continue;
+			}
+		}
+
 		if( FParserHelperLibrary::IsOpenPairToken(LToken) )
 		{
 			LPairTokensStack.push_back(LToken);
@@ -61,11 +75,6 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 					RaiseError(EErrorMessageType::EXPECTED_LTRI, LToken);
 					return;
 				}
-				case ETokenType::DESCRIPTION_BLOCK:
-				{
-					RaiseError(EErrorMessageType::EXPECTED_DESCRIPTION_BLOCK, LToken);
-					return;
-				}
 				}
 
 				RaiseError(EErrorMessageType::INVALID_CLOSE_PAIR, LToken);
@@ -93,11 +102,6 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 				case ETokenType::RTRI:
 				{
 					RaiseError(EErrorMessageType::EXPECTED_RTRI, LToken);
-					return;
-				}
-				case ETokenType::DESCRIPTION_BLOCK:
-				{
-					RaiseError(EErrorMessageType::EXPECTED_DESCRIPTION_BLOCK, LToken);
 					return;
 				}
 				}

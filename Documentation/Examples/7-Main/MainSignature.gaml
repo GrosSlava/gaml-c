@@ -7,103 +7,77 @@
 
     We do not recommend using this signature with extern_c.
 */
-func void main()
+func main
 {
 
 }
 
-/*
-    Same to previous example, but can return success code.
-*/
-func int32 main()
+***
+    // Same to previous example, but can return success code.
+   
+   @return Result: int32
+***
+func main
 {
     return 0;
 }
 
 
 
+***
+    // Main function for Console subsystem.
 
-/*
-    Main function for Console subsystem.
-*/
-func int32 main(const array<|string|> argv)
+    @param argv: const array<|string|> 
+    @return Result: int32
+***
+func main
 {
     return 0;
 }
 // NOTE: Gaml not support wmain
 
-/*
-    Main function for Console subsystem, if you use extern_c.
-    Gaml not have pointers to pointers as char arrays in C, so we can't use argv.
-*/
-func extern_c int32 main(int32 argc, any argv)
-{
-    const string LCmdLine = string::c_str(argv, argc);
-
-    return 0;
-}
-
-/*
-    Main function for Console subsystem with wide char command line, if you use extern_c.
-    Gaml not have pointers to pointers as char arrays in C, so we can't use argv.
-
-    This version of main not supported by all compilers. Be careful.
-*/
-func extern_c int32 wmain(int32 argc, any argv)
-{
-    const string LCmdLine = string::c_wstr(argv, argc);
-    return 0;
-}
 
 
 
 
 import Windows
 
-/*
-    Minimal main function for Window subsystem.
-*/
-func int32 WinMain()
+***
+    // Minimal main function for Window subsystem.
+
+    @return Result: int32
+***
+func WinMain
 {
     return 0;
 }
 
-/*
-    Main function for Window subsystem.
-*/
-func int32 WinMain(Windows::HINSTANCE hInstance, const array<|string|> CmdLine, int32 nCmdShow)
+***
+    // Main function for Window subsystem.
+    // We do not recommend using this signature with extern_c.
+
+    @param hInstance: Windows::HINSTANCE
+    @param CmdLine: const array<|string|>
+    @param nCmdShow: int32
+    @return Result: int32
+***
+func WinMain
 {
     return 0;
 }
 // NOTE: Gaml not support wWinMain
 
-/*
-    Main function for Window subsystem, if you use extern_c
-*/
-func extern_c stdcall int32 WinMain(Windows::HINSTANCE hInstance, Windows::HINSTANCE hPrevInstance, any CmdLine, int32 nCmdShow)
-{
-    const string LCmdLine = string::c_str(CmdLine);
 
-    return 0;
-}
+***
+    // Main function for dll.
+    // NOTE: not supported by all platforms.
 
-/*
-    Main function for Window subsystem with wide char command line, if you use extern_c
-*/
-func extern_c stdcall int32 wWinMain(Windows::HINSTANCE hInstance, Windows::HINSTANCE hPrevInstance, any CmdLine, int32 nCmdShow)
-{
-    const string LCmdLine = string::c_wstr(CmdLine);
-
-    return 0;
-}
-
-
-
-
-/*
-    Main function for dll.
-*/
-func extern_c stdcall bool DllMain(Windows::HINSTANCE hinstDLL, uint32 fdwReason, any lpvReserved)
+    @param hinstDLL: Windows::HINSTANCE
+    @param fdwReason: uint32
+    @param lpvReserved: addr_t
+    @return Result: bool
+***
+func DllMain
 {
     return true;
 }
