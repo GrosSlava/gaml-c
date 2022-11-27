@@ -142,10 +142,12 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 		if( VariableInfo.Modifiers.IsConst && IncludeConst ) LResult += "const ";
 
 		LResult += GetStandardTypeNameCStr(VariableInfo.TypeID);
+		// clang-format off
 		if( 
 			IsFunctionArgument && 
 			((VariableInfo.Modifiers.IsConst && VariableInfo.TypeID == EStandardTypesID::STRING_ID) || VariableInfo.Modifiers.IsMutable)
 		  )
+		// clang-format on
 		{
 			LResult += "*";
 		}

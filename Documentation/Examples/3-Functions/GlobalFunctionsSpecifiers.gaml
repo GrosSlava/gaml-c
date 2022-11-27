@@ -29,7 +29,7 @@ func foo4 {}
     */
     @unimplemented
 ***
-func foo5();
+func foo5;
 
 ***
     /*
@@ -53,7 +53,7 @@ func foo6 {}
     */
     @stdcall
 ***
-func foo7() {}
+func foo7 {}
 
 ***
     /*
@@ -76,7 +76,7 @@ private func foo8 {}
 
     @return Result: const uint8
 ***
-public BadFoo();
+public func BadFoo;
 
 ***
     // It is better, if your function is deprecated.

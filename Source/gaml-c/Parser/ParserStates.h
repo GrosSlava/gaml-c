@@ -43,35 +43,43 @@ public:
 //;|module|implement|import|func|struct|interface|object|component|enum|using|public|private|static_assert|template|***
 DECLARE_STATE_CLASS(Default)
 
-// public func|interface|object|component|struct|enum
-DECLARE_STATE_CLASS(DeclareAnyGlobalPublic) // public -> func|interface|object|component|struct|enum
+// *** ... ***
+DECLARE_STATE_CLASS(StartDescription)		// -> *** -> @|***
+DECLARE_STATE_CLASS(DescriptionModifier)	// *** -> @ -> [MODIFIER]|param|return
+DECLARE_STATE_CLASS(DescriptionParam1)		// @ -> param|return -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DescriptionParam2)		// [IDENTIFIER] -> : -> const|mut|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DescriptionParam3)		// : -> const|mut|[stadrad type]|[user type] -> (|@|***
+DECLARE_STATE_CLASS(DescriptionParam4)		// [stadrad type]|[user type] -> (|@|*** -> )
+DECLARE_STATE_CLASS(DescriptionParam5)		// ( -> ... -> )
+DECLARE_STATE_CLASS(DescriptionParam6)		// ... -> ) -> @|***
+DECLARE_STATE_CLASS(EndDescription)			// *** -> *** -> public|private|module|func|struct|interface|object|component|enum
 
-// private func|interface|object|component|struct|enum
-DECLARE_STATE_CLASS(DeclareAnyGlobalPrivate) // private -> func|interface|object|component|struct|enum
+// public|private func|interface|object|component|struct|enum
+DECLARE_STATE_CLASS(GlobalAccessModifier)	// -> public|private -> func|interface|object|component|struct|enum
 
 
 
 // moudle [IDENTIFIER].[IDENTIFIER]...;
-DECLARE_STATE_CLASS(StartDeclareModule)	// module -> [IDENTIFIER] -> .|;
-DECLARE_STATE_CLASS(DeclareModule1)		// [IDENTIFIER] -> .|; -> [IDENTIFIER]|[Default]
+DECLARE_STATE_CLASS(StartDeclareModule)		// -> module -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareModule1)			// module -> [IDENTIFIER] -> .|;
 
 // implement [IDENTIFIER].[IDENTIFIER]...;
-DECLARE_STATE_CLASS(StartImplementModule)	// implement -> [IDENTIFIER] -> .|;
-DECLARE_STATE_CLASS(ImplementModule1)		//[IDENTIFIER] -> .|; -> [IDENTIFIER]|[Default]
+DECLARE_STATE_CLASS(StartImplementModule)	// -> implement -> [IDENTIFIER]
+DECLARE_STATE_CLASS(ImplementModule1)		// implement -> [IDENTIFIER] -> .|;
 
 // import [IDENTIFIER].[IDENTIFIER]... as [IDENTIFIER];
-DECLARE_STATE_CLASS(StartImportModule)	// import -> [IDENTIFIER] -> .|as|;
-DECLARE_STATE_CLASS(ImportModule1)		// [IDENTIFIER] -> .|as|; -> [IDENTIFIER]|;
-DECLARE_STATE_CLASS(ImportModule2)		// as -> [IDENTIFIER] -> ;
-DECLARE_STATE_CLASS(ImportModule3)		// [IDENTIFIER] -> ; -> [Default]
+DECLARE_STATE_CLASS(StartImportModule)		// -> import -> [IDENTIFIER]
+DECLARE_STATE_CLASS(ImportModule1)			// import -> [IDENTIFIER] -> .|as|;
+DECLARE_STATE_CLASS(ImportModule2)			// -> as -> [IDENTIFIER]
+DECLARE_STATE_CLASS(ImportModule3)			// as -> [IDENTIFIER] -> ;
 
 
 
 // func [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareFunction)	// func -> [IDENTIFIER] -> ::|;|[|{
-DECLARE_STATE_CLASS(DeclareFunction1)		// [IDENTIFIER] -> ::|;|[|{ -> [IDENTIFIER]|[Default]|]|}
+DECLARE_STATE_CLASS(StartDeclareFunction)	// -> func -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareFunction1)		// func -> [IDENTIFIER] -> ::|;|[|{
 DECLARE_STATE_CLASS(DeclareFunction2)		// [IDENTIFIER] -> [ -> ]
-DECLARE_STATE_CLASS(DeclareFunction3)		// ] -> ;|{ -> [Default]|}
+DECLARE_STATE_CLASS(DeclareFunction3)		// [ -> ] -> ;|{
 DECLARE_STATE_CLASS(DeclareFunction4)		// [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
@@ -80,15 +88,15 @@ DECLARE_STATE_CLASS(StartDeclareClass)
 
 
 // using [IDENTIFIER] = [stadrad type]|[user type];
-DECLARE_STATE_CLASS(StartDefineAlias)	// using -> [IDENTIFIER] -> =
-DECLARE_STATE_CLASS(DefineAlias1)		// [IDENTIFIER] -> = -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DefineAlias2)		// = -> [stadrad type]|[user type] -> ;
+DECLARE_STATE_CLASS(StartDefineAlias)	// -> using -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DefineAlias1)		// using -> [IDENTIFIER] -> =
+DECLARE_STATE_CLASS(DefineAlias2)		// [IDENTIFIER] -> = -> [stadrad type]|[user type]
 DECLARE_STATE_CLASS(DefineAlias3)		// [stadrad type]|[user type] -> ; -> [Default]
 
 // static_assert(expression);
-DECLARE_STATE_CLASS(StartStaticAssert)	// static_assert -> ( -> [expression]
-DECLARE_STATE_CLASS(StaticAssert1)		// ( -> [expression...]|) -> ;
-DECLARE_STATE_CLASS(StaticAssert2)		// ) -> ; -> [Default]
+DECLARE_STATE_CLASS(StartStaticAssert)	// -> static_assert -> (
+DECLARE_STATE_CLASS(StaticAssert1)		// static_assert -> ( -> )
+DECLARE_STATE_CLASS(StaticAssert2)		// ( -> ) -> ;
 
 // template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
 DECLARE_STATE_CLASS(StartDefineTemplate)
@@ -146,6 +154,43 @@ public:
 	std::vector<std::string> ModulePath;
 	std::string AliasName = "";
 };
+
+
+
+enum class EDescriptionContext : unsigned char
+{
+	UNDEFINED,
+	Param,
+	Return
+};
+
+struct FDescriptionContext
+{
+public:
+
+	inline void Clear() noexcept
+	{
+		Modfiers = FModfiers();
+		DescriptionContext = EDescriptionContext::UNDEFINED;
+		Inputs.clear();
+		Return = FVariableInfo();
+		OpenBracketLayer = 0;
+		CodeTokens.clear();
+	}
+
+
+public:
+
+	FModfiers Modfiers;
+	EDescriptionContext DescriptionContext = EDescriptionContext::UNDEFINED;
+	std::vector<FVariableInfo> Inputs;
+	FVariableInfo Return;
+
+	int OpenBracketLayer = 0;
+	std::vector<Token> CodeTokens;
+};
+
+
 
 struct FFunctionDeclarationContext
 {
@@ -211,6 +256,8 @@ public:
 	EAccessModifier CurrentAccessModifier = EAccessModifier::Public;
 };
 
+
+
 struct FAliasDeclarationContext
 {
 public:
@@ -228,6 +275,7 @@ public:
 	std::string AliasName = "";
 };
 
+
 struct FStaticAssertContext
 {
 public:
@@ -244,6 +292,8 @@ public:
 	std::vector<Token> Expression;
 	int OpenBracketLayer = 0;
 };
+
+
 
 struct FFunctionImplementationContext
 {
@@ -296,9 +346,17 @@ public:
 
 	DECLARE_STATE(Default)
 
-	DECLARE_STATE(DeclareAnyGlobalPublic)
+	DECLARE_STATE(StartDescription)
+	DECLARE_STATE(DescriptionModifier)
+	DECLARE_STATE(DescriptionParam1)
+	DECLARE_STATE(DescriptionParam2)
+	DECLARE_STATE(DescriptionParam3)
+	DECLARE_STATE(DescriptionParam4)
+	DECLARE_STATE(DescriptionParam5)
+	DECLARE_STATE(DescriptionParam6)
+	DECLARE_STATE(EndDescription)
 
-	DECLARE_STATE(DeclareAnyGlobalPrivate)
+	DECLARE_STATE(GlobalAccessModifier)
 
 
 	DECLARE_STATE(StartDeclareModule)
@@ -352,6 +410,7 @@ public:
 		ModuleDeclarationContext.Clear();
 		ModuleImplementingContext.Clear();
 		ModuleImportingContext.Clear();
+		DescriptionContext.Clear();
 		FunctionDeclarationContext.Clear();
 		VariableDeclarationContext.Clear();
 		ClassDeclarationContext.Clear();
@@ -399,6 +458,7 @@ public:
 	FModuleDeclarationContext ModuleDeclarationContext;
 	FModuleImplementingContext ModuleImplementingContext;
 	FModuleImportingContext ModuleImportingContext;
+	FDescriptionContext DescriptionContext;
 	FFunctionDeclarationContext FunctionDeclarationContext;
 	FVariableDeclarationContext VariableDeclarationContext;
 	FClassDeclarationContext ClassDeclarationContext;

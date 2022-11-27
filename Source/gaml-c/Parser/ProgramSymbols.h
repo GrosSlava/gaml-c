@@ -178,7 +178,7 @@ struct FVariableInfo
 	/*
 		Build-time type id.
 	*/
-	int TypeID = -1;
+	int TypeID = 0;
 	/*
 		Variable name.
 	*/

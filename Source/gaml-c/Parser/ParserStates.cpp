@@ -29,6 +29,9 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	}
 	case ETokenType::MODULE:
 	{
+		InParserStates.ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+
 		return InParserStates.GStartDeclareModule_ParserState;
 	}
 	case ETokenType::IMPLEMENT:
@@ -45,6 +48,9 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
 	case ETokenType::STRUCT:
@@ -53,6 +59,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -62,6 +70,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -71,6 +81,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -80,6 +92,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -89,6 +103,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -103,14 +119,14 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
 		InParserStates.AccessModifierContextType = EAccessModifier::Public;
-		return InParserStates.GDeclareAnyGlobalPublic_ParserState;
+		return InParserStates.GGlobalAccessModifier_ParserState;
 	}
 	case ETokenType::PRIVATE:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
 		InParserStates.AccessModifierContextType = EAccessModifier::Private;
-		return InParserStates.GDeclareAnyGlobalPrivate_ParserState;
+		return InParserStates.GGlobalAccessModifier_ParserState;
 	}
 	case ETokenType::STATIC_ASSERT:
 	{
@@ -126,7 +142,7 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	}
 	case ETokenType::DESCRIPTION_BLOCK:
 	{
-		//TODO
+		return InParserStates.GStartDescription_ParserState;
 	}
 	}
 
@@ -138,56 +154,567 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 
 
 
-IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+IParserState* StartDescription_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
+	case ETokenType::DOG:
+	{
+		return InParserStates.GDescriptionModifier_ParserState;
+	}
+	case ETokenType::DESCRIPTION_BLOCK:
+	{
+		return InParserStates.GEndDescription_ParserState;
+	}
+	}
+
+	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	return nullptr;
+}
+
+IParserState* DescriptionModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	switch( InToken.GetType() )
+	{
+	case ETokenType::EXTERN_C:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsExternC )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsExternC = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::CDECL:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::CDECL;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::STDCALL:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::STDCALL;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::FASTCALL:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::FASTCALL;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::THISCALL:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::THISCALL;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::CONST:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsConst )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsConst = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::MUTABLE:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsMutable )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsMutable = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::STATIC:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsStatic )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsStatic = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::INLINE:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsInline )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsInline = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::VIRTUAL:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsVirtual )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsVirtual = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::OVERRIDE:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsOverride )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsOverride = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::ABSTRACT:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsAbstract )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsAbstract = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::FINAL:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsFinal )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsFinal = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::DEPRECATED:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsDeprecated )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsDeprecated = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::UNIMPLEMENTED:
+	{
+		if( InParserStates.DescriptionContext.Modfiers.IsUnimplemented )
+		{
+			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			return nullptr;
+		}
+		InParserStates.DescriptionContext.Modfiers.IsUnimplemented = true;
+		return InParserStates.GStartDescription_ParserState;
+	}
+	case ETokenType::PARAM:
+	{
+		InParserStates.DescriptionContext.DescriptionContext = EDescriptionContext::Param;
+		return InParserStates.GDescriptionParam1_ParserState;
+	}
+	case ETokenType::RETURN:
+	{
+		InParserStates.DescriptionContext.DescriptionContext = EDescriptionContext::Return;
+		return InParserStates.GDescriptionParam1_ParserState;
+	}
+	}
+
+	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	return nullptr;
+}
+
+IParserState* DescriptionParam1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() != ETokenType::IDENTIFIER )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		return nullptr;
+	}
+
+	switch( InParserStates.DescriptionContext.DescriptionContext )
+	{
+	case EDescriptionContext::Param:
+	{
+		FVariableInfo LNewVariable;
+		LNewVariable.VariableName = InToken.GetLexeme();
+		LNewVariable.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LNewVariable.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.DescriptionContext.Inputs.push_back(LNewVariable);
+		break;
+	}
+	case EDescriptionContext::Return:
+	{
+		if( !InParserStates.DescriptionContext.Return.VariableName.empty() )
+		{
+			InParserStates.RaiseError(EErrorMessageType::ARGUMENT_NAME_REDEFINITION, InToken);
+			return nullptr;
+		}
+
+		InParserStates.DescriptionContext.Return.VariableName = InToken.GetLexeme();
+		InParserStates.DescriptionContext.Return.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		InParserStates.DescriptionContext.Return.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		break;
+	}
+	default:
+	{
+		InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+		return nullptr;
+	}
+	}
+
+	return InParserStates.GDescriptionParam2_ParserState;
+}
+
+IParserState* DescriptionParam2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() != ETokenType::COLON )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_COLON, InToken);
+		return nullptr;
+	}
+
+	return InParserStates.GDescriptionParam3_ParserState;
+}
+
+IParserState* DescriptionParam3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( FParserHelperLibrary::IsModifierToken(InToken) )
+	{
+		switch( InToken.GetType() )
+		{
+		case ETokenType::CONST:
+		{
+			switch( InParserStates.DescriptionContext.DescriptionContext )
+			{
+			case EDescriptionContext::Param:
+			{
+				if( InParserStates.DescriptionContext.Inputs.back().Modifiers.IsConst )
+				{
+					InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+					return nullptr;
+				}
+
+				InParserStates.DescriptionContext.Inputs.back().Modifiers.IsConst = true;
+				break;
+			}
+			case EDescriptionContext::Return:
+			{
+				if( InParserStates.DescriptionContext.Return.Modifiers.IsConst )
+				{
+					InParserStates.RaiseError(EErrorMessageType::RETURN_TYPE_DOUBLE_MODIFIER, InToken);
+					return nullptr;
+				}
+
+				InParserStates.DescriptionContext.Return.Modifiers.IsConst = true;
+				break;
+			}
+			default:
+			{
+				InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+				return nullptr;
+			}
+			}
+
+			return InParserStates.GDescriptionParam3_ParserState;
+		}
+		case ETokenType::MUTABLE:
+		{
+			switch( InParserStates.DescriptionContext.DescriptionContext )
+			{
+			case EDescriptionContext::Param:
+			{
+				if( InParserStates.DescriptionContext.Inputs.back().Modifiers.IsMutable )
+				{
+					InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+					return nullptr;
+				}
+
+				InParserStates.DescriptionContext.Inputs.back().Modifiers.IsMutable = true;
+				break;
+			}
+			case EDescriptionContext::Return:
+			{
+				if( InParserStates.DescriptionContext.Return.Modifiers.IsMutable )
+				{
+					InParserStates.RaiseError(EErrorMessageType::RETURN_TYPE_DOUBLE_MODIFIER, InToken);
+					return nullptr;
+				}
+
+				InParserStates.DescriptionContext.Return.Modifiers.IsMutable = true;
+				break;
+			}
+			default:
+			{
+				InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+				return nullptr;
+			}
+			}
+
+			return InParserStates.GDescriptionParam3_ParserState;
+		}
+		}
+	}
+	else if( FParserHelperLibrary::IsStandardType(InToken) )
+	{
+		switch( InParserStates.DescriptionContext.DescriptionContext )
+		{
+		case EDescriptionContext::Param:
+		{
+			InParserStates.DescriptionContext.Inputs.back().TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+			break;
+		}
+		case EDescriptionContext::Return:
+		{
+			InParserStates.DescriptionContext.Return.TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+			break;
+		}
+		default:
+		{
+			InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+			return nullptr;
+		}
+		}
+
+		return InParserStates.GDescriptionParam4_ParserState;
+	}
+	else if( InToken.GetType() == ETokenType::IDENTIFIER ) 
+	{
+		switch( InParserStates.DescriptionContext.DescriptionContext )
+		{
+		case EDescriptionContext::Param:
+		{
+			//TODO user type
+			break;
+		}
+		case EDescriptionContext::Return:
+		{
+			//TODO user type
+			break;
+		}
+		default:
+		{
+			InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+			return nullptr;
+		}
+		}
+
+		return InParserStates.GDescriptionParam4_ParserState;
+	}
+
+	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	return nullptr;
+}
+
+IParserState* DescriptionParam4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	switch( InToken.GetType() )
+	{
+	case ETokenType::LPAR:
+	{
+		InParserStates.DescriptionContext.OpenBracketLayer = 1;
+		return InParserStates.GDescriptionParam5_ParserState;
+	}
+	case ETokenType::DOG:
+	{
+		return InParserStates.GDescriptionModifier_ParserState;
+	}
+	case ETokenType::DESCRIPTION_BLOCK:
+	{
+		return InParserStates.GEndDescription_ParserState;
+	}
+	}
+
+	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	return nullptr;
+}
+
+IParserState* DescriptionParam5_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	switch( InToken.GetType() )
+	{
+	case ETokenType::LPAR:
+	{
+		++InParserStates.DescriptionContext.OpenBracketLayer;
+		InParserStates.DescriptionContext.CodeTokens.push_back(InToken);
+		
+		return InParserStates.GDescriptionParam5_ParserState;
+	}
+	case ETokenType::RPAR:
+	{
+		--InParserStates.DescriptionContext.OpenBracketLayer;
+		if( InParserStates.DescriptionContext.OpenBracketLayer == 0 )
+		{
+			return InParserStates.GDescriptionParam6_ParserState;
+		}
+
+		InParserStates.DescriptionContext.CodeTokens.push_back(InToken);
+		return InParserStates.GDescriptionParam5_ParserState;
+	}
+	default:
+	{
+		InParserStates.DescriptionContext.CodeTokens.push_back(InToken);
+		return InParserStates.GDescriptionParam5_ParserState;
+	}
+	}
+
+	return nullptr;
+}
+
+IParserState* DescriptionParam6_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	switch( InParserStates.DescriptionContext.DescriptionContext )
+	{
+	case EDescriptionContext::Param:
+	{
+		InParserStates.DescriptionContext.Inputs.back().DefaultValueTree.BuildAST(InParserStates.DescriptionContext.CodeTokens);
+		break;
+	}
+	case EDescriptionContext::Return:
+	{
+		InParserStates.DescriptionContext.Return.DefaultValueTree.BuildAST(InParserStates.DescriptionContext.CodeTokens);
+		break;
+	}
+	default:
+	{
+		InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+		return nullptr;
+	}
+	}
+
+
+	switch( InToken.GetType() )
+	{
+	case ETokenType::DOG:
+	{
+		return InParserStates.GDescriptionModifier_ParserState;
+	}
+	case ETokenType::DESCRIPTION_BLOCK:
+	{
+		return InParserStates.GEndDescription_ParserState;
+	}
+	}
+
+	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	return nullptr;
+}
+
+IParserState* EndDescription_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	switch( InToken.GetType() )
+	{
+	case ETokenType::MODULE:
+	{
+		InParserStates.ModuleDeclarationContext.ModuleInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+
+		return InParserStates.GStartDeclareModule_ParserState;
+	}
 	case ETokenType::FUNCTION:
 	{
-		InParserStates.StateContextType = EStateContextType::Global;
-		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.AccessModifier = EAccessModifier::Public;
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs = InParserStates.DescriptionContext.Inputs;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Return = InParserStates.DescriptionContext.Return;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
 	case ETokenType::STRUCT:
 	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
 	case ETokenType::INTERFACE:
 	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
 	case ETokenType::OBJECT:
 	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
 	case ETokenType::COMPONENT:
 	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
 	case ETokenType::ENUM:
 	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Public;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
+	}
+	case ETokenType::PUBLIC:
+	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.AccessModifierContextType = EAccessModifier::Public;
+		return InParserStates.GGlobalAccessModifier_ParserState;
+	}
+	case ETokenType::PRIVATE:
+	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.AccessModifierContextType = EAccessModifier::Private;
+		return InParserStates.GGlobalAccessModifier_ParserState;
 	}
 	}
 
@@ -197,14 +724,19 @@ IParserState* DeclareAnyGlobalPublic_ParserState::Process(FParserStates& InParse
 
 
 
-IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+IParserState* GlobalAccessModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
 	case ETokenType::FUNCTION:
 	{
 		InParserStates.StateContextType = EStateContextType::Global;
-		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.AccessModifier = EAccessModifier::Private;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Inputs = InParserStates.DescriptionContext.Inputs;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.Return = InParserStates.DescriptionContext.Return;
+		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
@@ -212,7 +744,10 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 	{
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -220,7 +755,10 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 	{
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -228,7 +766,10 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 	{
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -236,7 +777,10 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 	{
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -244,7 +788,10 @@ IParserState* DeclareAnyGlobalPrivate_ParserState::Process(FParserStates& InPars
 	{
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
-		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = EAccessModifier::Private;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers = InParserStates.DescriptionContext.Modfiers;
+		InParserStates.ClassDeclarationContext.ClassInfo.Modifiers.AccessModifier = InParserStates.AccessModifierContextType;
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -483,13 +1030,6 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 
 IParserState* DeclareFunction2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	if( InParserStates.FunctionDeclarationContext.StaticCodeOpenBracketLayer == 0 )
-	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_LSQR, InToken);
-		return nullptr;
-	}
-
-
 	switch( InToken.GetType() )
 	{
 	case ETokenType::LSQR:
@@ -558,12 +1098,6 @@ IParserState* DeclareFunction3_ParserState::Process(FParserStates& InParserState
 
 IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	if( InParserStates.FunctionImplementationContext.FunctionCodeOpenBracketLayer == 0 )
-	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_LBRA, InToken);
-		return nullptr;
-	}
-
 	switch( InToken.GetType() )
 	{
 	case ETokenType::LBRA:
@@ -786,9 +1320,17 @@ FParserStates::FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOpti
 
 	CREATE_STATE(Default)
 
-	CREATE_STATE(DeclareAnyGlobalPublic)
+	CREATE_STATE(StartDescription)
+	CREATE_STATE(DescriptionModifier)
+	CREATE_STATE(DescriptionParam1)
+	CREATE_STATE(DescriptionParam2)
+	CREATE_STATE(DescriptionParam3)
+	CREATE_STATE(DescriptionParam4)
+	CREATE_STATE(DescriptionParam5)
+	CREATE_STATE(DescriptionParam6)
+	CREATE_STATE(EndDescription)
 
-	CREATE_STATE(DeclareAnyGlobalPrivate)
+	CREATE_STATE(GlobalAccessModifier)
 
 
 	CREATE_STATE(StartDeclareModule)
@@ -830,10 +1372,18 @@ FParserStates::~FParserStates()
 
 
 	DELETE_STATE(Default)
+	
+	DELETE_STATE(StartDescription)
+	DELETE_STATE(DescriptionModifier)
+	DELETE_STATE(DescriptionParam1)
+	DELETE_STATE(DescriptionParam2)
+	DELETE_STATE(DescriptionParam3)
+	DELETE_STATE(DescriptionParam4)
+	DELETE_STATE(DescriptionParam5)
+	DELETE_STATE(DescriptionParam6)
+	DELETE_STATE(EndDescription)
 
-	DELETE_STATE(DeclareAnyGlobalPublic)
-
-	DELETE_STATE(DeclareAnyGlobalPrivate)
+	DELETE_STATE(GlobalAccessModifier)
 
 
 	DELETE_STATE(StartDeclareModule)
@@ -914,12 +1464,6 @@ bool FParserStates::RegisterModuleFromContext(FProgramInfo& OutProgramInfo, cons
 		return false;
 	}
 
-
-
-	ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredInFile = TokenCTX.GetFileInfo();
-	ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredAtLine = TokenCTX.GetLine();
-
-
 	const std::string LModuleName = FCompilerHelperLibrary::MakePathFromParts(ModuleDeclarationContext.ModulePath, false, '.');
 	if( !GetIsMainModule() && OutProgramInfo.MainModuleName != LModuleName ) // module name was set at the import stage
 	{
@@ -932,6 +1476,8 @@ bool FParserStates::RegisterModuleFromContext(FProgramInfo& OutProgramInfo, cons
 		RaiseError(EErrorMessageType::MODULE_DOUBLE_IMPORT, TokenCTX);
 		return false;
 	}
+
+
 
 	OutProgramInfo.ImportedModulesInfo.insert(std::pair(LModuleName, ModuleDeclarationContext.ModuleInfo));
 	OutProgramInfo.MainModuleName = LModuleName;
@@ -1011,10 +1557,12 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 
 	if( !ModuleImportingContext.AliasName.empty() )
 	{
+		// clang-format off
 		if( 
 			OutProgramInfo.ImportedModulesInfo[OutProgramInfo.MainModuleName].ImportedModuleNameAliases.find(ModuleImportingContext.AliasName) != 
 			OutProgramInfo.ImportedModulesInfo[OutProgramInfo.MainModuleName].ImportedModuleNameAliases.end() 
 		  )
+		// clang-format on
 		{
 			RaiseError(EErrorMessageType::MODULE_ALIAS_NAME_REDEFINITION, TokenCTX);
 			return false;
@@ -1252,8 +1800,6 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 
 
 
-	FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredInFile = TokenCTX.GetFileInfo();
-	FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredAtLine = TokenCTX.GetLine();
 	FunctionDeclarationContext.SignatureInfo.StaticCodeTree.BuildAST(FunctionDeclarationContext.StaticCodeTokens);
 
 	const bool ThisSignatureExists = FParserHelperLibrary::GetFunctionSignatureID(FunctionDeclarationContext.SignatureInfo, OutProgramInfo) != -1;
@@ -1269,7 +1815,7 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 
 	OutProgramInfo.Functions.insert(std::pair(LFunctionCompileName, FunctionDeclarationContext.SignatureInfo));
 
-	if( StateContextType == EStateContextType::InClass && FunctionDeclarationContext.SignatureInfo.Modifiers.IsVirtual || FunctionDeclarationContext.SignatureInfo.Modifiers.IsOverride )
+	if( StateContextType == EStateContextType::InClass && (FunctionDeclarationContext.SignatureInfo.Modifiers.IsVirtual || FunctionDeclarationContext.SignatureInfo.Modifiers.IsOverride) )
 	{
 		ClassDeclarationContext.ClassInfo.VirtualFunctionsTable.insert(std::pair(FunctionDeclarationContext.FunctionName, LFunctionCompileName));
 	}
@@ -1336,10 +1882,6 @@ bool FParserStates::RegisterClassFromContext(FProgramInfo& OutProgramInfo, const
 		return false;
 	}
 
-
-
-	ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = TokenCTX.GetFileInfo();
-	ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredAtLine = TokenCTX.GetLine();
 
 
 	OutProgramInfo.Classes.insert(std::pair(LClassCompileName, ClassDeclarationContext.ClassInfo));

@@ -125,9 +125,9 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(MODULE_NAME_NOT_MATCH_FILE_NAME):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module name does not match the file name.");
 	CASE_ERROR(IMPORTING_MAIN_MODULE):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Main module can't be imported.");
 	CASE_ERROR(IMPORTING_IMPLEMENT_MODULE):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Implement module can only main module.");
-	CASE_ERROR(FUNCTION_DOUBLE_SPECIFIER):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function double specifier.");
-	CASE_ERROR(FUNCTION_RETURN_TYPE_DOUBLE_CPECIFIER):		return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function return type double specifier.");
-	CASE_ERROR(FUNCTION_MEMBER_DOUBLE_SPECIFIER):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function member double specifier.");
+	CASE_ERROR(DOUBLE_MODIFIER):							return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Double modifier.");
+	CASE_ERROR(RETURN_TYPE_DOUBLE_MODIFIER):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Return type double modifier.");
+	CASE_ERROR(MEMBER_DOUBLE_MODIFIER):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Member double modifier.");
 	CASE_ERROR(EXPECTED_FUNCTION_RETURN_TYPE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected return type.");
 	CASE_ERROR(EXPECTED_FUNCTION_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected function name.");
 	CASE_ERROR(EXPECTED_ARGUMENT_TYPE):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument type.");

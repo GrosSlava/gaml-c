@@ -611,27 +611,33 @@ struct FParserHelperLibrary
 		if( Tokens.empty() ) return "";
 
 		int ModuleNameSearchIndex = 0;
-		bool LIsModule = false;
 
-		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::DEPRECATED )
+		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::DESCRIPTION_BLOCK )
+		{
+			do
+			{
+				++ModuleNameSearchIndex;
+				if( Tokens.size() <= ModuleNameSearchIndex ) return "";
+			} while( Tokens[ModuleNameSearchIndex].GetType() != ETokenType::DESCRIPTION_BLOCK );
+		}
+		++ModuleNameSearchIndex;
+		if( Tokens.size() <= ModuleNameSearchIndex ) return "";
+
+		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::PUBLIC || Tokens[ModuleNameSearchIndex].GetType() == ETokenType::PRIVATE )
 		{
 			++ModuleNameSearchIndex;
+			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
 		}
-		if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::STATIC )
-		{
-			++ModuleNameSearchIndex;
-		}
-		if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-
+		
 		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::MODULE )
 		{
 			++ModuleNameSearchIndex;
-			LIsModule = true;
+			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
 		}
-		if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-
-		if( !LIsModule ) return "";
+		else
+		{
+			return "";
+		}
 
 		std::string LModuleName = "";
 		while( Tokens[ModuleNameSearchIndex].GetType() != ETokenType::SEMICOLON )

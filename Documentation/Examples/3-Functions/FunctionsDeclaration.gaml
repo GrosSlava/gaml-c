@@ -7,7 +7,7 @@
         We can't have more than 1 function with the same name, but it can be with different arguments in the same module.
     */
 ***
-func foo() {}
+func foo {}
 
 // func foo() {} // there will be error
 
