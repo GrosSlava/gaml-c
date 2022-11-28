@@ -3,150 +3,249 @@
 	"scopeName": "source.gaml",
 	"patterns": [
 		{
-			"include": "#keywords"
+			"include": "#GlobalSpace"
 		},
 		{
-			"include": "#comments"
+			"include": "#Comments"
 		},
 		{
-			"include": "#strings"
+			"include": "#Strings"
 		}
 	],
 	"repository": {
-		"keywords": {
+		"Comments": {
 			"patterns": [
 				{
-				"name": "keyword.control.gaml",
-				"match": "\\b(do|while|for|foreach|break|continue|if|else|switch|switch_all|case|default|return)\\b"
+					"include": "#BlockComment"
 				},
 				{
-				"name": "keyword.other.gaml",
-				"match": "\\b(func|lambda|param|extern_c|cdecl|stdcall|fastcall|thiscall|sizeof|typeof|nameof|alignof|alignas|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|in|is|as|addr|cast|unsafe_cast|assert|static_assert|static_error|static_warning|static_message|import|module|implement|using)\\b"
-				},
-				
-				{
-				"name": "storage.modifier.gaml",
-				"match": "\\b(const|mut|static|inline|virtual|override|abstract|final|template|deprecated|unimplemented|public|protected|private)\\b"
+					"include": "#LineComment"
 				},
 				{
-				"name": "storage.type.gaml",
-				"match": "\\b(struct|enum|interface|object|component)\\b"
-				},
-				
-				{
-				"name": "constant.language.gaml",
-				"match": "\\b(true|false|None|this|super)\\b"
-				},
-				
-				{
-				"name": "support.type.gaml",
-				"match": "\\b(void|class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
+					"include": "#DescriptionComment"
 				}
 			]
 		},
-		"comments": {
+		"GlobalSpace": {
 			"patterns": [
 				{
-					"include": "#block_comment"
+					"include": "#GlobalSpaceModifiers"
 				},
 				{
-					"include": "#line_comment"
+					"include": "#AccessModifiers"
+				},
+				{
+					"include": "#Operators"
+				},
+				{
+					"include": "#ClassKeywords"
+				},
+				{
+					"include": "#FunctionKeywords"
+				},
+				{
+					"include": "#ModuleKeywords"
+				},
+				{
+					"include": "#TemplateKeywords"
+				},
+				{
+					"include": "#StandardTypes"
+				},
+				{
+					"include": "#StandardConstants"
+				},
+				{
+					"include": "#BuildinOperators"
+				},
+				{
+					"include": "#Asserts"
 				}
 			]
 		},
-		"strings": {
+		"DescriptionModifiers": {
 			"patterns": [
 				{
-				"name":"string.quoted.single.gaml",
-				"begin": "'",
-				"end": "'"
+					"name": "storage.modifier.gaml",
+					"match": "@"
 				},
 				{
-				"name":"string.quoted.double.gaml",
-				"begin": "\"",
-				"end": "\""
+					"name": "keyword.other.gaml",
+					"match": "\\b(param|return|extern_c|cdecl|stdcall|fastcall|thiscall|const|static|inline|virtual|override|abstract|final|deprecated|unimplemented|align)\\b"
 				}
 			]
 		},
-		"block_comment": {
+		"GlobalSpaceModifiers": {
+			"patterns": [
+				{
+					"name": "storage.modifier.gaml",
+					"match": "\\b(const|mut)\\b"
+				}
+			]
+		},
+		"AccessModifiers": {
+			"patterns": [
+				{
+					"name": "storage.modifier.gaml",
+					"match": "\\b(public|protected|private)\\b"
+				}
+			]
+		},
+		"Operators": {
+			"patterns": [
+				{
+					"name": "keyword.control.gaml",
+					"match": "\\b(static|do|while|for|foreach|break|continue|if|else|switch|switch_all|case|default|return)\\b"
+				}
+			]
+		},
+		"ClassKeywords": {
+			"patterns": [
+				{
+					"name": "storage.type.gaml",
+					"match": "\\b(struct|enum|interface|object|component)\\b"
+				},
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(this|super)\\b"
+				}
+			]
+		},
+		"FunctionKeywords": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(func|lambda)\\b"
+				}
+			]
+		},
+		"ModuleKeywords": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(module|import|implement)\\b"
+				}
+			]
+		},
+		"TemplateKeywords": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(typename|template)\\b"
+				}
+			]
+		},
+		"StandardTypes": {
+			"patterns": [
+				{
+					"name": "support.type.gaml",
+					"match": "\\b(void|class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
+				}
+			]
+		},
+		"StandardConstants": {
+			"patterns": [
+				{
+					"name": "constant.language.gaml",
+					"match": "\\b(true|false|None)\\b"
+				}
+			]
+		},
+		"BuildinOperators": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|in|is|as|addr|cast|unsafe_cast|using)\\b"
+				}
+			]
+		},
+		"Asserts": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(assert|static_assert|static_error|static_warning|static_message)\\b"
+				}
+			]
+		},
+		"Strings": {
+			"patterns": [
+				{
+					"name":"string.quoted.single.gaml",
+					"begin": "'",
+					"end": "'"
+				},
+				{
+					"name":"string.quoted.double.gaml",
+					"begin": "\"",
+					"end": "\""
+				}
+			]
+		},
+		"BlockComment": {
 			"patterns": [
 				{
 					"name": "comment.block.gaml",
 					"begin": "\\s*+(\\/\\*)",
-					"end": "\\*\\/",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.definition.comment.begin.gaml"
-						}
-					},
-					"endCaptures": {
-						"0": {
-							"name": "punctuation.definition.comment.end.gaml"
-						}
-					}
-				},
-				{
-					"name": "comment.block.gaml",
-					"begin": "\\s*+(\\/\\*)",
-					"end": "\\*\\/",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.definition.comment.begin.gaml"
-						}
-					},
-					"endCaptures": {
-						"0": {
-							"name": "punctuation.definition.comment.end.gaml"
-						}
-					}
+					"end": "\\*\\/"
 				}
 			]
 		},
-		"line_comment": {
+		"LineComment": {
 			"patterns": [
 				{
 					"name": "comment.line.double-slash.gaml",
 					"begin": "\\s*+(\\/\\/)",
 					"end": "(?<=\\n)(?<!\\\\\\n)",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.definition.comment.gaml"
-						}
-					},
-					"endCaptures": {},
 					"patterns": [
 						{
-							"include": "#line_continuation_character"
-						}
-					]
-				},
-				{
-					"name": "comment.line.double-slash.gaml",
-					"begin": "\\s*+(\\/\\/)",
-					"end": "(?<=\\n)(?<!\\\\\\n)",
-					"beginCaptures": {
-						"1": {
-							"name": "punctuation.definition.comment.gaml"
-						}
-					},
-					"endCaptures": {},
-					"patterns": [
-						{
-							"include": "#line_continuation_character"
+							"include": "#LineContinuationCharacter"
 						}
 					]
 				}
 			]
 		},
-		"line_continuation_character": {
+		"LineContinuationCharacter": {
 			"patterns": [
 				{
-					"match": "(\\\\)\\n",
-					"captures": {
-						"1": {
-							"name": "constant.character.escape.line-continuation.gaml"
+					"match": "(\\\\)\\n"
+				}
+			]
+		},
+		"DescriptionComment": {
+			"patterns": [
+				{
+					"name": "block.gaml",
+					"begin": "\\*\\*\\*",
+					"end": "\\*\\*\\*",
+					"patterns": [
+						{
+							"include": "#BlockComment"
+						},
+						{
+							"include": "#LineComment"
+						},
+						{
+							"include": "#Strings"
+						},
+						{
+							"include": "#DescriptionModifiers"
+						},
+						{
+							"include": "#GlobalSpaceModifiers"
+						},
+						{
+							"include": "#FunctionKeywords"
+						},
+						{
+							"include": "#StandardTypes"
+						},
+						{
+							"include": "#StandardConstants"
+						},
+						{
+							"include": "#BuildinOperators"
 						}
-					}
+					]
 				}
 			]
 		}

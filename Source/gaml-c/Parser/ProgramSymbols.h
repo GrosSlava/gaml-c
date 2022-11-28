@@ -120,6 +120,8 @@ struct FModfiers
 	bool IsFinal = false;
 	bool IsDeprecated = false;
 	bool IsUnimplemented = false;
+
+	int Align = -1;
 };
 
 
@@ -268,10 +270,6 @@ struct FClassInfo
 		Array of parent build-time type IDs.
 	*/
 	std::vector<int> ParentTypesID;
-	/*
-		Data align. -1 means default.
-	*/
-	int Align = -1;
 
 	/*
 		Context modifiers.

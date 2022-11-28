@@ -130,7 +130,7 @@ func foo
         Compiler can try to convert one type to other. 
         If it is unsafe to cast one type to other, compiler will throw error.
     */
-    uint16 AutoCastedChar = 'H';
+    uint32 AutoCastedChar = 'H';
 
 
 

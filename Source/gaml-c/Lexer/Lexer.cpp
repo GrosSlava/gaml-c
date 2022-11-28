@@ -530,7 +530,8 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 {
 	std::vector<Token> LTokens;
 
-
+	//Example
+	/*
 	//.......................Merge access modifier block.....................//
 
 	for( size_t i = 0; i < OutTokens.size(); ++i )
@@ -556,4 +557,5 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 	LTokens.clear();
 
 	//.......................................................................//
+	*/
 }

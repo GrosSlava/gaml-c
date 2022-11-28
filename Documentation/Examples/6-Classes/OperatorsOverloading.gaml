@@ -6,7 +6,6 @@
     See example with struct.
 */
 
-
 struct FMyStruct 
 {
     ***

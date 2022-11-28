@@ -8,6 +8,7 @@
 object UMyObject // object can be inhereted only from interface(many) or other object(one)
 {
     // declare object members
+    // by default all members are public
     int32 A;        // by default uninitialized members contains trash
     float B = 5.6f; // we can give dafault value
 
@@ -18,14 +19,10 @@ object UMyObject // object can be inhereted only from interface(many) or other o
     UMyComponent Comp2; // this component is not instantiated, so there will be None
     UMyComponent Comp3; // this component is instantiated in constructor
 
-private: // start private block, by default we are in the public block
-
     ***
-        // declare method, it is public, but we not leave private block
+        // declare method, it is public
     ***
     public func foo {}
-
-public:
 
     ***
         @virtual // declare virtual function, which can be overridden by a child
@@ -51,7 +48,7 @@ public:
 } // not need ';' unlike C
 
 
-object UMyObject2 : UMyObject 
+object UMyObject2(UMyObject)
 {
     func bar {} // we can declare method with the same name as parent method, but it is not virtual
 

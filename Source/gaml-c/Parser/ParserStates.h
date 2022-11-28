@@ -45,7 +45,10 @@ DECLARE_STATE_CLASS(Default)
 
 // *** ... ***
 DECLARE_STATE_CLASS(StartDescription)		// -> *** -> @|***
-DECLARE_STATE_CLASS(DescriptionModifier)	// *** -> @ -> [MODIFIER]|param|return
+DECLARE_STATE_CLASS(DescriptionModifier)	// *** -> @ -> [MODIFIER]|param|return|align
+DECLARE_STATE_CLASS(DescriptionAlign1)		// @ -> align -> (
+DECLARE_STATE_CLASS(DescriptionAlign2)		// align -> ( -> )
+DECLARE_STATE_CLASS(DescriptionAlign3)		// ( -> ) -> @|***
 DECLARE_STATE_CLASS(DescriptionParam1)		// @ -> param|return -> [IDENTIFIER]
 DECLARE_STATE_CLASS(DescriptionParam2)		// [IDENTIFIER] -> : -> const|mut|[stadrad type]|[user type]
 DECLARE_STATE_CLASS(DescriptionParam3)		// : -> const|mut|[stadrad type]|[user type] -> (|@|***
@@ -56,6 +59,7 @@ DECLARE_STATE_CLASS(EndDescription)			// *** -> *** -> public|private|module|fun
 
 // public|private func|interface|object|component|struct|enum
 DECLARE_STATE_CLASS(GlobalAccessModifier)	// -> public|private -> func|interface|object|component|struct|enum
+DECLARE_STATE_CLASS(LocalAccessModifier)	// -> public|protected|private -> func|static|const|[stadrad type]|[user type]
 
 
 
@@ -83,20 +87,28 @@ DECLARE_STATE_CLASS(DeclareFunction3)		// [ -> ] -> ;|{
 DECLARE_STATE_CLASS(DeclareFunction4)		// [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareClass)
+DECLARE_STATE_CLASS(StartDeclareClass)		// -> struct|enum|interface|object|component -> <||[IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass1)			// struct|enum|interface|object|component -> <| -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass2)			// <| -> [stadrad type]|[user type] -> ,||>
+DECLARE_STATE_CLASS(DeclareClass3)			// <| -> |> -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass4)			// struct|enum|interface|object|component||> -> [IDENTIFIER] -> (|{
+DECLARE_STATE_CLASS(DeclareClass5)			// [IDENTIFIER] -> ( -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass6)			// ( -> [stadrad type]|[user type] -> ,|)
+DECLARE_STATE_CLASS(DeclareClass7)			// [stadrad type]|[user type] -> ) -> {
+DECLARE_STATE_CLASS(DeclareClassInternal)	// [IDENTIFIER]|) -> { -> public:|protected:|private:|***|public|protected|private|func|static_assert|static|const|[stadrad type]|[user type]}
 
 
 
 // using [IDENTIFIER] = [stadrad type]|[user type];
-DECLARE_STATE_CLASS(StartDefineAlias)	// -> using -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DefineAlias1)		// using -> [IDENTIFIER] -> =
-DECLARE_STATE_CLASS(DefineAlias2)		// [IDENTIFIER] -> = -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DefineAlias3)		// [stadrad type]|[user type] -> ; -> [Default]
+DECLARE_STATE_CLASS(StartDefineAlias)		// -> using -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DefineAlias1)			// using -> [IDENTIFIER] -> =
+DECLARE_STATE_CLASS(DefineAlias2)			// [IDENTIFIER] -> = -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DefineAlias3)			// [stadrad type]|[user type] -> ; -> [Default]
 
 // static_assert(expression);
-DECLARE_STATE_CLASS(StartStaticAssert)	// -> static_assert -> (
-DECLARE_STATE_CLASS(StaticAssert1)		// static_assert -> ( -> )
-DECLARE_STATE_CLASS(StaticAssert2)		// ( -> ) -> ;
+DECLARE_STATE_CLASS(StartStaticAssert)		// -> static_assert -> (
+DECLARE_STATE_CLASS(StaticAssert1)			// static_assert -> ( -> )
+DECLARE_STATE_CLASS(StaticAssert2)			// ( -> ) -> ;
 
 // template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
 DECLARE_STATE_CLASS(StartDefineTemplate)
@@ -171,9 +183,16 @@ public:
 	inline void Clear() noexcept
 	{
 		Modfiers = FModfiers();
-		DescriptionContext = EDescriptionContext::UNDEFINED;
 		Inputs.clear();
 		Return = FVariableInfo();
+		DescriptionContext = EDescriptionContext::UNDEFINED;
+		OpenBracketLayer = 0;
+		CodeTokens.clear();
+	}
+
+	inline void PrepareForNextModifier() noexcept 
+	{
+		DescriptionContext = EDescriptionContext::UNDEFINED;
 		OpenBracketLayer = 0;
 		CodeTokens.clear();
 	}
@@ -182,10 +201,10 @@ public:
 public:
 
 	FModfiers Modfiers;
-	EDescriptionContext DescriptionContext = EDescriptionContext::UNDEFINED;
 	std::vector<FVariableInfo> Inputs;
 	FVariableInfo Return;
 
+	EDescriptionContext DescriptionContext = EDescriptionContext::UNDEFINED;
 	int OpenBracketLayer = 0;
 	std::vector<Token> CodeTokens;
 };
@@ -252,8 +271,6 @@ public:
 	FClassInfo ClassInfo;
 	std::vector<std::string> TemplateArguments;
 	std::string ClassName = "";
-
-	EAccessModifier CurrentAccessModifier = EAccessModifier::Public;
 };
 
 
@@ -348,6 +365,9 @@ public:
 
 	DECLARE_STATE(StartDescription)
 	DECLARE_STATE(DescriptionModifier)
+	DECLARE_STATE(DescriptionAlign1)
+	DECLARE_STATE(DescriptionAlign2)
+	DECLARE_STATE(DescriptionAlign3)
 	DECLARE_STATE(DescriptionParam1)
 	DECLARE_STATE(DescriptionParam2)
 	DECLARE_STATE(DescriptionParam3)
@@ -357,6 +377,7 @@ public:
 	DECLARE_STATE(EndDescription)
 
 	DECLARE_STATE(GlobalAccessModifier)
+	DECLARE_STATE(LocalAccessModifier)
 
 
 	DECLARE_STATE(StartDeclareModule)
@@ -378,6 +399,14 @@ public:
 	DECLARE_STATE(DeclareFunction4)
 
 	DECLARE_STATE(StartDeclareClass)
+	DECLARE_STATE(DeclareClass1)
+	DECLARE_STATE(DeclareClass2)
+	DECLARE_STATE(DeclareClass3)
+	DECLARE_STATE(DeclareClass4)
+	DECLARE_STATE(DeclareClass5)
+	DECLARE_STATE(DeclareClass6)
+	DECLARE_STATE(DeclareClass7)
+	DECLARE_STATE(DeclareClassInternal)
 
 
 	DECLARE_STATE(StartDefineAlias)

@@ -8,19 +8,16 @@
 component UMyComponent // component can be inhereted only from interface(many) or other component(one)
 {
     // declare component members
+    // by default all members are public
     int32 A;        // by default uninitialized members contains trash
     float B = 5.6f; // we can give dafault value
 
     private int32 C; // set this member as private
 
-private: // start private block, by default we are in the public block
-
     ***
-        // declare method, it is public, but we not leave private block
+        // declare method, it is public
     ***
     public func foo {}
-
-public:
 
     ***
         @virtual // declare virtual function, which can be overridden by a child
@@ -43,7 +40,7 @@ public:
     func UMyComponent { this->A = A; } // use keyword 'this' to get access the current instance fields
 } // not need ';' unlike C
 
-component UMyComponent2 : UMyComponent 
+component UMyComponent2(UMyComponent) 
 {
     func bar {} // we can declare method with the same name as parent method, but it is not virtual
 

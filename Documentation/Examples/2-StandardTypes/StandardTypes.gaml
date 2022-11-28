@@ -24,9 +24,9 @@ func main
     */
 
     bool g;     // 8-bit logic type
-    char h;     // 16-bit symbol type(utf-16)
+    char h;     // 32-bit symbol type(utf-16)
 
-    string s;   // builtin type for easy operations with strings, see documentation about string
+    string s;    // builtin type for easy operations with strings, see documentation about string
     vector4d v1; // builtin type for easy operations with 4d-vectors, see documentation about vectors
     vector3d v2; // builtin type for easy operations with 3d-vectors, see documentation about vectors
     vector2d v3; // builtin type for easy operations with 2d-vectors, see documentation about vectors

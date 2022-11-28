@@ -5,7 +5,7 @@
     Declare enum.
     Each enum is located on the stack (except the array of enum).
 */
-enum EMyEnum : uint8 // enum can be inhereted from any integer type(by default uint32)
+enum EMyEnum(uint8) // enum can be inhereted from any integer type(by default uint32)
 {
     One,        // each field is number
     Two = 3,    // we can give custom number for field
@@ -20,7 +20,7 @@ enum EMyEnum : uint8 // enum can be inhereted from any integer type(by default u
     // all enum members are public, you can't change its access modifier
 } // not need ';' unlike C
 
-enum EMyStringEnum : string // enum can be inhereted from string
+enum EMyStringEnum(string) // enum can be inhereted from string
 {
     One = "One",    // each field is string, so, we need to init it
     Two = "Two",        
@@ -38,6 +38,9 @@ func main
 
     EMyEnum::max(); // get enum max value member
     // EMyStringEnum::max(); // will not work with strtings
+
+    EMyEnum::min(); // get enum min value member
+    // EMyStringEnum::min(); // will not work with strtings
 
     EMyEnum::count(); // get count of enum fields
     

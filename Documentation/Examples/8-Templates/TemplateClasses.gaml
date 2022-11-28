@@ -6,7 +6,7 @@
     But template arguments can contain only types.
     Unlike template code, template classes will be converted to class declaration after first mention in code. 
 */
-struct<|T|> TMyStruct
+struct<|typename T|> TMyStruct
 [
     // static code can be here
 ]

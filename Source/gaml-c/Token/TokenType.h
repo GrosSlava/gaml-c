@@ -50,7 +50,6 @@ enum class ETokenType
 	TYPE_OF,                    // typeof
 	NAME_OF,                    // nameof
 	ALIGN_OF,                   // alignof
-	ALIGN_AS,					// alignas
 	IS_FUNCTION,                // isfunction
 	IS_STRUCT,					// isstruct
 	IS_ENUM,					// isenum
@@ -175,6 +174,7 @@ enum class ETokenType
 	STDCALL,					// stdcall
 	FASTCALL,					// fastcall
 	THISCALL,					// thiscall
+	TYPENAME,					// typename
 
 	// specifiers
 	CONST,                      // const
@@ -188,6 +188,7 @@ enum class ETokenType
 	TEMPLATE,                   // template
 	DEPRECATED,					// deprecated
 	UNIMPLEMENTED,				// unimplemented
+	ALIGN,						// align
 
 	// casts
 	CAST,                       // cast
@@ -215,9 +216,6 @@ enum class ETokenType
 	PUBLIC,                     // public
 	PROTECTED,                  // protected
 	PRIVATE,                    // private
-	PUBLIC_BLOCK,               // public:
-	PROTECTED_BLOCK,            // protected:
-	PRIVATE_BLOCK,              // private:
 
 	// modules
 	IMPORT,                     // import

@@ -3,7 +3,9 @@
 
 
 ***
-    //@deprecated // we can add deprecated modifier to mark this module as deprecated
+    //@deprecated       // we can add deprecated modifier to mark this module as deprecated
+    //@unimplemented    // we can set this module as unimplemented, it can't be included
+    //@extern_c         // all functions inside this module will be marked as extern_c, this module can't contains classes
 ***
 module MyModule; // set the module name, it must match the file name
 

@@ -6,7 +6,7 @@ object UMyObject
 
 }
 
-object UMyObject2 : UMyObject
+object UMyObject2(UMyObject)
 {
 
 }

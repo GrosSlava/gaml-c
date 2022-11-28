@@ -1,25 +1,26 @@
 // This examples show features of struct declaration
 
 
-/*
-    Declare struct.
-    Each structure is located on the stack (except the array of struct).
-*/
+
+***
+    /*
+        Declare struct.
+        Each structure is located on the stack (except the array of struct).
+    */
+
+    @align(16) // set structure memory align
+***
 struct FMyStruct // struct can't be inhereted from any type
-alignas(16) // set structure memory align
 {
     // Declare struct members
+    // by default all members are public
     int32 A;        // by default uninitialized members contains trash
     float B = 5.6f; // we can give dafault value
 
     private int32 C; // set this member as private, protected modifier can't be used with structs
 
-private: // start private block, by default we are in the public block
-
-    // declare method, it is public, but we not leave private block
+    // declare method, it is public
     public func foo {}
-
-public:
 
     // declare method without implementation
     func bar;
