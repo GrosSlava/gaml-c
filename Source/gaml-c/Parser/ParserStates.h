@@ -88,14 +88,14 @@ DECLARE_STATE_CLASS(DeclareFunction4)		// [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
 DECLARE_STATE_CLASS(StartDeclareClass)		// -> struct|enum|interface|object|component -> <||[IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass1)			// struct|enum|interface|object|component -> <| -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass1)			// struct|enum|interface|object|component -> <| -> typename|[stadrad type]|[user type]
 DECLARE_STATE_CLASS(DeclareClass2)			// <| -> [stadrad type]|[user type] -> ,||>
 DECLARE_STATE_CLASS(DeclareClass3)			// <| -> |> -> [IDENTIFIER]
 DECLARE_STATE_CLASS(DeclareClass4)			// struct|enum|interface|object|component||> -> [IDENTIFIER] -> (|{
 DECLARE_STATE_CLASS(DeclareClass5)			// [IDENTIFIER] -> ( -> [stadrad type]|[user type]
 DECLARE_STATE_CLASS(DeclareClass6)			// ( -> [stadrad type]|[user type] -> ,|)
 DECLARE_STATE_CLASS(DeclareClass7)			// [stadrad type]|[user type] -> ) -> {
-DECLARE_STATE_CLASS(DeclareClassInternal)	// [IDENTIFIER]|) -> { -> public:|protected:|private:|***|public|protected|private|func|static_assert|static|const|[stadrad type]|[user type]}
+DECLARE_STATE_CLASS(DeclareClassInternal)	// [IDENTIFIER]|) -> { -> ***|public|protected|private|func|static_assert|using|static|const|[stadrad type]|[user type]|}
 
 
 
@@ -443,6 +443,17 @@ public:
 		FunctionDeclarationContext.Clear();
 		VariableDeclarationContext.Clear();
 		ClassDeclarationContext.Clear();
+		AliasDeclarationContext.Clear();
+		StaticAssertContext.Clear();
+		FunctionImplementationContext.Clear();
+	}
+	inline void ClearContextsLocal() noexcept
+	{
+		AccessModifierContextType = EAccessModifier::Public;
+
+		DescriptionContext.Clear();
+		FunctionDeclarationContext.Clear();
+		VariableDeclarationContext.Clear();
 		AliasDeclarationContext.Clear();
 		StaticAssertContext.Clear();
 		FunctionImplementationContext.Clear();

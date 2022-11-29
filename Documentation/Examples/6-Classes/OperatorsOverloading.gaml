@@ -2,7 +2,7 @@
 
 
 /*
-    Only enum, struct can have overloaded operators.
+    Only struct can have overloaded operators.
     See example with struct.
 */
 
