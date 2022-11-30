@@ -104,6 +104,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(INVALID_CLOSE_PAIR):							return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid close pair.");
 	CASE_ERROR(OPEN_PAIR_SHOULD_HAVE_CLOSE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Open pair should have close.");
 	CASE_ERROR(MODULE_NAME_REDEFINITION):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module name redefinition.");
+	CASE_ERROR(MODULE_ALIAS_CONTAINS_INVALID_CHAR):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module alias name contains invalid char.");
 	CASE_ERROR(MODULE_ALIAS_NAME_REDEFINITION):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module alias name redefinition.");
 	CASE_ERROR(FUNCTION_NAME_REDEFINITION):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function implementation name redefinition.");
 	CASE_ERROR(FUNCTION_IMPLEMENTATION_NAME_REDEFINITION):	return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function name redefinition.");

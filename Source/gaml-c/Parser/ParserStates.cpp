@@ -1919,8 +1919,8 @@ bool FParserStates::RegisterModuleFromContext(FProgramInfo& OutProgramInfo, cons
 		RaiseError(EErrorMessageType::MODULE_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
-
-	const std::string LModuleName = FCompilerHelperLibrary::MakePathFromParts(ModuleDeclarationContext.ModulePath, false, '.');
+	
+	const std::string LModuleName = FParserHelperLibrary::GetModuleCompileName(ModuleDeclarationContext.ModulePath);
 	if( !GetIsMainModule() && OutProgramInfo.MainModuleName != LModuleName ) // module name was set at the import stage
 	{
 		RaiseError(EErrorMessageType::INVALID_IMPORTING_MODULE_NAME, TokenCTX);
@@ -1970,7 +1970,7 @@ bool FParserStates::ImplementModuleFromContext(FProgramInfo& OutProgramInfo, con
 
 
 
-	const std::string LModuleName = FCompilerHelperLibrary::MakePathFromParts(ModuleImplementingContext.ModulePath, false, '.');
+	const std::string LModuleName = FParserHelperLibrary::GetModuleCompileName(ModuleImplementingContext.ModulePath);
 
 	if( OutProgramInfo.ImportedModulesInfo.find(LModuleName) != OutProgramInfo.ImportedModulesInfo.end() )
 	{
@@ -2009,10 +2009,16 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 
 
 	const std::string LImportingModuleRelativePath = FCompilerHelperLibrary::MakePathFromParts(ModuleImportingContext.ModulePath);
-	const std::string LModuleName = FCompilerHelperLibrary::MakePathFromParts(ModuleImportingContext.ModulePath, false, '.');
+	const std::string LModuleName = FParserHelperLibrary::GetModuleCompileName(ModuleImportingContext.ModulePath);
 
 	if( !ModuleImportingContext.AliasName.empty() )
 	{
+		if( ModuleImportingContext.AliasName.find('.') != std::string::npos )
+		{
+			RaiseError(EErrorMessageType::MODULE_ALIAS_CONTAINS_INVALID_CHAR, TokenCTX);
+			return false;
+		}
+
 		// clang-format off
 		if( 
 			OutProgramInfo.ImportedModulesInfo[OutProgramInfo.MainModuleName].ImportedModuleNameAliases.find(ModuleImportingContext.AliasName) != 
@@ -2053,7 +2059,7 @@ bool FParserStates::ImportModule(FProgramInfo& OutProgramInfo, const std::string
 	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
-	FCompilerHelperLibrary::SplitPathToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts, '.');
+	FParserHelperLibrary::SplitModuleNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
 	const std::string LUpDirectory = FCompilerHelperLibrary::MakeUpDirectoryStr(LCurrentModulePathParts.size() - 1);
 
 
@@ -2137,9 +2143,9 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
-	FCompilerHelperLibrary::SplitPathToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts, '.');
+	FParserHelperLibrary::SplitModuleNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
 	const std::string LUpDirectory = FCompilerHelperLibrary::MakeUpDirectoryStr(LCurrentModulePathParts.size() - 1);
-
+	
 
 	std::vector<FGamlFileInfo> FilesInfo;
 

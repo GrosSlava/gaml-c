@@ -162,15 +162,17 @@ struct FCompilerHelperLibrary
 	*/
 	static inline std::string MakeUpDirectoryStr(size_t UpCount)
 	{
-		std::string LResult = "";
-		const std::string LUp = ".." + std::filesystem::path::preferred_separator;
+		if( UpCount == 0 ) return "";
 
-		LResult.reserve(UpCount * LUp.length());
+		std::string LResult = "";
+		const std::string LUp = std::string("..") + static_cast<char>(std::filesystem::path::preferred_separator);
+
+		LResult.reserve(UpCount * LUp.size());
 		for( size_t i = 0; i < UpCount; ++i )
 		{
 			LResult += LUp;
 		}
-
+		
 		return LResult;
 	}
 

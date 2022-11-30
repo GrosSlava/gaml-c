@@ -7,6 +7,8 @@
 #include "../Token/Token.h"
 #include "ProgramSymbols.h"
 
+#include "../Compiler/CompilerHelperLibrary.h"
+
 
 
 
@@ -14,6 +16,8 @@
 	Separetor for compile names.
 */
 const static std::string NameSeparator = "_0";
+
+
 
 /*
 	Helper library for common parser operations.
@@ -41,7 +45,7 @@ struct FParserHelperLibrary
 
 		// clang-format off
 		return	LTokenType == ETokenType::RBRA || LTokenType == ETokenType::RPAR ||
-				LTokenType == ETokenType::RSQR || LTokenType == ETokenType::RTRI; 
+				LTokenType == ETokenType::RSQR || LTokenType == ETokenType::RTRI;
 		// clang-format on
 	}
 	/*
@@ -117,7 +121,78 @@ struct FParserHelperLibrary
 
 
 
+	
 
+	/*
+		Construct module compile name.
+
+		@param ModulePathParts - module package path.
+		@return constructed module name.
+	*/
+	static inline std::string GetModuleCompileName(const std::vector<std::string>& ModulePathParts) { return FCompilerHelperLibrary::MakePathFromParts(ModulePathParts, false, '_'); }
+	/*
+		Construct module compile name.
+
+		@param ModuleName - original module name from file.
+		@return constructed module name.
+	*/
+	static inline std::string GetModuleCompileName(const std::string& ModuleName)
+	{
+		std::vector<std::string> SplittedParts;
+		FCompilerHelperLibrary::SplitPathToParts(ModuleName, SplittedParts, '.');
+
+		return GetModuleCompileName(SplittedParts);
+	}
+	/*
+		Convert module name to parts.
+
+		@param ModuleCompileName - nome of module to convert.
+		@param OutParts - result of splitting will be here.
+	*/
+	static inline void SplitModuleNameToParts(const std::string& ModuleCompileName, std::vector<std::string>& OutParts) { FCompilerHelperLibrary::SplitPathToParts(ModuleCompileName, OutParts, '_'); }
+	/*
+		Return module real compile name.
+
+		@param ModuleNameOrAlias - module compile name or alias.
+		@ProgramInfo ProgramInfo - current program info.
+		@return module real compile name.
+	*/
+	static inline std::string GetModuleRealName(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo)
+	{
+		if( ProgramInfo.ImportedModulesInfo.find(ModuleNameOrAlias) != ProgramInfo.ImportedModulesInfo.end() ) return ModuleNameOrAlias;
+
+		const auto LMainModuleInfo = ProgramInfo.ImportedModulesInfo.find(ProgramInfo.MainModuleName);
+		if( LMainModuleInfo == ProgramInfo.ImportedModulesInfo.end() ) return "";
+
+		for( const auto& LAliasPair : LMainModuleInfo->second.ImportedModuleNameAliases )
+		{
+			if( ModuleNameOrAlias == LAliasPair.first )
+			{
+				return LAliasPair.second;
+			}
+		}
+
+		return "";
+	}
+	/*
+		Return module real compile name.
+		First part can be module/packege alias. 
+
+		@param ModulePathParts - module package path.
+		@ProgramInfo ProgramInfo - current program info.
+		@return module real compile name.
+	*/
+	static inline std::string GetModuleRealName(std::vector<std::string> ModulePathParts, const FProgramInfo& ProgramInfo)
+	{
+		if( ModulePathParts.empty() ) return "";
+
+		const std::string LFirstPartRealName = GetModuleRealName(ModulePathParts[0], ProgramInfo);
+
+		if( LFirstPartRealName.empty() ) return GetModuleCompileName(ModulePathParts);
+
+		ModulePathParts[0] = LFirstPartRealName;
+		return GetModuleCompileName(ModulePathParts);
+	}
 	/*
 		Construct class compile name.
 
@@ -619,16 +694,17 @@ struct FParserHelperLibrary
 				++ModuleNameSearchIndex;
 				if( Tokens.size() <= ModuleNameSearchIndex ) return "";
 			} while( Tokens[ModuleNameSearchIndex].GetType() != ETokenType::DESCRIPTION_BLOCK );
+
+			++ModuleNameSearchIndex;
+			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
 		}
-		++ModuleNameSearchIndex;
-		if( Tokens.size() <= ModuleNameSearchIndex ) return "";
 
 		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::PUBLIC || Tokens[ModuleNameSearchIndex].GetType() == ETokenType::PRIVATE )
 		{
 			++ModuleNameSearchIndex;
 			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
 		}
-		
+
 		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::MODULE )
 		{
 			++ModuleNameSearchIndex;
@@ -647,6 +723,6 @@ struct FParserHelperLibrary
 			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
 		}
 
-		return LModuleName;
+		return GetModuleCompileName(LModuleName);
 	}
 };
