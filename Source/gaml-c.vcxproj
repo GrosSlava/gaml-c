@@ -101,7 +101,7 @@
     <ClCompile Include="gaml-c\main.cpp" />
     <ClCompile Include="gaml-c\Parser\AST.cpp" />
     <ClCompile Include="gaml-c\Parser\Parser.cpp" />
-    <ClCompile Include="gaml-c\Parser\ParserStates.cpp" />
+    <ClCompile Include="gaml-c\Parser\States\ParserStates.cpp" />
     <ClCompile Include="gaml-c\SemanticAnalyzer\SemanticAnalyser.cpp" />
     <ClCompile Include="gaml-c\Token\Token.cpp" />
   </ItemGroup>
@@ -124,8 +124,9 @@
     <ClInclude Include="gaml-c\Parser\AST.h" />
     <ClInclude Include="gaml-c\Parser\Parser.h" />
     <ClInclude Include="gaml-c\Parser\ParserHelperLibray.h" />
-    <ClInclude Include="gaml-c\Parser\ParserStates.h" />
+    <ClInclude Include="gaml-c\Parser\States\ParserStates.h" />
     <ClInclude Include="gaml-c\Parser\ProgramSymbols.h" />
+    <ClInclude Include="gaml-c\Parser\States\StatesContext.h" />
     <ClInclude Include="gaml-c\Platform\GenericPlatform.h" />
     <ClInclude Include="gaml-c\Platform\LinuxPlatform.h" />
     <ClInclude Include="gaml-c\Platform\PlatformHelperLibrary.h" />

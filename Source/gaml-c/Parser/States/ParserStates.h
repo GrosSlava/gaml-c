@@ -2,15 +2,17 @@
 
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "../../CoreMinimal.h"
 
-#include "ProgramSymbols.h"
-#include "../Token/Token.h"
+#include "StatesContext.h"
 
-#include "../Compiler/CompilerFileInfo.h"
-#include "../Compiler/CompilerOptions.h"
+#include "../ProgramSymbols.h"
+#include "../../Token/Token.h"
 
-#include "../Logger/ErrorLogger.h"
+#include "../../Compiler/CompilerFileInfo.h"
+#include "../../Compiler/CompilerOptions.h"
+
+#include "../../Logger/ErrorLogger.h"
 
 
 
@@ -44,18 +46,21 @@ public:
 DECLARE_STATE_CLASS(Default)
 
 // *** ... ***
-DECLARE_STATE_CLASS(StartDescription)	 // -> *** -> @|***
-DECLARE_STATE_CLASS(DescriptionModifier) // *** -> @ -> [MODIFIER]|param|return|align
-DECLARE_STATE_CLASS(DescriptionAlign1)	 // @ -> align -> (
-DECLARE_STATE_CLASS(DescriptionAlign2)	 // align -> ( -> )
-DECLARE_STATE_CLASS(DescriptionAlign3)	 // ( -> ) -> @|***
-DECLARE_STATE_CLASS(DescriptionParam1)	 // @ -> param|return -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DescriptionParam2)	 // [IDENTIFIER] -> : -> const|mut|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DescriptionParam3)	 // : -> const|mut|[stadrad type]|[user type] -> (|@|***
-DECLARE_STATE_CLASS(DescriptionParam4)	 // [stadrad type]|[user type] -> (|@|*** -> )
-DECLARE_STATE_CLASS(DescriptionParam5)	 // ( -> ... -> )
-DECLARE_STATE_CLASS(DescriptionParam6)	 // ... -> ) -> @|***
-DECLARE_STATE_CLASS(EndDescription)		 // *** -> *** -> public|private|module|func|struct|interface|object|component|enum
+DECLARE_STATE_CLASS(StartDescription)					 // -> *** -> @|***
+DECLARE_STATE_CLASS(DescriptionModifier)				 // *** -> @ -> [MODIFIER]|param|return|align
+DECLARE_STATE_CLASS(DescriptionAlign1)					 // @ -> align -> (
+DECLARE_STATE_CLASS(DescriptionAlign2)					 // align -> ( -> )
+DECLARE_STATE_CLASS(DescriptionAlign3)					 // ( -> ) -> @|***
+DECLARE_STATE_CLASS(DescriptionParam1)					 // @ -> param|return -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DescriptionParam2)					 // [IDENTIFIER] -> : -> const|mut|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DescriptionParam3)					 // : -> const|mut|[stadrad type]|[user type] -> (|@|***
+DECLARE_STATE_CLASS(DescriptionParam4)					 // [stadrad type]|[user type] -> (|@|*** -> )
+DECLARE_STATE_CLASS(DescriptionParam5)					 // ( -> ... -> )
+DECLARE_STATE_CLASS(DescriptionParam6)					 // ... -> ) -> @|***
+DECLARE_STATE_CLASS(EndDescription)						 // *** -> *** -> public|private|module|func|struct|interface|object|component|enum
+DECLARE_STATE_CLASS(DescriptionParamBuildinTemplateType) // -> [buildin template] ->
+DECLARE_STATE_CLASS(DescriptionParamLambdaType)			 // -> [lambda] ->
+DECLARE_STATE_CLASS(DescriptionParamUserType)			 // -> [user type] ->
 
 // public|private func|interface|object|component|struct|enum
 DECLARE_STATE_CLASS(GlobalAccessModifier) // -> public|private -> func|interface|object|component|struct|enum
@@ -87,281 +92,70 @@ DECLARE_STATE_CLASS(DeclareFunction3)	  // [ -> ] -> ;|{
 DECLARE_STATE_CLASS(DeclareFunction4)	  // [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareClass)	  // -> struct|enum|interface|object|component -> <||[IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass1)		  // struct|enum|interface|object|component -> <| -> typename|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass2)		  // <| -> [stadrad type]|[user type] -> ,||>
-DECLARE_STATE_CLASS(DeclareClass3)		  // <| -> |> -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass4)		  // struct|enum|interface|object|component||> -> [IDENTIFIER] -> (|{
-DECLARE_STATE_CLASS(DeclareClass5)		  // [IDENTIFIER] -> ( -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass6)		  // ( -> [stadrad type]|[user type] -> ,|)
-DECLARE_STATE_CLASS(DeclareClass7)		  // [stadrad type]|[user type] -> ) -> {
-DECLARE_STATE_CLASS(DeclareClassInternal) // [IDENTIFIER]|) -> { -> ***|public|protected|private|func|static_assert|using|static|const|[stadrad type]|[user type]|}
+DECLARE_STATE_CLASS(StartDeclareClass)					   // -> struct|enum|interface|object|component -> <||[IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass1)						   // struct|enum|interface|object|component -> <| -> typename|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass2)						   // <| -> [stadrad type]|[user type] -> ,||>
+DECLARE_STATE_CLASS(DeclareClass3)						   // <| -> |> -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass4)						   // struct|enum|interface|object|component||> -> [IDENTIFIER] -> (|{
+DECLARE_STATE_CLASS(DeclareClass5)						   // [IDENTIFIER] -> ( -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass6)						   // ( -> [stadrad type]|[user type] -> ,|)
+DECLARE_STATE_CLASS(DeclareClass7)						   // [stadrad type]|[user type] -> ) -> {
+DECLARE_STATE_CLASS(DeclareClassInternal)				   // [IDENTIFIER]|) -> { -> ***|public|protected|private|func|static_assert|using|static|const|[stadrad type]|[user type]|}
+DECLARE_STATE_CLASS(DeclareClassParentBuildinTemplateType) // -> [buildin template] ->
+DECLARE_STATE_CLASS(DeclareClassParentUserType)			   // -> [user type] ->
+
+// template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
+DECLARE_STATE_CLASS(StartDefineTemplate)
 
 
 
 // using [IDENTIFIER] = [stadrad type]|[user type];
-DECLARE_STATE_CLASS(StartDefineAlias) // -> using -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DefineAlias1)	  // using -> [IDENTIFIER] -> =
-DECLARE_STATE_CLASS(DefineAlias2)	  // [IDENTIFIER] -> = -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DefineAlias3)	  // = -> [stadrad type]|[user type] -> ;
+DECLARE_STATE_CLASS(StartDefineAlias)				// -> using -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DefineAlias1)					// using -> [IDENTIFIER] -> =
+DECLARE_STATE_CLASS(DefineAlias2)					// [IDENTIFIER] -> = -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DefineAlias3)					// = -> [stadrad type]|[user type] -> ;
+DECLARE_STATE_CLASS(DefineAliasBuildinTemplateType) // -> [buildin template] ->
+DECLARE_STATE_CLASS(DefineAliasLambdaType)			// -> [lambda] ->
+DECLARE_STATE_CLASS(DefineAliasUserType)			// -> [user type] ->
 
 // static_assert(expression);
 DECLARE_STATE_CLASS(StartStaticAssert) // -> static_assert -> (
 DECLARE_STATE_CLASS(StaticAssert1)	   // static_assert -> ( -> )
 DECLARE_STATE_CLASS(StaticAssert2)	   // ( -> ) -> ;
 
-// template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
-DECLARE_STATE_CLASS(StartDefineTemplate)
+
+
+// class|array <|[stadrad type]|[user type]|>
+DECLARE_STATE_CLASS(StartBuildinTemplateType)
+
+// lambda ([stadrad type]|[user type]) => [stadrad type]|[user type]
+DECLARE_STATE_CLASS(StartLambdaType)
+
+// [IDENTIFIER].[IDENTIFIER]::[IDENTIFIER]<|...|>
+DECLARE_STATE_CLASS(StartUserType) // [IDENTIFIER] -> .|::|<|
 
 //.........................................................................................................................//
-
-
-
-//....................................................Contexts.............................................................//
-
-struct FModuleDeclarationContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		ModuleInfo = FModuleInfo();
-		ModulePath.clear();
-	}
-
-
-public:
-
-	FModuleInfo ModuleInfo;
-	std::vector<std::string> ModulePath;
-};
-
-struct FModuleImplementingContext
-{
-public:
-
-	inline void Clear() noexcept 
-	{ 
-		ModulePath.clear(); 
-	}
-
-
-public:
-
-	std::vector<std::string> ModulePath;
-};
-
-struct FModuleImportingContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		ModulePath.clear();
-		AliasName.clear();
-	}
-
-
-public:
-
-	std::vector<std::string> ModulePath;
-	std::string AliasName = "";
-};
-
-
-
-enum class EDescriptionContext : unsigned char
-{
-	UNDEFINED,
-	Param,
-	Return
-};
-
-struct FDescriptionContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		Modfiers = FModfiers();
-		Inputs.clear();
-		Return = FVariableInfo();
-		DescriptionContext = EDescriptionContext::UNDEFINED;
-		OpenBracketLayer = 0;
-		CodeTokens.clear();
-	}
-
-	inline void PrepareForNextModifier() noexcept
-	{
-		DescriptionContext = EDescriptionContext::UNDEFINED;
-		OpenBracketLayer = 0;
-		CodeTokens.clear();
-	}
-
-
-public:
-
-	FModfiers Modfiers;
-	std::vector<FVariableInfo> Inputs;
-	FVariableInfo Return;
-
-	EDescriptionContext DescriptionContext = EDescriptionContext::UNDEFINED;
-	int OpenBracketLayer = 0;
-	std::vector<Token> CodeTokens;
-};
-
-
-
-struct FFunctionDeclarationContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		SignatureInfo = FFunctionSignatureInfo();
-		FunctionName.clear();
-		ClassDeclarationNamespace.clear();
-		StaticCodeTokens.clear();
-		StaticCodeOpenBracketLayer = 0;
-	}
-
-
-public:
-
-	FFunctionSignatureInfo SignatureInfo;
-	std::string ClassDeclarationNamespace = "";
-	std::string FunctionName = "";
-
-	std::vector<Token> StaticCodeTokens;
-	int StaticCodeOpenBracketLayer = 0;
-};
-
-struct FVariableDeclarationContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		VariableInfo = FVariableInfo();
-		VariableName.clear();
-		DefaultValueTokens.clear();
-	}
-
-
-public:
-
-	FVariableInfo VariableInfo;
-	std::string VariableName = "";
-
-	std::vector<Token> DefaultValueTokens;
-};
-
-struct FClassDeclarationContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		ClassInfo = FClassInfo();
-		ClassName.clear();
-	}
-
-
-public:
-
-	FClassInfo ClassInfo;
-	std::vector<std::string> TemplateArguments;
-	std::string ClassName = "";
-};
-
-
-
-struct FAliasDeclarationContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		OriginalTypeID = -1;
-		AliasName.clear();
-	}
-
-
-public:
-
-	int OriginalTypeID = -1;
-	std::string AliasName = "";
-};
-
-
-struct FStaticAssertContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		Expression.clear();
-		OpenBracketLayer = 0;
-	}
-
-
-public:
-
-	std::vector<Token> Expression;
-	int OpenBracketLayer = 0;
-};
-
-
-
-struct FFunctionImplementationContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		CompilingFunctionInfo = FCompilingFunctionInfo();
-		FunctionCodeTokens.clear();
-		FunctionCodeOpenBracketLayer = 0;
-	}
-
-
-public:
-
-	FCompilingFunctionInfo CompilingFunctionInfo;
-	std::vector<Token> FunctionCodeTokens;
-	int FunctionCodeOpenBracketLayer = 0;
-};
-
-
-
-enum class EStateContextType : unsigned char
-{
-	Global,
-	InClass
-};
-
-//.........................................................................................................................//
-
 
 
 
 
 /*
 	Main parser state maschine.
-	@see IParserState.
+	@see IParserState, FStatesContext, AST.
 */
 struct FParserStates
 {
 public:
 
-	FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOptions& InCompileOptions, bool InIsMainModule);
+	FParserStates() = delete;
+	FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOptions& InCompileOptions, bool InIsMainModule) : FileInfo(InFileInfo), CompileOptions(InCompileOptions), IsMainModule(InIsMainModule) { }
 	~FParserStates();
 
 
 
 public:
 
-#define DECLARE_STATE(StateName) StateName##_ParserState* G##StateName##_ParserState = nullptr;
+#define DECLARE_STATE(StateName) StateName##_ParserState* G##StateName##_ParserState = new StateName##_ParserState();
 
 
 	DECLARE_STATE(Default)
@@ -378,6 +172,9 @@ public:
 	DECLARE_STATE(DescriptionParam5)
 	DECLARE_STATE(DescriptionParam6)
 	DECLARE_STATE(EndDescription)
+	DECLARE_STATE(DescriptionParamBuildinTemplateType)
+	DECLARE_STATE(DescriptionParamLambdaType)
+	DECLARE_STATE(DescriptionParamUserType)
 
 	DECLARE_STATE(GlobalAccessModifier)
 	DECLARE_STATE(LocalAccessModifier)
@@ -410,18 +207,30 @@ public:
 	DECLARE_STATE(DeclareClass6)
 	DECLARE_STATE(DeclareClass7)
 	DECLARE_STATE(DeclareClassInternal)
+	DECLARE_STATE(DeclareClassParentBuildinTemplateType)
+	DECLARE_STATE(DeclareClassParentUserType)
+
+	DECLARE_STATE(StartDefineTemplate)
 
 
 	DECLARE_STATE(StartDefineAlias)
 	DECLARE_STATE(DefineAlias1)
 	DECLARE_STATE(DefineAlias2)
 	DECLARE_STATE(DefineAlias3)
+	DECLARE_STATE(DefineAliasBuildinTemplateType)
+	DECLARE_STATE(DefineAliasLambdaType)
+	DECLARE_STATE(DefineAliasUserType)
 
 	DECLARE_STATE(StartStaticAssert)
 	DECLARE_STATE(StaticAssert1)
 	DECLARE_STATE(StaticAssert2)
 
-	DECLARE_STATE(StartDefineTemplate)
+
+	DECLARE_STATE(StartBuildinTemplateType)
+
+	DECLARE_STATE(StartLambdaType)
+
+	DECLARE_STATE(StartUserType)
 
 public:
 
@@ -454,41 +263,6 @@ public:
 	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const
 	{
 		FErrorLogger::Raise(ErrorMessageType, FileInfo.GetFileFullPath(), Token.GetLine(), Token.GetPos(), CompileOptions);
-	}
-
-
-
-	/*
-		Clear all context.
-	*/
-	inline void ClearContexts() noexcept
-	{
-		AccessModifierContextType = EAccessModifier::Public;
-
-		ModuleDeclarationContext.Clear();
-		ModuleImplementingContext.Clear();
-		ModuleImportingContext.Clear();
-		DescriptionContext.Clear();
-		FunctionDeclarationContext.Clear();
-		VariableDeclarationContext.Clear();
-		ClassDeclarationContext.Clear();
-		AliasDeclarationContext.Clear();
-		StaticAssertContext.Clear();
-		FunctionImplementationContext.Clear();
-	}
-	/*
-		Clear only local context used in class declaration.
-	*/
-	inline void ClearContextsLocal() noexcept
-	{
-		AccessModifierContextType = EAccessModifier::Public;
-
-		DescriptionContext.Clear();
-		FunctionDeclarationContext.Clear();
-		VariableDeclarationContext.Clear();
-		AliasDeclarationContext.Clear();
-		StaticAssertContext.Clear();
-		FunctionImplementationContext.Clear();
 	}
 
 
@@ -576,19 +350,8 @@ private:
 
 public:
 
-	bool ModuleNameDeclared = false;
-	EStateContextType StateContextType = EStateContextType::Global;
-
-	EAccessModifier AccessModifierContextType = EAccessModifier::Public;
-
-	FModuleDeclarationContext ModuleDeclarationContext;
-	FModuleImplementingContext ModuleImplementingContext;
-	FModuleImportingContext ModuleImportingContext;
-	FDescriptionContext DescriptionContext;
-	FFunctionDeclarationContext FunctionDeclarationContext;
-	FVariableDeclarationContext VariableDeclarationContext;
-	FClassDeclarationContext ClassDeclarationContext;
-	FAliasDeclarationContext AliasDeclarationContext;
-	FStaticAssertContext StaticAssertContext;
-	FFunctionImplementationContext FunctionImplementationContext;
+	/*
+		Contexts for states.
+	*/
+	FStatesContext StatesContext;
 };
