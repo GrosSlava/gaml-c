@@ -44,71 +44,71 @@ public:
 DECLARE_STATE_CLASS(Default)
 
 // *** ... ***
-DECLARE_STATE_CLASS(StartDescription)		// -> *** -> @|***
-DECLARE_STATE_CLASS(DescriptionModifier)	// *** -> @ -> [MODIFIER]|param|return|align
-DECLARE_STATE_CLASS(DescriptionAlign1)		// @ -> align -> (
-DECLARE_STATE_CLASS(DescriptionAlign2)		// align -> ( -> )
-DECLARE_STATE_CLASS(DescriptionAlign3)		// ( -> ) -> @|***
-DECLARE_STATE_CLASS(DescriptionParam1)		// @ -> param|return -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DescriptionParam2)		// [IDENTIFIER] -> : -> const|mut|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DescriptionParam3)		// : -> const|mut|[stadrad type]|[user type] -> (|@|***
-DECLARE_STATE_CLASS(DescriptionParam4)		// [stadrad type]|[user type] -> (|@|*** -> )
-DECLARE_STATE_CLASS(DescriptionParam5)		// ( -> ... -> )
-DECLARE_STATE_CLASS(DescriptionParam6)		// ... -> ) -> @|***
-DECLARE_STATE_CLASS(EndDescription)			// *** -> *** -> public|private|module|func|struct|interface|object|component|enum
+DECLARE_STATE_CLASS(StartDescription)	 // -> *** -> @|***
+DECLARE_STATE_CLASS(DescriptionModifier) // *** -> @ -> [MODIFIER]|param|return|align
+DECLARE_STATE_CLASS(DescriptionAlign1)	 // @ -> align -> (
+DECLARE_STATE_CLASS(DescriptionAlign2)	 // align -> ( -> )
+DECLARE_STATE_CLASS(DescriptionAlign3)	 // ( -> ) -> @|***
+DECLARE_STATE_CLASS(DescriptionParam1)	 // @ -> param|return -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DescriptionParam2)	 // [IDENTIFIER] -> : -> const|mut|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DescriptionParam3)	 // : -> const|mut|[stadrad type]|[user type] -> (|@|***
+DECLARE_STATE_CLASS(DescriptionParam4)	 // [stadrad type]|[user type] -> (|@|*** -> )
+DECLARE_STATE_CLASS(DescriptionParam5)	 // ( -> ... -> )
+DECLARE_STATE_CLASS(DescriptionParam6)	 // ... -> ) -> @|***
+DECLARE_STATE_CLASS(EndDescription)		 // *** -> *** -> public|private|module|func|struct|interface|object|component|enum
 
 // public|private func|interface|object|component|struct|enum
-DECLARE_STATE_CLASS(GlobalAccessModifier)	// -> public|private -> func|interface|object|component|struct|enum
-DECLARE_STATE_CLASS(LocalAccessModifier)	// -> public|protected|private -> func|static|const|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(GlobalAccessModifier) // -> public|private -> func|interface|object|component|struct|enum
+DECLARE_STATE_CLASS(LocalAccessModifier)  // -> public|protected|private -> func|static|const|[stadrad type]|[user type]
 
 
 
 // moudle [IDENTIFIER].[IDENTIFIER]...;
-DECLARE_STATE_CLASS(StartDeclareModule)		// -> module -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareModule1)			// module -> [IDENTIFIER] -> .|;
+DECLARE_STATE_CLASS(StartDeclareModule) // -> module -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareModule1)		// module -> [IDENTIFIER] -> .|;
 
 // implement [IDENTIFIER].[IDENTIFIER]...;
-DECLARE_STATE_CLASS(StartImplementModule)	// -> implement -> [IDENTIFIER]
-DECLARE_STATE_CLASS(ImplementModule1)		// implement -> [IDENTIFIER] -> .|;
+DECLARE_STATE_CLASS(StartImplementModule) // -> implement -> [IDENTIFIER]
+DECLARE_STATE_CLASS(ImplementModule1)	  // implement -> [IDENTIFIER] -> .|;
 
 // import [IDENTIFIER].[IDENTIFIER]... as [IDENTIFIER];
-DECLARE_STATE_CLASS(StartImportModule)		// -> import -> [IDENTIFIER]
-DECLARE_STATE_CLASS(ImportModule1)			// import -> [IDENTIFIER] -> .|as|;
-DECLARE_STATE_CLASS(ImportModule2)			// -> as -> [IDENTIFIER]
-DECLARE_STATE_CLASS(ImportModule3)			// as -> [IDENTIFIER] -> ;
+DECLARE_STATE_CLASS(StartImportModule) // -> import -> [IDENTIFIER]
+DECLARE_STATE_CLASS(ImportModule1)	   // import -> [IDENTIFIER] -> .|as|;
+DECLARE_STATE_CLASS(ImportModule2)	   // -> as -> [IDENTIFIER]
+DECLARE_STATE_CLASS(ImportModule3)	   // as -> [IDENTIFIER] -> ;
 
 
 
 // func [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareFunction)	// -> func -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareFunction1)		// func -> [IDENTIFIER] -> ::|;|[|{
-DECLARE_STATE_CLASS(DeclareFunction2)		// [IDENTIFIER] -> [ -> ]
-DECLARE_STATE_CLASS(DeclareFunction3)		// [ -> ] -> ;|{
-DECLARE_STATE_CLASS(DeclareFunction4)		// [IDENTIFIER]|] -> { -> }
+DECLARE_STATE_CLASS(StartDeclareFunction) // -> func -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareFunction1)	  // func -> [IDENTIFIER] -> ::|;|[|{
+DECLARE_STATE_CLASS(DeclareFunction2)	  // [IDENTIFIER] -> [ -> ]
+DECLARE_STATE_CLASS(DeclareFunction3)	  // [ -> ] -> ;|{
+DECLARE_STATE_CLASS(DeclareFunction4)	  // [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareClass)		// -> struct|enum|interface|object|component -> <||[IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass1)			// struct|enum|interface|object|component -> <| -> typename|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass2)			// <| -> [stadrad type]|[user type] -> ,||>
-DECLARE_STATE_CLASS(DeclareClass3)			// <| -> |> -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass4)			// struct|enum|interface|object|component||> -> [IDENTIFIER] -> (|{
-DECLARE_STATE_CLASS(DeclareClass5)			// [IDENTIFIER] -> ( -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass6)			// ( -> [stadrad type]|[user type] -> ,|)
-DECLARE_STATE_CLASS(DeclareClass7)			// [stadrad type]|[user type] -> ) -> {
-DECLARE_STATE_CLASS(DeclareClassInternal)	// [IDENTIFIER]|) -> { -> ***|public|protected|private|func|static_assert|using|static|const|[stadrad type]|[user type]|}
+DECLARE_STATE_CLASS(StartDeclareClass)	  // -> struct|enum|interface|object|component -> <||[IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass1)		  // struct|enum|interface|object|component -> <| -> typename|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass2)		  // <| -> [stadrad type]|[user type] -> ,||>
+DECLARE_STATE_CLASS(DeclareClass3)		  // <| -> |> -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass4)		  // struct|enum|interface|object|component||> -> [IDENTIFIER] -> (|{
+DECLARE_STATE_CLASS(DeclareClass5)		  // [IDENTIFIER] -> ( -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass6)		  // ( -> [stadrad type]|[user type] -> ,|)
+DECLARE_STATE_CLASS(DeclareClass7)		  // [stadrad type]|[user type] -> ) -> {
+DECLARE_STATE_CLASS(DeclareClassInternal) // [IDENTIFIER]|) -> { -> ***|public|protected|private|func|static_assert|using|static|const|[stadrad type]|[user type]|}
 
 
 
 // using [IDENTIFIER] = [stadrad type]|[user type];
-DECLARE_STATE_CLASS(StartDefineAlias)		// -> using -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DefineAlias1)			// using -> [IDENTIFIER] -> =
-DECLARE_STATE_CLASS(DefineAlias2)			// [IDENTIFIER] -> = -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DefineAlias3)			// [stadrad type]|[user type] -> ; -> [Default]
+DECLARE_STATE_CLASS(StartDefineAlias) // -> using -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DefineAlias1)	  // using -> [IDENTIFIER] -> =
+DECLARE_STATE_CLASS(DefineAlias2)	  // [IDENTIFIER] -> = -> [stadrad type]|[user type]
+DECLARE_STATE_CLASS(DefineAlias3)	  // = -> [stadrad type]|[user type] -> ;
 
 // static_assert(expression);
-DECLARE_STATE_CLASS(StartStaticAssert)		// -> static_assert -> (
-DECLARE_STATE_CLASS(StaticAssert1)			// static_assert -> ( -> )
-DECLARE_STATE_CLASS(StaticAssert2)			// ( -> ) -> ;
+DECLARE_STATE_CLASS(StartStaticAssert) // -> static_assert -> (
+DECLARE_STATE_CLASS(StaticAssert1)	   // static_assert -> ( -> )
+DECLARE_STATE_CLASS(StaticAssert2)	   // ( -> ) -> ;
 
 // template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
 DECLARE_STATE_CLASS(StartDefineTemplate)
@@ -117,6 +117,7 @@ DECLARE_STATE_CLASS(StartDefineTemplate)
 
 
 
+//....................................................Contexts.............................................................//
 
 struct FModuleDeclarationContext
 {
@@ -141,7 +142,7 @@ public:
 
 	inline void Clear() noexcept 
 	{ 
-		ModulePath.clear();
+		ModulePath.clear(); 
 	}
 
 
@@ -155,7 +156,7 @@ struct FModuleImportingContext
 public:
 
 	inline void Clear() noexcept
-	{ 
+	{
 		ModulePath.clear();
 		AliasName.clear();
 	}
@@ -190,7 +191,7 @@ public:
 		CodeTokens.clear();
 	}
 
-	inline void PrepareForNextModifier() noexcept 
+	inline void PrepareForNextModifier() noexcept
 	{
 		DescriptionContext = EDescriptionContext::UNDEFINED;
 		OpenBracketLayer = 0;
@@ -339,6 +340,8 @@ enum class EStateContextType : unsigned char
 	InClass
 };
 
+//.........................................................................................................................//
+
 
 
 
@@ -422,16 +425,42 @@ public:
 
 public:
 
-	inline const FGamlFileInfo& GetFileInfo() const noexcept { return FileInfo; }
-	inline const FCompileOptions& GetCompileOptions() const noexcept { return CompileOptions; }
-	inline bool GetIsMainModule() const noexcept { return IsMainModule; }
-
-
-	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const 
-	{ 
-		FErrorLogger::Raise(ErrorMessageType, FileInfo.GetFileFullPath(), Token.GetLine(), Token.GetPos(), CompileOptions); 
+	/*
+		@return information about parsing file.
+	*/
+	inline const FGamlFileInfo& GetFileInfo() const noexcept
+	{
+		return FileInfo;
+	}
+	/*
+		@return current compile options.
+	*/
+	inline const FCompileOptions& GetCompileOptions() const noexcept
+	{
+		return CompileOptions;
+	}
+	/*
+		@return true if parsing main module(false if parsing imported into main module).
+	*/
+	inline bool GetIsMainModule() const noexcept
+	{
+		return IsMainModule;
 	}
 
+
+	/*
+		Raise error based on state context.
+	*/
+	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const
+	{
+		FErrorLogger::Raise(ErrorMessageType, FileInfo.GetFileFullPath(), Token.GetLine(), Token.GetPos(), CompileOptions);
+	}
+
+
+
+	/*
+		Clear all context.
+	*/
 	inline void ClearContexts() noexcept
 	{
 		AccessModifierContextType = EAccessModifier::Public;
@@ -447,6 +476,9 @@ public:
 		StaticAssertContext.Clear();
 		FunctionImplementationContext.Clear();
 	}
+	/*
+		Clear only local context used in class declaration.
+	*/
 	inline void ClearContextsLocal() noexcept
 	{
 		AccessModifierContextType = EAccessModifier::Public;
@@ -460,12 +492,52 @@ public:
 	}
 
 
+	/*
+		Check that state stack is empty.
+		Should be used before using PopState.
+	*/
+	inline bool IsStateStackEmpty() noexcept
+	{
+		return StatesStack.empty();
+	}
+	/*
+		Push state into state-stack.
+	*/
+	inline void PushState(IParserState* State) noexcept
+	{
+		StatesStack.push_back(State);
+	}
+	/*
+		Pop state from stack.
+		NOTE! Method not check that stack is empty.
+	*/
+	inline IParserState* PopState() noexcept
+	{
+		IParserState* LState = StatesStack.back();
+		StatesStack.pop_back();
+		return LState;
+	}
+	/*
+		Pop state from stack.
+		If stack is empty cause error.
+	*/
+	inline IParserState* PopStateChecked(const Token& ContextToken) noexcept
+	{
+		if( IsStateStackEmpty() )
+		{
+			RaiseError(EErrorMessageType::STATE_STACK_EMPTY, ContextToken);
+		}
+
+		return PopState();
+	}
+
+
 	void RegisterMainModule(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterModuleFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool ImplementModuleFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool ImportModuleFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bool SkipIfExist, const Token& TokenCTX);
-	bool RegisterVariableFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX); 
+	bool RegisterVariableFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterClassFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterFunctionImplementationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
@@ -484,9 +556,23 @@ private:
 
 private:
 
+	/*
+		Info of parsing file.
+	*/
 	FGamlFileInfo FileInfo;
+	/*
+		Cached compiler options.
+	*/
 	FCompileOptions CompileOptions;
+	/*
+		Indicates that the main module is being parsed (imported modules are marked as non-main).
+	*/
 	bool IsMainModule = true;
+
+	/*
+		States stack.
+	*/
+	std::vector<IParserState*> StatesStack;
 
 public:
 

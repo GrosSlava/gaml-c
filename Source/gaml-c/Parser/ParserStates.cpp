@@ -29,6 +29,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	}
 	case ETokenType::MODULE:
 	{
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		InParserStates.ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
 		InParserStates.ModuleDeclarationContext.ModuleInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
@@ -36,17 +38,23 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	}
 	case ETokenType::IMPLEMENT:
 	{
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		return InParserStates.GStartImplementModule_ParserState;
 	}
 	case ETokenType::IMPORT:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		return InParserStates.GStartImportModule_ParserState;
 	}
 	case ETokenType::FUNCTION:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
 
 		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
 		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
@@ -56,6 +64,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	case ETokenType::STRUCT:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Struct;
@@ -68,6 +78,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Interface;
 		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
@@ -78,6 +90,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	case ETokenType::OBJECT:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Object;
@@ -90,6 +104,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Component;
 		InParserStates.ClassDeclarationContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
@@ -100,6 +116,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	case ETokenType::ENUM:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
 
 		InParserStates.StateContextType = EStateContextType::InClass;
 		InParserStates.ClassDeclarationContext.ClassInfo.ClassType = EClassType::Enum;
@@ -112,11 +130,15 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		return InParserStates.GStartDefineAlias_ParserState;
 	}
 	case ETokenType::PUBLIC:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
 
 		InParserStates.AccessModifierContextType = EAccessModifier::Public;
 		return InParserStates.GGlobalAccessModifier_ParserState;
@@ -125,6 +147,8 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		InParserStates.AccessModifierContextType = EAccessModifier::Private;
 		return InParserStates.GGlobalAccessModifier_ParserState;
 	}
@@ -132,16 +156,22 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		return InParserStates.GStartStaticAssert_ParserState;
 	}
 	case ETokenType::TEMPLATE:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		return InParserStates.GStartDefineTemplate_ParserState;
 	}
 	case ETokenType::DESCRIPTION_BLOCK:
 	{
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+
 		return InParserStates.GStartDescription_ParserState;
 	}
 	}
@@ -743,6 +773,8 @@ IParserState* DescriptionParam6_ParserState::Process(FParserStates& InParserStat
 
 IParserState* EndDescription_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
+	// state to return already pushed
+
 	switch( InToken.GetType() )
 	{
 	case ETokenType::MODULE:
@@ -902,6 +934,8 @@ IParserState* EndDescription_ParserState::Process(FParserStates& InParserStates,
 
 IParserState* GlobalAccessModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
+	// global state already pushed
+
 	switch( InToken.GetType() )
 	{
 	case ETokenType::FUNCTION:
@@ -979,6 +1013,8 @@ IParserState* GlobalAccessModifier_ParserState::Process(FParserStates& InParserS
 
 IParserState* LocalAccessModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
+	// local state already pushed
+
 	if( FParserHelperLibrary::IsStandardType(InToken) )
 	{
 		//TODO Class variable
@@ -1056,7 +1092,7 @@ IParserState* DeclareModule1_ParserState::Process(FParserStates& InParserStates,
 			return nullptr;
 		}
 
-		return InParserStates.GDefault_ParserState;
+		return InParserStates.PopStateChecked(InToken);
 	}
 	}
 
@@ -1095,7 +1131,7 @@ IParserState* ImplementModule1_ParserState::Process(FParserStates& InParserState
 			return nullptr;
 		}
 
-		return InParserStates.GDefault_ParserState;
+		return InParserStates.PopStateChecked(InToken);
 	}
 	}
 
@@ -1138,7 +1174,7 @@ IParserState* ImportModule1_ParserState::Process(FParserStates& InParserStates, 
 			return nullptr;
 		}
 
-		return InParserStates.GDefault_ParserState;
+		return InParserStates.PopStateChecked(InToken);
 	}
 	}
 
@@ -1174,7 +1210,7 @@ IParserState* ImportModule3_ParserState::Process(FParserStates& InParserStates, 
 		return nullptr;
 	}
 
-	return InParserStates.GDefault_ParserState;
+	return InParserStates.PopStateChecked(InToken);
 }
 
 
@@ -1220,14 +1256,7 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 			return nullptr;
 		}
 
-		if( InParserStates.StateContextType == EStateContextType::Global )
-		{
-			return InParserStates.GDefault_ParserState;
-		}
-		else
-		{
-			return InParserStates.GDeclareClassInternal_ParserState;
-		}
+		return InParserStates.PopStateChecked(InToken);
 	}
 	case ETokenType::LSQR:
 	{
@@ -1293,14 +1322,7 @@ IParserState* DeclareFunction3_ParserState::Process(FParserStates& InParserState
 			return nullptr;
 		}
 
-		if( InParserStates.StateContextType == EStateContextType::Global )
-		{
-			return InParserStates.GDefault_ParserState;
-		}
-		else
-		{
-			return InParserStates.GDeclareClassInternal_ParserState;
-		}
+		return InParserStates.PopStateChecked(InToken);
 	}
 	case ETokenType::LBRA:
 	{
@@ -1339,14 +1361,7 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 				return nullptr;
 			}
 
-			if( InParserStates.StateContextType == EStateContextType::Global )
-			{
-				return InParserStates.GDefault_ParserState;
-			}
-			else
-			{
-				return InParserStates.GDeclareClassInternal_ParserState;
-			}
+			return InParserStates.PopStateChecked(InToken);
 		}
 
 		InParserStates.FunctionImplementationContext.FunctionCodeTokens.push_back(InToken);
@@ -1530,38 +1545,53 @@ IParserState* DeclareClassInternal_ParserState::Process(FParserStates& InParserS
 	{
 	case ETokenType::DESCRIPTION_BLOCK:
 	{
+		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
+
 		return InParserStates.GStartDescription_ParserState;
 	}
 	case ETokenType::PUBLIC:
 	{
+		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
+
 		InParserStates.AccessModifierContextType = EAccessModifier::Public;
 
 		return InParserStates.GLocalAccessModifier_ParserState;
 	}
 	case ETokenType::PROTECTED:
 	{
+		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
+
 		InParserStates.AccessModifierContextType = EAccessModifier::Protected;
 
 		return InParserStates.GLocalAccessModifier_ParserState;
 	}
 	case ETokenType::PRIVATE:
 	{
+		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
+
 		InParserStates.AccessModifierContextType = EAccessModifier::Private;
 
 		return InParserStates.GLocalAccessModifier_ParserState;
 	}
 	case ETokenType::FUNCTION:
 	{
+		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
+
 		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
 		InParserStates.FunctionDeclarationContext.SignatureInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
 	case ETokenType::STATIC_ASSERT:
 	{
+		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
+
 		return InParserStates.GStartStaticAssert_ParserState;
 	}
 	case ETokenType::USING:
 	{
+		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
+
 		return InParserStates.GStartDefineAlias_ParserState;
 	}
 	case ETokenType::STATIC:
@@ -1574,7 +1604,7 @@ IParserState* DeclareClassInternal_ParserState::Process(FParserStates& InParserS
 	}
 	case ETokenType::RBRA:
 	{
-		return InParserStates.GDefault_ParserState;
+		return InParserStates.PopStateChecked(InToken);
 	}
 	}
 
@@ -1649,16 +1679,7 @@ IParserState* DefineAlias3_ParserState::Process(FParserStates& InParserStates, c
 		return nullptr;
 	}
 
-	if( InParserStates.StateContextType == EStateContextType::Global )
-	{
-		return InParserStates.GDefault_ParserState;
-	}
-	else
-	{
-		return InParserStates.GDeclareClassInternal_ParserState;
-	}
-
-	return nullptr;
+	return InParserStates.PopStateChecked(InToken);
 }
 
 
@@ -1715,16 +1736,7 @@ IParserState* StaticAssert2_ParserState::Process(FParserStates& InParserStates, 
 	}
 
 
-	if( InParserStates.StateContextType == EStateContextType::Global )
-	{
-		return InParserStates.GDefault_ParserState;
-	}
-	else
-	{
-		return InParserStates.GDeclareClassInternal_ParserState;
-	}
-
-	return nullptr;
+	return InParserStates.PopStateChecked(InToken);
 }
 
 

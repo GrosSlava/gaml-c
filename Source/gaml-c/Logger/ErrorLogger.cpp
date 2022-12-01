@@ -83,6 +83,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 
 	// Parser
 	CASE_ERROR(INVALID_STATE):								return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid state.");
+	CASE_ERROR(STATE_STACK_EMPTY):							return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "State stack is empty.");
 	CASE_ERROR(UNEXPECTED_EXPRESSION):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Unexpected expression.");
 	CASE_ERROR(UNEXPECTED_IDENTIFIER):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Unexpected identifier.");
 	CASE_ERROR(EXPECTED_IDENTIFIER):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected identifier.");

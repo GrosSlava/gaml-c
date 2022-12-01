@@ -137,7 +137,7 @@ void Parser::ProcessSymbolsScanning(const std::vector<Token>& Tokens, FProgramIn
 			return;
 		}
 	}
-	if( LState != LParserStates.GDefault_ParserState )
+	if( LState != LParserStates.GDefault_ParserState || !LParserStates.IsStateStackEmpty() )
 	{
 		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, CurrentFileInfo.GetFileFullPath(), 0, 0, CurrentCompileOptions);
 		return;
