@@ -4,10 +4,18 @@
 
 **GAML-c** - first compiler for GAML.
 
+
+
 # Requirements
 
-On Linux: gcc, nasm \
+On Linux: gcc, g++, PyProjectBuilder, clang, llvm, nasm \
 On Windows: Visual Studio 2017 or higher, native tools command prompt for VS
+
+# How to build
+
+On Linux: install [`PyProjectBuilder`](https://github.com/GrosSlava/PyProjectBuilder) and use this tool to make gaml-c \
+On Windows: use Visual Studio 2017 or higher
+
 
 
 # FAQ

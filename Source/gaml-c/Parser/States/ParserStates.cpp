@@ -10,6 +10,7 @@
 #include "../../Parser/Parser.h"
 
 #include <fstream>
+#include <algorithm>
 
 
 

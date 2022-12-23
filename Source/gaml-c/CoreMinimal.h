@@ -25,4 +25,6 @@
 	#define WINDOWS_32 0
 	#define WINDOWS_64 0
 	#define LINUX 1
+#else
+	#error "Unsupported platform"
 #endif

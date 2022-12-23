@@ -43,7 +43,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	if( FTokenHelperLibrary::IsCharLexeme(LexemeStr) )		{ Type = ETokenType::CHAR_CONST;	return; }
 	if( FTokenHelperLibrary::IsStringLexeme(LexemeStr) )	{ Type = ETokenType::STRING_CONST;	return; }
 
-#define CASE_LEXEME(Lexeme, TokenType) if( LexemeStr == Lexeme ) { Type = ETokenType::##TokenType##; return; }
+#define CASE_LEXEME(Lexeme, TokenType) if( LexemeStr == Lexeme ) { Type = ETokenType::TokenType; return; }
 
 	CASE_LEXEME("<",						LESS)
 	CASE_LEXEME(">",						GREATER)
@@ -230,7 +230,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 std::string Token::GetTypeAsStr() const noexcept
 {
 	// clang-format off
-#define CASE_TOKEN(TokenType, Str) case ETokenType::##TokenType##: return Str;
+#define CASE_TOKEN(TokenType, Str) case ETokenType::TokenType: return Str;
 
 	switch( Type )
 	{

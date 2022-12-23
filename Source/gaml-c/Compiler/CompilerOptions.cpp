@@ -87,7 +87,7 @@ private:
 
 // clang-format off
 #define OPTION_FUNCTION(Name) \
-	void Name## \
+	void Name \
 	( \
 		const std::string& Argument, \
 		FCompileOptions& OutCompileOptions, std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths \
