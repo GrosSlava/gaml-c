@@ -1,6 +1,8 @@
 // This examples show features of operators overloading
 
 
+
+
 /*
     Only struct can have overloaded operators.
     See example with struct.
@@ -376,6 +378,12 @@ struct FMyStruct
         @return Result: [type]
     ***
     func OpElementAccess {}
+
+    ***
+        // Get hash based on class.
+        @return Result: int32
+    ***
+    func Hash {}
 */
 }
 

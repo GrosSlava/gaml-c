@@ -1,9 +1,10 @@
 // This examples show features of template code declaration
 
-
 /*
-    Template are compile-time generated code.
+    Templates are compile-time generated code.
 */
+
+
 
 
 /*
@@ -18,6 +19,7 @@ template<|Name|> TFooGen
 }
 
 /*
+    Expands to:
     ***
         @return Result: uint8
     ***
@@ -80,7 +82,7 @@ template<|...|> TMyVariadicCode
     {
         if( typeof($(...)[i]$) != int32 || $(...)[i]$ == int32 )
         {
-            static_error("Arg{0} should be int32", i);
+            static_error("Arg{Index} should be int32".format(Index = string::FromInt(i)));
         }
     }
 ]
@@ -100,13 +102,14 @@ template<|...|> TMyVariadicCode
 
 func void main()
 {
-    string s = MY_TEMPLATE_STRING; // s = "Hello World";
-    s = MY_TEMPLATE_STRING2<|"!!!"|>; // s = "Hello World!!!";
+    string s = MY_TEMPLATE_STRING;      // s = "Hello World";
+    s = MY_TEMPLATE_STRING2<|"!!!"|>;   // s = "Hello World!!!";
     s = MY_TEMPLATE_STRING_2<|"BABA"|>; // s = "Hello World dear BABA";
-    s = MY_TEMPLATE_STRING_2<|int32|>; // s = "Hello World int32;
+    s = MY_TEMPLATE_STRING_2<|int32|>;  // s = "Hello World int32;
 
     int32 MyInt = 5;
-    TMyInlineCode<|MyInt|>; // MyInt *= 6; if(MyInt < 22) { MyInt += 30; };
+    TMyInlineCode<|MyInt|>;                 // MyInt *= 6; if(MyInt < 22) { MyInt += 30; };
+    
     MyInt = TMyVariadicCode<|5, 4, MyInt|>; // MyInt = 5 + 4 + MyInt;
 }
 

@@ -15,6 +15,7 @@ module MyModule; // set the module name, it must match the file name
 
 
 
+
 /*
     Create alias for type.
 */

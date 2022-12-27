@@ -1,6 +1,8 @@
 // This examples show features of lambdas declaration
 
 
+
+
 /*
     Define new type as lambda.
 */
@@ -22,6 +24,8 @@ func foo
     InL(5, 4);
 }
 
+
+
 ***
     // This monster takes lambda as argument and return lambda as taken lambda result.
 
@@ -38,6 +42,7 @@ func bar
 */
 using LambdaOut = lambda (bool, int32) => void;
 using LambdaIn = lambda (int32, int32) => LambdaOut;
+
 ***
     @param InL: LambdaIn
     @return Result: LambdaOut

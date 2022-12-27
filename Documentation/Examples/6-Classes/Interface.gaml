@@ -1,6 +1,8 @@
 // This examples show features of interface declaration
 
 
+
+
 /*
     Declare interface.
 */

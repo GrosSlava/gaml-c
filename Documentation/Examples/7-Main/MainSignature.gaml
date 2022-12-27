@@ -1,6 +1,8 @@
 // This examples show features of main function signature declaration
 
 
+
+
 /*
     Minimal main function. 
     Works on any subsystem.

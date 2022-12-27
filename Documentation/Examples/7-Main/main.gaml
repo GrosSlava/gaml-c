@@ -108,11 +108,6 @@ func main
         module2_deinit_module: 
         ...
 
-    [for Linux]
     init - shared library initialization method
     deinit - shared library deinitialization method
-
-    [for Windows]
-    DllMain:
-        use init, deinit functions on need time
 */

@@ -1,6 +1,8 @@
 // This examples show features of functions declaration
 
 
+
+
 ***
     /*
         This is function in global space. 

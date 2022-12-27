@@ -2,6 +2,7 @@
 
 
 
+
 func main
 {   
     /*
@@ -16,5 +17,14 @@ func main
         // continue - go to the next iteration
 
         a--;
+    }
+
+    /*
+        Compile time while.
+        Body of this 'while' will be interpreted during compile time and will be converted into code.
+    */
+    static while( a > 0 )
+    {
+
     }
 }

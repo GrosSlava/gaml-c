@@ -1,6 +1,8 @@
 // This examples show features of object declaration
 
 
+
+
 /*
     Declare object.
     Each object is located in the heap.

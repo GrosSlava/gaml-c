@@ -1,9 +1,13 @@
 // This examples show features of standard types
 
 
+
+
 func main
 {
     // void - can't be as function argument or variable type. Only for function return.
+
+    bool g;     // 8-bit logic type
 
     uint8 a;    // 8-bit unsigned integer [0 - 255]
     uint16 b;   // 16-bit unsigned integer [0 - 65 535]
@@ -23,14 +27,13 @@ func main
         So, if your system(e.g 32 bit machine) not support 64-bit types they will cause compile error.
     */
 
-    bool g;     // 8-bit logic type
     char h;     // 32-bit symbol type(utf-16)
+    string s;   // builtin type for easy operations with strings, see documentation about string
 
-    string s;    // builtin type for easy operations with strings, see documentation about string
-    vector4d v1; // builtin type for easy operations with 4d-vectors, see documentation about vectors
-    vector3d v2; // builtin type for easy operations with 3d-vectors, see documentation about vectors
-    vector2d v3; // builtin type for easy operations with 2d-vectors, see documentation about vectors
+    vector4d v4; // builtin type for easy operations with 4d-vectors, see documentation about vectors
+    vector3d v3; // builtin type for easy operations with 3d-vectors, see documentation about vectors
+    vector2d v2; // builtin type for easy operations with 2d-vectors, see documentation about vectors
 
     array<|uint8|> arr; // builtin array for any type, see documentation about arrays
-    //class<|class type|> - container of any class type
+    //class<|class_type|> // container of any class type
 }

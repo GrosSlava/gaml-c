@@ -36,7 +36,7 @@ AdditionalLibsDirs =
 Libs =
 
 # Type of build result.
-# Available values = [Executable, Dynamic, Static]
+# Available values = [NoLink, Executable, Dynamic, Static]
 # By default = Executable
 ResultType = Executable
 
@@ -54,7 +54,7 @@ ConvertWarningsToErrors = false
 
 # Tell compiler to show all warnings.
 # By default = false
-EnableAllWarnings = false
+EnableAllWarnings = true
 
 # Console command to execute after build complete.
 # By default =

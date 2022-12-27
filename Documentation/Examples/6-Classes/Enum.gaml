@@ -1,6 +1,8 @@
 // This examples show features of enum declaration
 
 
+
+
 /*
     Declare enum.
     Each enum is located on the stack (except the array of enum).

@@ -1,9 +1,10 @@
 // This examples show features of global functions specifiers
 
 
-***
-    // Minimum function declaration without any specifiers.
-***
+
+
+// Minimum function declaration without any specifiers.
+// return is void
 func foo {}
 
 ***
@@ -62,6 +63,8 @@ func foo7 {}
     */
 ***
 private func foo8 {}
+
+
 
 
 ***

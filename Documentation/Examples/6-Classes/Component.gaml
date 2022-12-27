@@ -1,6 +1,8 @@
 // This examples show features of component declaration
 
 
+
+
 /*
     Declare component.
     Each component is located in the heap.

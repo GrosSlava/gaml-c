@@ -1,6 +1,8 @@
 // This examples show features of template classes declaration
 
 
+
+
 /*
     Template classes as templates has number of template arguments.
     But template arguments can contain only types.
@@ -29,6 +31,6 @@ struct<|int32|> TMyStruct
 
 func main
 {
-    TMyStruct<|uint8|> LStruct; // TMyStruct with specialization uint8 will be declared in this module
-    TMyStruct<|int32|> LStruct2; // this specialization already exists
+    TMyStruct<|uint8|> LStruct;     // TMyStruct with specialization uint8 will be declared in this module
+    TMyStruct<|int32|> LStruct2;    // this specialization already exists
 }
