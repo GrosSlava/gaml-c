@@ -43,7 +43,7 @@ func foo
         We can declare local variable with default value, by default variable contains trash.
     */
     uint8 A = 8;                    // integer in decimal form
-    uint8 B = 0x5a;                 // hexadecimal 0x5A or 5ah or 5AH
+    uint8 B = 0x5a;                 // hexadecimal 0x5A
     uint8 C = 11101b;               // binary
     float f = 55.01f;               // f or F - mark this is float
     double ff = 55.01;              // without f it is double

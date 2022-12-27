@@ -139,14 +139,14 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("",		"--name=",					"compiled program name",								true,	ProgramNameOption),
 	FOptionInfo("-O",	"",							"optimization level [0 - 2]",							true,	OptimizationLevelOption),
 	FOptionInfo("-W",	"",							"warning level [0 - 3]",								true,	WarningLevelOption),
-	FOptionInfo("",		"--code_type=",				"code generation type [ReduceC, LLVM, NASM]",			true,	CodeGenerationTypeOption),
+	FOptionInfo("",		"--code_type=",				"code generation type [ReduceC, LLVM]",					true,	CodeGenerationTypeOption),
 	FOptionInfo("",		"--subsystem=",				"type of subsystem [Console, Window]",					true,	SubsystemTypeOption),
 	FOptionInfo("",		"--platform=",				"[Undefined, Windows, Linux]",							true,	TargetPlatformOption),
 	FOptionInfo("",		"--arch=",					"[x86, x86_64, ARM, ARM_64]",							true,	TargetArchOption),
 	FOptionInfo("-e",	"--entry=",					"entry point name",										true,	EntryPointOption),
 	FOptionInfo("-L",	"--libpath=",				"add libs searching dir",								true,	LibsSearchingOption),
 
-	FOptionInfo("",		"--debug",					"Include debug information",							false,	DebugOption),
+	FOptionInfo("",		"--debug",					"include debug information",							false,	DebugOption),
 	FOptionInfo("",		"--DLL",					"output result will be in dll",							false,	DLLOption),
 	FOptionInfo("",		"--w2e",					"warnings to errors",									false,	WarningToErrorsOption),
 	FOptionInfo("",		"--no_builtin",				"no builtin content",									false,	NoBuiltinOption), 
@@ -303,10 +303,6 @@ OPTION_FUNCTION(CodeGenerationTypeOption)
 	else if( Argument == "LLVM" )
 	{
 		OutCompileOptions.CodeGenerationType = ECodeGenerationType::LLVM;
-	}
-	else if( Argument == "NASM" )
-	{
-		OutCompileOptions.CodeGenerationType = ECodeGenerationType::NASM;
 	}
 	else
 	{

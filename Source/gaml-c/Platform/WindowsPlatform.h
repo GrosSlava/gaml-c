@@ -177,14 +177,7 @@ struct FGenericPlatform
 			ConsoleCommand += " " + LLibFilePath;
 		}
 
-		if( CompileOptions.Freestanding )
-		{
-			ConsoleCommand += " -NODEFAULTLIB";
-		}
-		else
-		{
-			// use native tools command prompt for VS
-		}
+		if( CompileOptions.Freestanding ) ConsoleCommand += " -NODEFAULTLIB";
 		if( !CompileOptions.EntryPoint.empty() ) ConsoleCommand += " -ENTRY:" + CompileOptions.EntryPoint;
 		if( CompileOptions.IsDebug ) ConsoleCommand += " -DEBUG:FULL";
 		if( CompileOptions.IsDLL ) ConsoleCommand += " -DLL";

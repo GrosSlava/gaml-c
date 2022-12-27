@@ -42,7 +42,7 @@ void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File,
 
 			LFile.close();
 
-			FCompileLogger::Message(LLineStr);
+			FCompileLogger::Message(LLineStr, true);
 
 			if( Pos > 0 )
 			{
@@ -50,7 +50,7 @@ void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File,
 				LPosStr.resize(std::max(LLineStr.size(), Pos), ' ');
 				LPosStr[Pos - 1] = '^'; // we are indexing position in row from 1
 
-				FCompileLogger::Message(LPosStr);
+				FCompileLogger::Message(LPosStr, true);
 			}
 		}
 	}

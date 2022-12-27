@@ -9,7 +9,8 @@
 			"**/*.sln": true,
 			"**/.vs": true,
 			"**/*.user": true,
-			"**/*.vcxproj": true
+			"**/*.vcxproj": true,
+			"**/PyBuildFile.txt": true
 		}
 	}
 }

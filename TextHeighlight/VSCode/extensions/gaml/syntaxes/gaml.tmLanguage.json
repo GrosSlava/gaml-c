@@ -155,7 +155,7 @@
 			"patterns": [
 				{
 					"name": "keyword.other.gaml",
-					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|in|is|as|addr|cast|unsafe_cast|using)\\b"
+					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|isiterable|isabstract|in|is|as|addr|cast|unsafe_cast|using)\\b"
 				}
 			]
 		},

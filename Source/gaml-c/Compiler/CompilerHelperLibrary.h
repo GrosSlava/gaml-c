@@ -197,7 +197,7 @@ struct FCompilerHelperLibrary
 			if( !LEntry.is_regular_file() ) continue;
 
 			FGamlFileInfo LGamlFileInfo = SplitFilePath(LEntry.path().string());
-			for( const std::string LAvailableExtension : AvailableExtensions )
+			for( const std::string& LAvailableExtension : AvailableExtensions )
 			{
 				if( LGamlFileInfo.ExtensionOnly == LAvailableExtension )
 				{

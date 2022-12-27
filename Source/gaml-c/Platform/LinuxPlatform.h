@@ -115,7 +115,7 @@ struct FGenericPlatform
 			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, CompileOptions);
 		}
 
-		ConsoleCommand += "ld";
+		ConsoleCommand += "gcc";
 
 		switch( CompileOptions.SubsystemType )
 		{
@@ -146,15 +146,16 @@ struct FGenericPlatform
 			ConsoleCommand += " -l" + LLibFilePath;
 		}
 
-		if( CompileOptions.Freestanding )
+		if( CompileOptions.Freestanding ) ConsoleCommand += " -nostdlib";
+		if( !CompileOptions.EntryPoint.empty() )
 		{
-			ConsoleCommand += " -nostdlib";
-		}
+			ConsoleCommand += " -e" + CompileOptions.EntryPoint;
+		} 
 		else
 		{
-			ConsoleCommand += " -lm -lc -lgcc";
+			ConsoleCommand += " -nostartfiles";
+			
 		}
-		if( !CompileOptions.EntryPoint.empty() ) ConsoleCommand += " -e" + CompileOptions.EntryPoint;
 		if( CompileOptions.IsDebug ) ConsoleCommand += "";
 		if( CompileOptions.IsDLL ) ConsoleCommand += " -shared -fPIC";
 

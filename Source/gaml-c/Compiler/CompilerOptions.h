@@ -37,8 +37,7 @@ enum class EWarningLevel : unsigned char
 enum class ECodeGenerationType : unsigned char
 {
 	ReduceC,
-	LLVM,
-	NASM
+	LLVM
 };
 
 /*

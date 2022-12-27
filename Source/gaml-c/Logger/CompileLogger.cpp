@@ -47,13 +47,20 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 
 	LErrorMessage += Message;
 
-	FCompileLogger::Message(LErrorMessage);
+	FCompileLogger::Message(LErrorMessage, true);
 }
 
 
-void FCompileLogger::Message(const std::string& Message)
+void FCompileLogger::Message(const std::string& Message, bool IsError)
 {
 	if( Message.empty() ) return;
 
-	std::cout << Message << std::endl;
+	if( IsError )
+	{
+		std::cerr << Message << std::endl;
+	}
+	else
+	{
+		std::cout << Message << std::endl;
+	}
 }

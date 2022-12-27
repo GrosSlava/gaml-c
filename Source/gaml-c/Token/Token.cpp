@@ -9,30 +9,6 @@
 
 
 
-size_t Token::GetLexemeCache(const std::string& Lexeme) noexcept
-{
-	const size_t MagicValue = 73;
-	size_t Result = 0;
-
-	static std::vector<size_t> MagicNumbersMap = {MagicValue};
-
-
-	for( size_t i = 0; i < Lexeme.length(); ++i )
-	{
-		if( i >= MagicNumbersMap.size() )
-		{
-			MagicNumbersMap.push_back(MagicNumbersMap[i - 1] * MagicValue);
-		}
-
-		Result += Lexeme[i] * MagicNumbersMap[i];
-	}
-
-	return Result;
-}
-
-
-
-
 void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 {
 	// clang-format off
@@ -84,6 +60,8 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("iscomponent",				IS_COMPONENT)
 	CASE_LEXEME("issubclass",				IS_SUBCLASS)
 	CASE_LEXEME("isinstance",				IS_INSTANCE)
+	CASE_LEXEME("isiterable",				IS_ITERABLE)
+	CASE_LEXEME("isabstract",				IS_ABSTRACT)
 	CASE_LEXEME("in",						IN)
 	CASE_LEXEME("is",						IS)
 	CASE_LEXEME("as",						AS)
@@ -275,6 +253,8 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(IS_COMPONENT,				"is_component")
 	CASE_TOKEN(IS_SUBCLASS,					"isvsubclass")
 	CASE_TOKEN(IS_INSTANCE,					"is_instance")
+	CASE_TOKEN(IS_ITERABLE,					"is_iterable")
+	CASE_TOKEN(IS_ABSTRACT,					"is_abstract")
 	CASE_TOKEN(IN,							"in")
 	CASE_TOKEN(IS,							"is")
 	CASE_TOKEN(AS,							"as")

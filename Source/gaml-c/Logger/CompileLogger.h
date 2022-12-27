@@ -50,6 +50,7 @@ struct FCompileLogger
 		Log message.
 
 		@param Message - Message to log.
+		@param IsError - Log message to stderr or not.
 	*/
-	static void Message(const std::string& Message);
+	static void Message(const std::string& Message, bool IsError = false);
 };

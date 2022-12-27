@@ -27,7 +27,7 @@ struct FParserStates;
 class IParserState
 {
 public:
-
+	virtual ~IParserState() {}
 	virtual IParserState* Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo) = 0;
 };
 

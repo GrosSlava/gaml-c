@@ -12,6 +12,7 @@
 /*
 	Determine current platform
 */
+// clang-format off
 #if WIN32 || _WIN32 || WIN64 || _WIN64
 	#if WIN64 || _WIN64
 		#define WINDOWS_32 1
@@ -28,3 +29,4 @@
 #else
 	#error "Unsupported platform"
 #endif
+// clang-format on

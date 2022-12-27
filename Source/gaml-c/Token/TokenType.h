@@ -58,6 +58,8 @@ enum class ETokenType
 	IS_COMPONENT,				// iscomponent
 	IS_SUBCLASS,                // issubclass
 	IS_INSTANCE,                // isinstance
+	IS_ITERABLE,				// isiterable
+	IS_ABSTRACT,				// isabstract
 	IN,                         // in
 	IS,                         // is
 	AS,							// as

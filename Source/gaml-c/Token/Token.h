@@ -55,15 +55,10 @@ public:
 		@return token position in line.
 	*/
 	inline size_t GetPos() const noexcept { return Pos; }
-
 	/*
-		@return cache from current lexeme str.
+		@return hash from current lexeme str.
 	*/
-	size_t GetCache() const noexcept { return GetLexemeCache(LexemeStr); }
-	/*
-		@return cache from lexeme str.
-	*/
-	static size_t GetLexemeCache(const std::string& Lexeme) noexcept; 
+	inline size_t GetHash() const noexcept { return std::hash<std::string>{}(LexemeStr); }
 
 private:
 

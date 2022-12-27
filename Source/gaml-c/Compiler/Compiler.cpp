@@ -9,7 +9,6 @@
 
 #include "../Generator/ReduceCGenerator.h"
 #include "../Generator/LLVMGenerator.h"
-#include "../Generator/NASMGenerator.h"
 
 #include <fstream>
 
@@ -189,9 +188,8 @@ BaseGenerator* Compiler::CreateCodeGenerator() const noexcept
 	{
 	case ECodeGenerationType::ReduceC: return new ReduceCGenerator();
 	case ECodeGenerationType::LLVM: return new LLVMGenerator();
-	case ECodeGenerationType::NASM: return new NASMGenerator();
 	}
 
-	FCompileLogger::Message("!!!UNDEFINED CODE GENERATOR TYPE!!!");
+	FCompileLogger::Message("!!!UNDEFINED CODE GENERATOR TYPE!!!", true);
 	return nullptr;
 }

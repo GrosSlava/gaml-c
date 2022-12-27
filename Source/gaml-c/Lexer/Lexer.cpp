@@ -469,7 +469,7 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 						{
 							PushCurrentLexeme(OutTokens, 1);
 						}
-						else if(FTokenHelperLibrary::IsComplex(CurrentLexeme[0], CurrentLexeme[1]))
+						else if( FTokenHelperLibrary::IsComplex(CurrentLexeme[0], CurrentLexeme[1]) )
 						{
 							const std::string Tmp = CurrentLexeme;
 
@@ -493,13 +493,12 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 						{
 							PushCurrentLexeme(OutTokens, 1);
 						}
-						
 					}
-					else 
+					else
 					{
 						PushCurrentLexeme(OutTokens, 1);
 					}
-					
+
 
 					CurrentLexeme += LSymbol;
 					// push on next iteration
