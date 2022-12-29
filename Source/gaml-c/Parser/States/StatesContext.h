@@ -169,7 +169,6 @@ public:
 public:
 
 	FClassInfo ClassInfo;
-	std::vector<std::string> TemplateArguments;
 	std::string ClassName = "";
 };
 

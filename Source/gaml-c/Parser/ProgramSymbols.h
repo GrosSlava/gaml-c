@@ -16,7 +16,6 @@
 /*
 	Structures of language objects prototypes from modules.
 	Each object(methods/functions...) realization will be in AST.
-	Templates are instantiated into concrete objects after mention in code.
 */
 
 
@@ -325,32 +324,6 @@ struct FModuleInfo
 };
 
 
-/*
-	Information about template code.
-*/
-struct FTemplateCodeInfo
-{
-	/*
-		Array of template arguments names.
-	*/
-	std::vector<std::string> TemplateArguments;
-	/*
-		Template static code AST.
-	*/
-	AST StaticCodeTree;
-	/*
-		Template code in tokens for lazy instantiation.
-	*/
-	std::vector<Token> TemplateCode;
-
-	/*
-		Meta info.
-	*/
-	FSymbolMetaInfo MetaInfo;
-};
-
-
-
 
 
 /*
@@ -364,9 +337,9 @@ public:
 	{
 		for( int i = 0; i < EStandardTypesID::StandardTypesID_MAX; ++i )
 		{
-			FUserTypePath LUserTyePath;
-			LUserTyePath.PathSwitch = ETypePathSwitch::EStandard;
-			TypesMap.push_back(LUserTyePath);
+			FUserTypePath LUserTypePath;
+			LUserTypePath.PathSwitch = ETypePathSwitch::EStandard;
+			TypesMap.push_back(LUserTypePath);
 		}
 	}
 
@@ -402,11 +375,6 @@ public:
 		Value - function signature info.
 	*/
 	std::unordered_map<std::string, FFunctionSignatureInfo> Functions;
-	/*
-		Key - template code compile name.
-		Value - template code info.
-	*/
-	std::unordered_map<std::string, FTemplateCodeInfo> TemplateCode;
 
 	/*
 		Unique function signatures. Each new signature is new type with unique id.

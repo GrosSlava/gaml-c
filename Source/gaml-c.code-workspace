@@ -11,6 +11,10 @@
 			"**/*.user": true,
 			"**/*.vcxproj": true,
 			"**/PyBuildFile.txt": true
+		},
+		"files.associations": {
+			"iostream": "cpp",
+			"fstream": "cpp"
 		}
 	}
 }

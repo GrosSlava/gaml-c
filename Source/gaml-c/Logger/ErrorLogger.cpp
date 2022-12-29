@@ -8,7 +8,7 @@
 
 
 
-void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File, size_t Line, size_t Pos, const FCompileOptions& CompileOptions)
+void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File, size_t Line, size_t Pos, size_t UnderlineLength, const FCompileOptions& CompileOptions)
 {
 	FErrorInfo LErrorInfo = GetErrorInfo(MessageType);
 
@@ -42,7 +42,7 @@ void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File,
 
 			LFile.close();
 
-			FCompileLogger::Message(LLineStr, true);
+			FCompileLogger::MessageError(LLineStr);
 
 			if( Pos > 0 )
 			{
@@ -50,7 +50,12 @@ void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File,
 				LPosStr.resize(std::max(LLineStr.size(), Pos), ' ');
 				LPosStr[Pos - 1] = '^'; // we are indexing position in row from 1
 
-				FCompileLogger::Message(LPosStr, true);
+				for( size_t i = Pos; i < Pos + UnderlineLength && i < LPosStr.size(); ++i )
+				{
+					LPosStr[i] = '~';
+				}
+
+				FCompileLogger::MessageError(LPosStr);
 			}
 		}
 	}
@@ -138,6 +143,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(FUNCTION_ARGUMENT_NAME_MISMATCH):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Mismatch of the function declaration argument name.");
 	CASE_ERROR(FUNCTION_STATIC_CODE_OVERRIDE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function static code override.");
 	CASE_ERROR(EXPECTED_ALIAS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected alias name.");
+	CASE_ERROR(EXPECTED_CLASS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected class name.");
 
 	//Code generator
 	CASE_ERROR(NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM):	return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "No default compiler for current platform.");

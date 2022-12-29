@@ -171,14 +171,14 @@ OPTION_FUNCTION(HelpOption)
 {
 	for( const FOptionInfo& LOptionInfo : Options )
 	{
-		FCompileLogger::Message(LOptionInfo.GetHelpStr());
+		FCompileLogger::MessageText(LOptionInfo.GetHelpStr());
 	}
 	exit(0);
 }
 
 OPTION_FUNCTION(VersionOption)
 {
-	FCompileLogger::Message(std::string(FCompilerConfig::COMPILER_NAME) + std::string(" ") + std::string(FCompilerConfig::COMPILER_VERSION));
+	FCompileLogger::MessageText(std::string(FCompilerConfig::COMPILER_NAME) + std::string(" ") + std::string(FCompilerConfig::COMPILER_VERSION));
 	exit(0);
 }
 
@@ -189,7 +189,7 @@ OPTION_FUNCTION(PackageOption)
 
 	if( LPackegeFilesInfo.empty() )
 	{
-		FCompileLogger::Message("Package '" + Argument + "' hasn't got any compilable files.");
+		FCompileLogger::MessageError("Package '" + Argument + "' hasn't got any compilable files.");
 		exit(0);
 	}
 
@@ -206,7 +206,7 @@ OPTION_FUNCTION(StaticLinkOption)
 
 	if( LPackegeFilesInfo.empty() )
 	{
-		FCompileLogger::Message("Package '" + Argument + "' hasn't got any object files.");
+		FCompileLogger::MessageError("Package '" + Argument + "' hasn't got any object files.");
 		exit(0);
 	}
 
@@ -254,7 +254,7 @@ OPTION_FUNCTION(OptimizationLevelOption)
 	}
 	default:
 	{
-		FCompileLogger::Message("Invalid optimization level: " + Argument[0]);
+		FCompileLogger::MessageError("Invalid optimization level: " + Argument[0]);
 		exit(0);
 	}
 	}
@@ -288,7 +288,7 @@ OPTION_FUNCTION(WarningLevelOption)
 	}
 	default:
 	{
-		FCompileLogger::Message("Invalid warning level: " + Argument[0]);
+		FCompileLogger::MessageError("Invalid warning level: " + Argument[0]);
 		exit(0);
 	}
 	}
@@ -306,7 +306,7 @@ OPTION_FUNCTION(CodeGenerationTypeOption)
 	}
 	else
 	{
-		FCompileLogger::Message("Invalid code generation type: " + Argument);
+		FCompileLogger::MessageError("Invalid code generation type: " + Argument);
 		exit(0);
 	}
 }
@@ -323,7 +323,7 @@ OPTION_FUNCTION(SubsystemTypeOption)
 	}
 	else
 	{
-		FCompileLogger::Message("Invalid subsystem type: " + Argument);
+		FCompileLogger::MessageError("Invalid subsystem type: " + Argument);
 		exit(0);
 	}
 }
@@ -344,7 +344,7 @@ OPTION_FUNCTION(TargetPlatformOption)
 	}
 	else
 	{
-		FCompileLogger::Message("Invalid platform type: " + Argument);
+		FCompileLogger::MessageError("Invalid platform type: " + Argument);
 		exit(0);
 	}
 }
@@ -369,7 +369,7 @@ OPTION_FUNCTION(TargetArchOption)
 	}
 	else
 	{
-		FCompileLogger::Message("Invalid architecture type: " + Argument);
+		FCompileLogger::MessageError("Invalid architecture type: " + Argument);
 		exit(0);
 	}
 }
@@ -491,7 +491,7 @@ void ParseInputOptions
 			}
 			else
 			{
-				FCompileLogger::Message("File with extension '" + LFileInfo.ExtensionOnly + "' can't be compiled!");
+				FCompileLogger::MessageError("File with extension '" + LFileInfo.ExtensionOnly + "' can't be compiled!");
 			}
 
 			continue;
@@ -513,7 +513,7 @@ void ParseInputOptions
 
 		if( !LFindOption )
 		{
-			FCompileLogger::Message("Option '" + LOptionName + "' not found!\nUse --help for details.");
+			FCompileLogger::MessageError("Option '" + LOptionName + "' not found!\nUse --help for details.");
 			exit(0);
 		}
 	}

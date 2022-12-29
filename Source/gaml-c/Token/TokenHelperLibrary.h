@@ -99,7 +99,7 @@ struct FTokenHelperLibrary
 		Check that c1, c2 are potential two-symbols or three-symbols operator. 
 	*/
 	static inline bool IsPotentialComplex(const char c1, const char c2) noexcept
-	{ 
+	{
 		return IsComplex(c1, c2) || IsComplex(c1, c2, '=') || IsComplex(c1, c2, '.') || IsComplex(c1, c2, '*');
 	}
 	/*
@@ -110,69 +110,44 @@ struct FTokenHelperLibrary
 		return (s.size() == 2 && IsComplex(s[0], s[1])) || (s.size() == 3 && IsComplex(s[0], s[1], s[2]));
 	}
 
-	
+
 
 	/*
 		Check that c is letter.
 	*/
-	static inline bool IsLetter(const char c) noexcept
-	{
-		return (('a' <= c) && (c <= 'z')) || (('A' <= c) && (c <= 'Z'));
-	}
+	static inline bool IsLetter(const char c) noexcept { return (('a' <= c) && (c <= 'z')) || (('A' <= c) && (c <= 'Z')); }
 	/*
 		Check that c is digit.
 	*/
-	static inline bool IsDigit(const char c) noexcept
-	{
-		return ('0' <= c) && (c <= '9');
-	}
+	static inline bool IsDigit(const char c) noexcept { return ('0' <= c) && (c <= '9'); }
 	/*
 		Check that c is letter or digit.
 	*/
-	static inline bool IsLetterOrDigit(const char c) noexcept
-	{
-		return IsLetter(c) || IsDigit(c);
-	}
+	static inline bool IsLetterOrDigit(const char c) noexcept { return IsLetter(c) || IsDigit(c); }
 
 	/*
 		Check that c is left bracket like '(' or '[' ...
 	*/
-	static inline bool IsLeftBracket(const char c) noexcept
-	{
-		return ('(' == c) || ('[' == c) || ('{' == c);
-	}
+	static inline bool IsLeftBracket(const char c) noexcept { return ('(' == c) || ('[' == c) || ('{' == c); }
 	/*
 		Check that c is right bracket like ')' or ']' ...
 	*/
-	static inline bool IsRightBracket(const char c) noexcept
-	{
-		return (')' == c) || (']' == c) || ('}' == c);
-	}
+	static inline bool IsRightBracket(const char c) noexcept { return (')' == c) || (']' == c) || ('}' == c); }
 	/*
 		Check that c is any single-symbol bracket.
 	*/
-	static inline bool IsBracket(const char c) noexcept
-	{
-		return IsLeftBracket(c) || IsRightBracket(c);
-	}
+	static inline bool IsBracket(const char c) noexcept { return IsLeftBracket(c) || IsRightBracket(c); }
 
 	/*
 		Check that c is sign.
 	*/
-	static inline bool IsSign(const char c) noexcept
-	{
-		return ('+' == c) || ('-' == c);
-	}
-	
-
+	static inline bool IsSign(const char c) noexcept { return ('+' == c) || ('-' == c); }
 
 	/*
 		Check that c is symbol which separate tokens.
 	*/
-	static inline bool IsSeparateSymbol(char c) noexcept
-	{ 
-		return IsWhitespace(c) || IsOperatorChar(c);
-	}
+	static inline bool IsSeparateSymbol(char c) noexcept { return IsWhitespace(c) || IsOperatorChar(c); }
+
 
 	/*
 		Check that c is incorrect char.
@@ -191,7 +166,6 @@ struct FTokenHelperLibrary
 				(c != '\'');
 		// clang-format on
 	}
-
 	/*
 		Check that identifier is named correctly.
 	*/
@@ -217,20 +191,14 @@ struct FTokenHelperLibrary
 
 		@param Lexeme - lexeme str to check.
 	*/
-	static inline bool IsStringLexeme(const std::string& Lexeme) noexcept 
-	{ 
-		return Lexeme.size() >= 2 && Lexeme.front() == '"' && Lexeme.back() == '"';
-	}
+	static inline bool IsStringLexeme(const std::string& Lexeme) noexcept { return Lexeme.size() >= 2 && Lexeme.front() == '"' && Lexeme.back() == '"'; }
 
 	/*
 		Check that Lexeme is wrapped by '\''.
 
 		@param Lexeme - lexeme str to check.
 	*/
-	static inline bool IsCharLexeme(const std::string& Lexeme) noexcept 
-	{ 
-		return Lexeme.size() >= 2 && Lexeme.front() == '\'' && Lexeme.back() == '\''; 
-	}
+	static inline bool IsCharLexeme(const std::string& Lexeme) noexcept { return Lexeme.size() >= 2 && Lexeme.front() == '\'' && Lexeme.back() == '\''; }
 
 	/*
 		Check that Lexeme is integer.
@@ -291,8 +259,8 @@ struct FTokenHelperLibrary
 
 		@param Lexeme - lexeme str to check.
 	*/
-	static bool IsDoubleLexeme(const std::string& Lexeme) noexcept 
-	{ 
+	static bool IsDoubleLexeme(const std::string& Lexeme) noexcept
+	{
 		bool LHasFirstDigit = false;
 		bool LHasPoint = false;
 		bool LHasDigitAfterPoint = false;
@@ -338,7 +306,7 @@ struct FTokenHelperLibrary
 
 		@param Lexeme - lexeme str to check.
 	*/
-	static bool IsFloatLexeme(const std::string& Lexeme) noexcept 
+	static bool IsFloatLexeme(const std::string& Lexeme) noexcept
 	{
 		bool LHasFirstDigit = false;
 		bool LHasPoint = false;

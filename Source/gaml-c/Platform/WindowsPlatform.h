@@ -31,6 +31,7 @@ struct FGenericPlatform
 	// clang-format on
 	{
 		std::string ConsoleCommand = "";
+		ConsoleCommand.reserve(128);
 
 		ConsoleCommand += '\"' + GetMSVCHostDirectory();
 
@@ -59,7 +60,7 @@ struct FGenericPlatform
 		}
 		default:
 		{
-			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, OriginalFile.GetFileFullPath(), 0, 0, CompileOptions);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, OriginalFile.GetFileFullPath(), 0, 0, 0, CompileOptions);
 			break;
 		}
 		}
@@ -114,6 +115,7 @@ struct FGenericPlatform
 	// clang-format on
 	{
 		std::string ConsoleCommand = "";
+		ConsoleCommand.reserve(128);
 
 		ConsoleCommand += '\"' + GetMSVCHostDirectory();
 
@@ -141,7 +143,7 @@ struct FGenericPlatform
 		}
 		default:
 		{
-			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, CompileOptions);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, 0, CompileOptions);
 			break;
 		}
 		}
@@ -162,7 +164,7 @@ struct FGenericPlatform
 		}
 		default:
 		{
-			FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, CompileOptions);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, 0, CompileOptions);
 			break;
 		}
 		}
@@ -199,7 +201,9 @@ struct FGenericPlatform
 	static std::string GetMSVCRootDirectory() noexcept
 	{
 		std::string LResult = "";
+		LResult.reserve(256);
 
+		// clang-format off
 		LResult += "C:\\Program Files\\Microsoft Visual Studio\\";
 		const std::string LVisualStudioYearVersion = FCompilerHelperLibrary::GetBestFolderName("C:/Program Files/Microsoft Visual Studio", {"2022", "2019", "2017"});
 		LResult += LVisualStudioYearVersion;
@@ -208,6 +212,7 @@ struct FGenericPlatform
 		LResult += LVisualStudioType;
 		LResult += "\\VC\\Tools\\MSVC\\";
 		LResult += FCompilerHelperLibrary::GetFirstFolderName("C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC");
+		// clang-format on
 
 		return LResult;
 	}

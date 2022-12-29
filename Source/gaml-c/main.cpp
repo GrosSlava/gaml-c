@@ -23,13 +23,13 @@ int main(int argc, char** argv)
 
 
 	//..........................Parse options.............................//
-	
+
 	LCompileOptions.PathToCompiler = argv[0];
 	ParseInputOptions(argc - 1, argv + 1, LCompileOptions, LSourceFilePaths, LObjectFilesPaths, LLibsFilesPaths);
 
 	if( LSourceFilePaths.empty() )
 	{
-		FErrorLogger::Raise(EErrorMessageType::NO_FILES_TO_COMPILE, "", 0, 0, LCompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::NO_FILES_TO_COMPILE, "", 0, 0, 0, LCompileOptions);
 	}
 
 	//....................................................................//
@@ -37,12 +37,11 @@ int main(int argc, char** argv)
 
 	//.......................Compile source files.........................//
 
-	const size_t LCompilationTime = FCompilerHelperLibrary::ClockCodeMilliseconds
-	(
+	const size_t LCompilationTime = FCompilerHelperLibrary::ClockCodeMilliseconds(
 		[&LSourceFilePaths, &LObjectFilesPaths, &LLibsFilesPaths, &LCompileOptions]()
 		{
 			Compiler LCompiler;
-			
+
 			// generate object files for translation objects
 			for( size_t i = 0; i < LSourceFilePaths.size(); ++i )
 			{
@@ -54,7 +53,8 @@ int main(int argc, char** argv)
 
 				if( LCompileOptions.ShowProgress && !LCompileOptions.Silent )
 				{
-					FCompileLogger::Message("[" + std::to_string(i + 1) + "/" + std::to_string(LSourceFilePaths.size()) + "] " + LSourceFilePaths[i].GetFileFullPath());
+					FCompileLogger::MessageText(
+						"[" + std::to_string(i + 1) + "/" + std::to_string(LSourceFilePaths.size()) + "] " + LSourceFilePaths[i].GetFileFullPath());
 				}
 			}
 
@@ -64,8 +64,7 @@ int main(int argc, char** argv)
 				Linker LLinker;
 				LLinker.Process(LObjectFilesPaths, LLibsFilesPaths, LCompileOptions);
 			}
-		}
-	);
+		});
 
 	//....................................................................//
 
@@ -73,7 +72,7 @@ int main(int argc, char** argv)
 	// print compile time
 	if( !LCompileOptions.Silent )
 	{
-		FCompileLogger::Message("Compilation time " + FCompilerHelperLibrary::GetPrettyTimeStr(LCompilationTime));
+		FCompileLogger::MessageText("Compilation time " + FCompilerHelperLibrary::GetPrettyTimeStr(LCompilationTime));
 	}
 
 	return 0;

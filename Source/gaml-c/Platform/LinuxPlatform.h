@@ -29,6 +29,7 @@ struct FGenericPlatform
 	// clang-format on
 	{
 		std::string ConsoleCommand = "";
+		ConsoleCommand.reserve(128);
 
 		switch( CompileOptions.TargetArch )
 		{
@@ -54,7 +55,7 @@ struct FGenericPlatform
 		}
 		default:
 		{
-			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, OriginalFile.GetFileFullPath(), 0, 0, CompileOptions);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, OriginalFile.GetFileFullPath(), 0, 0, 0, CompileOptions);
 			break;
 		}
 		}
@@ -109,10 +110,11 @@ struct FGenericPlatform
 	// clang-format on
 	{
 		std::string ConsoleCommand = "";
+		ConsoleCommand.reserve(128);
 
 		if( CompileOptions.TargetArch != FCompilerConfig::DEFAULT_TARGET_ARCH )
 		{
-			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, CompileOptions);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, 0, CompileOptions);
 		}
 
 		ConsoleCommand += "gcc";
@@ -131,7 +133,7 @@ struct FGenericPlatform
 		}
 		default:
 		{
-			FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, CompileOptions);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, 0, CompileOptions);
 			break;
 		}
 		}
@@ -150,11 +152,10 @@ struct FGenericPlatform
 		if( !CompileOptions.EntryPoint.empty() )
 		{
 			ConsoleCommand += " -e" + CompileOptions.EntryPoint;
-		} 
+		}
 		else
 		{
 			ConsoleCommand += " -nostartfiles";
-			
 		}
 		if( CompileOptions.IsDebug ) ConsoleCommand += "";
 		if( CompileOptions.IsDLL ) ConsoleCommand += " -shared -fPIC";

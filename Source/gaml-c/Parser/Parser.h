@@ -29,6 +29,7 @@ public:
 
 public:
 
+	// clang-format off
 	/*
 		Start parse.
 
@@ -38,14 +39,27 @@ public:
 		@param InIsMainModule - Indicate that we parsing main module or importing.
 		@param OutProgramInfo - result of parsing.
 	*/
-	void Process(const std::vector<Token>& Tokens, const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, bool InIsMainModule, FProgramInfo& OutProgramInfo);
+	void Process
+	(
+		const std::vector<Token>& Tokens, const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, bool InIsMainModule,
+		FProgramInfo& OutProgramInfo
+	);
+	// clang-format on
 
 	/*
 		Raise error based on parser context.
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const
 	{
-		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Token.GetLine(), Token.GetPos(), CurrentCompileOptions);
+		// clang-format off
+		FErrorLogger::Raise
+		(
+			ErrorMessageType, 
+			CurrentFileInfo.GetFileFullPath(), 
+			Token.GetLine(), Token.GetPos(), Token.GetLexeme().size() - 1, 
+			CurrentCompileOptions
+		);
+		// clang-format on
 	}
 
 private:

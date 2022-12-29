@@ -120,6 +120,9 @@ bool Compiler::GenerateCode(const FProgramInfo& ProgramInfo, std::string& OutCom
 
 void Compiler::DumpLexemes(const std::vector<Token>& Tokens)
 {
+	if( Tokens.empty() ) return;
+
+
 	const std::string LFilePath = GetCompilerOutputDir(FileInfo.FileNameOnly + "_lexemes.txt");
 
 	std::ofstream LFile(LFilePath);
@@ -128,9 +131,6 @@ void Compiler::DumpLexemes(const std::vector<Token>& Tokens)
 		LogError(EErrorStage::INITIALIZATION, EErrorType::WARNING, FileInfo.FileNameOnly, "Can't create file '" + LFilePath + "'!", 0, 0);
 		return;
 	}
-
-	if( Tokens.empty() ) return;
-
 
 	size_t LLineIndex = Tokens[0].GetLine();
 	for( const Token& LToken : Tokens )
@@ -141,7 +141,15 @@ void Compiler::DumpLexemes(const std::vector<Token>& Tokens)
 			LFile.put('\n');
 		}
 
-		const std::string LTypeStr = "[" + LToken.GetTypeAsStr() + " \"" + LToken.GetLexeme() + "\" " + std::to_string(LToken.GetLine()) + ":" + std::to_string(LToken.GetPos()) + "] ";
+		// clang-format off
+		const std::string LTypeStr = 	"[" + 
+										LToken.GetTypeAsStr() + 
+										" \"" + LToken.GetLexeme() + "\" " + 
+										std::to_string(LToken.GetLine()) + ":" +
+										std::to_string(LToken.GetPos()) + 
+										"] ";
+		// clang-format on
+
 		LFile.write(LTypeStr.c_str(), LTypeStr.size());
 	}
 
@@ -190,6 +198,6 @@ BaseGenerator* Compiler::CreateCodeGenerator() const noexcept
 	case ECodeGenerationType::LLVM: return new LLVMGenerator();
 	}
 
-	FCompileLogger::Message("!!!UNDEFINED CODE GENERATOR TYPE!!!", true);
+	LogError(EErrorStage::INITIALIZATION, EErrorType::ERROR, "", "!!!UNDEFINED CODE GENERATOR TYPE!!!", 0, 0);
 	return nullptr;
 }

@@ -40,6 +40,7 @@ public:
 
 public:
 
+	// clang-format off
 	/*
 		Translate code to object file.
 
@@ -49,7 +50,12 @@ public:
 		@param OutCompiledObjectFilePath - Result path to generated object file.
 		@return success.
 	*/
-	virtual bool GenerateCode(const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, const FProgramInfo& ProgramInfo, std::string& OutCompiledObjectFilePath)
+	virtual bool GenerateCode
+	(
+		const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, const FProgramInfo& ProgramInfo, 
+		std::string& OutCompiledObjectFilePath
+	)
+	// clang-format on
 	{
 		// set context
 		CurrentFileInfo = FileInfo;
@@ -57,6 +63,10 @@ public:
 		GeneratedCodeStr.clear();
 
 		OutCompiledObjectFilePath.clear();
+
+
+		// generate code for low-level language
+		ProcessGeneration(ProgramInfo);
 
 
 		// create other language file
@@ -70,10 +80,9 @@ public:
 			return false;
 		}
 
-		// generate code for low-level language
-		ProcessGeneration(ProgramInfo);
 		LFile.write(GeneratedCodeStr.c_str(), GeneratedCodeStr.size());
 		LFile.close();
+
 
 		// compile generated code by native compiler
 		if( !CurrentCompileOptions.NoTranslation )
@@ -81,14 +90,14 @@ public:
 			const std::string LFileExtension = FPlatformHelperLibrary::GetPlatformObjectFileExtension(CurrentCompileOptions.TargetPlatform);
 			if( LFileExtension.empty() )
 			{
-				RaiseError(EErrorMessageType::INVALID_GENERATION_EXTENSION, 0, 0);
+				RaiseError(EErrorMessageType::INVALID_GENERATION_EXTENSION, 0, 0, 0);
 				return false;
 			}
 
 			OutCompiledObjectFilePath = GetOutputFilePath(LFileExtension);
 			FGenericPlatform::RunThirdPartyCompiler(CurrentFileInfo, CurrentCompileOptions, LOutFilePath, GetOutputDirectoryPath(), OutCompiledObjectFilePath);
 		}
-		
+
 		// remove generated low-level code if needed
 		if( !CurrentCompileOptions.DumpGeneratedCode )
 		{
@@ -132,13 +141,13 @@ protected:
 		return FCompilerHelperLibrary::CatPaths(GetOutputDirectoryPath(), CurrentFileInfo.FileNameOnly + "." + ExtensionOnlyStr);
 	}
 
-	
+
 	/*
 		Raise error based on compiler context.
 	*/
-	inline void RaiseError(EErrorMessageType ErrorMessageType, size_t Line, size_t Pos) const 
-	{ 
-		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Line, Pos, CurrentCompileOptions); 
+	inline void RaiseError(EErrorMessageType ErrorMessageType, size_t Line, size_t Pos, size_t UnderlineLength) const
+	{
+		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Line, Pos, UnderlineLength, CurrentCompileOptions);
 	}
 
 

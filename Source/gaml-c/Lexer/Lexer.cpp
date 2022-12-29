@@ -16,7 +16,7 @@ void Lexer::Process(const std::string& Code, const FGamlFileInfo& FileInfo, cons
 	CurrentCompileOptions = CompileOptions;
 
 	CurrentLine = 1; // we are indexing rows from 1
-	CurrentPos = 0;
+	CurrentPos = 1;	 // we are indexing position in row from 1
 	CurrentLexeme = "";
 
 	Split(Code, OutTokens);
@@ -26,7 +26,7 @@ void Lexer::Process(const std::string& Code, const FGamlFileInfo& FileInfo, cons
 
 
 
-enum class ESpiltCommentState : unsigned char
+enum class ESplitCommentState : unsigned char
 {
 	DEFAULT,
 	PossibleInComment,
@@ -36,14 +36,14 @@ enum class ESpiltCommentState : unsigned char
 	CommentEnd
 };
 
-enum class ESpiltStringState : unsigned char
+enum class ESplitStringState : unsigned char
 {
 	DEFAULT,
 	CharOpen,
 	StringOpen
 };
 
-enum class ESpiltNumberState : unsigned char
+enum class ESplitNumberState : unsigned char
 {
 	DEFAULT,
 	HasNumber,
@@ -57,9 +57,9 @@ enum class ESpiltNumberState : unsigned char
 
 void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 {
-	ESpiltCommentState SplitCommentState = ESpiltCommentState::DEFAULT;
-	ESpiltStringState SpiltStringState = ESpiltStringState::DEFAULT;
-	ESpiltNumberState SpiltNumberState = ESpiltNumberState::DEFAULT;
+	ESplitCommentState SplitCommentState = ESplitCommentState::DEFAULT;
+	ESplitStringState SplitStringState = ESplitStringState::DEFAULT;
+	ESplitNumberState SplitNumberState = ESplitNumberState::DEFAULT;
 
 
 	for( const char& LSymbol : Code )
@@ -77,74 +77,74 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 		// NOTE! Construction: /* /* */ - second '/*' not open new block.
 		// NOTE! Construction: /* /* */ */ - second '*/' will be not in comment block.
 
-		if( SplitCommentState == ESpiltCommentState::CommentEnd )
+		if( SplitCommentState == ESplitCommentState::CommentEnd )
 		{
-			SplitCommentState = ESpiltCommentState::DEFAULT;
+			SplitCommentState = ESplitCommentState::DEFAULT;
 		}
 
 		if( LSymbol == '\n' )
 		{
-			if( SplitCommentState == ESpiltCommentState::PossibleInComment )
+			if( SplitCommentState == ESplitCommentState::PossibleInComment )
 			{
-				SplitCommentState = ESpiltCommentState::DEFAULT;
+				SplitCommentState = ESplitCommentState::DEFAULT;
 			}
-			else if( SplitCommentState == ESpiltCommentState::InLineComment )
+			else if( SplitCommentState == ESplitCommentState::InLineComment )
 			{
-				SplitCommentState = ESpiltCommentState::CommentEnd;
+				SplitCommentState = ESplitCommentState::CommentEnd;
 			}
-			else if( SplitCommentState == ESpiltCommentState::PossibleOutBlockComment )
+			else if( SplitCommentState == ESplitCommentState::PossibleOutBlockComment )
 			{
-				SplitCommentState = ESpiltCommentState::InBlockComment;
+				SplitCommentState = ESplitCommentState::InBlockComment;
 			}
 		}
 		else if( LSymbol == '/' )
 		{
-			if( SplitCommentState == ESpiltCommentState::DEFAULT )
+			if( SplitCommentState == ESplitCommentState::DEFAULT )
 			{
-				SplitCommentState = ESpiltCommentState::PossibleInComment;
+				SplitCommentState = ESplitCommentState::PossibleInComment;
 			}
-			else if( SplitCommentState == ESpiltCommentState::PossibleInComment )
+			else if( SplitCommentState == ESplitCommentState::PossibleInComment )
 			{
-				SplitCommentState = ESpiltCommentState::InLineComment;
+				SplitCommentState = ESplitCommentState::InLineComment;
 				CurrentLexeme.resize(CurrentLexeme.size() - 1);
 				PushCurrentLexeme(OutTokens, 2);
 			}
-			else if( SplitCommentState == ESpiltCommentState::PossibleOutBlockComment )
+			else if( SplitCommentState == ESplitCommentState::PossibleOutBlockComment )
 			{
-				SplitCommentState = ESpiltCommentState::CommentEnd;
+				SplitCommentState = ESplitCommentState::CommentEnd;
 			}
 		}
 		else if( LSymbol == '*' )
 		{
-			if( SplitCommentState == ESpiltCommentState::PossibleInComment )
+			if( SplitCommentState == ESplitCommentState::PossibleInComment )
 			{
-				SplitCommentState = ESpiltCommentState::InBlockComment;
+				SplitCommentState = ESplitCommentState::InBlockComment;
 				CurrentLexeme.resize(CurrentLexeme.size() - 1);
 				// not push current lexeme because we can have comment inside any expression
 			}
-			else if( SplitCommentState == ESpiltCommentState::InBlockComment )
+			else if( SplitCommentState == ESplitCommentState::InBlockComment )
 			{
-				SplitCommentState = ESpiltCommentState::PossibleOutBlockComment;
+				SplitCommentState = ESplitCommentState::PossibleOutBlockComment;
 			}
 		}
 		else
 		{
-			if( SplitCommentState == ESpiltCommentState::PossibleInComment )
+			if( SplitCommentState == ESplitCommentState::PossibleInComment )
 			{
-				SplitCommentState = ESpiltCommentState::DEFAULT;
+				SplitCommentState = ESplitCommentState::DEFAULT;
 			}
-			else if( SplitCommentState == ESpiltCommentState::PossibleOutBlockComment )
+			else if( SplitCommentState == ESplitCommentState::PossibleOutBlockComment )
 			{
-				SplitCommentState = ESpiltCommentState::InBlockComment;
+				SplitCommentState = ESplitCommentState::InBlockComment;
 			}
 		}
 
 		// clang-format off
 		if( 
-			SplitCommentState == ESpiltCommentState::InLineComment || 
-			SplitCommentState == ESpiltCommentState::InBlockComment || 
-			SplitCommentState == ESpiltCommentState::PossibleOutBlockComment ||
-			SplitCommentState == ESpiltCommentState::CommentEnd 
+			SplitCommentState == ESplitCommentState::InLineComment || 
+			SplitCommentState == ESplitCommentState::InBlockComment || 
+			SplitCommentState == ESplitCommentState::PossibleOutBlockComment ||
+			SplitCommentState == ESplitCommentState::CommentEnd 
 		  )
 		// clang-format on
 		{
@@ -158,21 +158,21 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 
 		if( LSymbol == '\'' )
 		{
-			if( SpiltStringState == ESpiltStringState::DEFAULT )
+			if( SplitStringState == ESplitStringState::DEFAULT )
 			{
-				SpiltStringState = ESpiltStringState::CharOpen;
+				SplitStringState = ESplitStringState::CharOpen;
 				PushCurrentLexeme(OutTokens, 1);
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltStringState == ESpiltStringState::CharOpen )
+			else if( SplitStringState == ESplitStringState::CharOpen )
 			{
-				SpiltStringState = ESpiltStringState::DEFAULT;
+				SplitStringState = ESplitStringState::DEFAULT;
 				CurrentLexeme += LSymbol;
 				PushCurrentLexeme(OutTokens);
 				continue;
 			}
-			else if( SpiltStringState == ESpiltStringState::StringOpen )
+			else if( SplitStringState == ESplitStringState::StringOpen )
 			{
 				CurrentLexeme += LSymbol;
 				continue;
@@ -180,21 +180,21 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 		}
 		else if( LSymbol == '"' )
 		{
-			if( SpiltStringState == ESpiltStringState::DEFAULT )
+			if( SplitStringState == ESplitStringState::DEFAULT )
 			{
-				SpiltStringState = ESpiltStringState::StringOpen;
+				SplitStringState = ESplitStringState::StringOpen;
 				PushCurrentLexeme(OutTokens, 1);
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltStringState == ESpiltStringState::CharOpen )
+			else if( SplitStringState == ESplitStringState::CharOpen )
 			{
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltStringState == ESpiltStringState::StringOpen )
+			else if( SplitStringState == ESplitStringState::StringOpen )
 			{
-				SpiltStringState = ESpiltStringState::DEFAULT;
+				SplitStringState = ESplitStringState::DEFAULT;
 				CurrentLexeme += LSymbol;
 				PushCurrentLexeme(OutTokens);
 				continue;
@@ -202,10 +202,10 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 		}
 		else if( LSymbol == '\n' )
 		{
-			SpiltStringState = ESpiltStringState::DEFAULT;
+			SplitStringState = ESplitStringState::DEFAULT;
 		}
 
-		if( SpiltStringState == ESpiltStringState::CharOpen || SpiltStringState == ESpiltStringState::StringOpen )
+		if( SplitStringState == ESplitStringState::CharOpen || SplitStringState == ESplitStringState::StringOpen )
 		{
 			CurrentLexeme += LSymbol;
 			continue;
@@ -218,7 +218,7 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 
 		if( FTokenHelperLibrary::IsDigit(LSymbol) )
 		{
-			if( SpiltNumberState == ESpiltNumberState::DEFAULT )
+			if( SplitNumberState == ESplitNumberState::DEFAULT )
 			{
 				if( (CurrentLexeme.size() == 1 && FTokenHelperLibrary::IsOperatorChar(CurrentLexeme[0])) || FTokenHelperLibrary::IsComplexToken(CurrentLexeme) )
 				{
@@ -227,205 +227,205 @@ void Lexer::Split(const std::string& Code, std::vector<Token>& OutTokens)
 
 				if( CurrentLexeme.empty() )
 				{
-					SpiltNumberState = ESpiltNumberState::HasNumber;
+					SplitNumberState = ESplitNumberState::HasNumber;
 					CurrentLexeme += LSymbol;
 					continue;
 				}
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumber )
+			else if( SplitNumberState == ESplitNumberState::HasNumber )
 			{
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnDot )
+			else if( SplitNumberState == ESplitNumberState::OnDot )
 			{
-				SpiltNumberState = ESpiltNumberState::HasNumberAfterDot;
+				SplitNumberState = ESplitNumberState::HasNumberAfterDot;
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterDot )
-			{
-				CurrentLexeme += LSymbol;
-				continue;
-			}
-			else if( SpiltNumberState == ESpiltNumberState::OnE )
-			{
-				SpiltNumberState = ESpiltNumberState::HasNumberAfterE;
-				CurrentLexeme += LSymbol;
-				continue;
-			}
-			else if( SpiltNumberState == ESpiltNumberState::OnSignAfterE )
-			{
-				SpiltNumberState = ESpiltNumberState::HasNumberAfterE;
-				CurrentLexeme += LSymbol;
-				continue;
-			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterE )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterDot )
 			{
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnF )
+			else if( SplitNumberState == ESplitNumberState::OnE )
+			{
+				SplitNumberState = ESplitNumberState::HasNumberAfterE;
+				CurrentLexeme += LSymbol;
+				continue;
+			}
+			else if( SplitNumberState == ESplitNumberState::OnSignAfterE )
+			{
+				SplitNumberState = ESplitNumberState::HasNumberAfterE;
+				CurrentLexeme += LSymbol;
+				continue;
+			}
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterE )
+			{
+				CurrentLexeme += LSymbol;
+				continue;
+			}
+			else if( SplitNumberState == ESplitNumberState::OnF )
 			{
 				RaiseError(EErrorMessageType::EXTRA_DIGIT_AFTER_NUMBER_END);
 			}
 		}
 		else if( LSymbol == '.' )
 		{
-			if( SpiltNumberState == ESpiltNumberState::DEFAULT )
+			if( SplitNumberState == ESplitNumberState::DEFAULT )
 			{
 				// no operation
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumber )
+			else if( SplitNumberState == ESplitNumberState::HasNumber )
 			{
-				SpiltNumberState = ESpiltNumberState::OnDot;
+				SplitNumberState = ESplitNumberState::OnDot;
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnDot )
+			else if( SplitNumberState == ESplitNumberState::OnDot )
 			{
 				RaiseError(EErrorMessageType::EXTRA_DOT_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterDot )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterDot )
 			{
 				RaiseError(EErrorMessageType::EXTRA_DOT_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnE )
+			else if( SplitNumberState == ESplitNumberState::OnE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_DOT_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnSignAfterE )
+			else if( SplitNumberState == ESplitNumberState::OnSignAfterE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_DOT_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterE )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_DOT_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnF )
+			else if( SplitNumberState == ESplitNumberState::OnF )
 			{
 				RaiseError(EErrorMessageType::EXTRA_DOT_INSIDE_NUMBER);
 			}
 		}
 		else if( LSymbol == 'e' || LSymbol == 'E' )
 		{
-			if( SpiltNumberState == ESpiltNumberState::DEFAULT )
+			if( SplitNumberState == ESplitNumberState::DEFAULT )
 			{
 				// no operation
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumber )
+			else if( SplitNumberState == ESplitNumberState::HasNumber )
 			{
 				RaiseError(EErrorMessageType::EXTRA_E_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnDot )
+			else if( SplitNumberState == ESplitNumberState::OnDot )
 			{
-				SpiltNumberState = ESpiltNumberState::OnE;
+				SplitNumberState = ESplitNumberState::OnE;
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterDot )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterDot )
 			{
-				SpiltNumberState = ESpiltNumberState::OnE;
+				SplitNumberState = ESplitNumberState::OnE;
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnE )
+			else if( SplitNumberState == ESplitNumberState::OnE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_E_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnSignAfterE )
+			else if( SplitNumberState == ESplitNumberState::OnSignAfterE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_E_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterE )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_E_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnF )
+			else if( SplitNumberState == ESplitNumberState::OnF )
 			{
 				RaiseError(EErrorMessageType::EXTRA_E_INSIDE_NUMBER);
 			}
 		}
 		else if( FTokenHelperLibrary::IsSign(LSymbol) )
 		{
-			if( SpiltNumberState == ESpiltNumberState::DEFAULT )
+			if( SplitNumberState == ESplitNumberState::DEFAULT )
 			{
 				// no operation
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumber )
+			else if( SplitNumberState == ESplitNumberState::HasNumber )
 			{
 				// no include sign in number lexeme
-				SpiltNumberState = ESpiltNumberState::DEFAULT;
+				SplitNumberState = ESplitNumberState::DEFAULT;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnDot )
+			else if( SplitNumberState == ESplitNumberState::OnDot )
 			{
 				RaiseError(EErrorMessageType::EXTRA_SIGN_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterDot )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterDot )
 			{
-				SpiltNumberState = ESpiltNumberState::DEFAULT;
+				SplitNumberState = ESplitNumberState::DEFAULT;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnE )
+			else if( SplitNumberState == ESplitNumberState::OnE )
 			{
-				SpiltNumberState = ESpiltNumberState::OnSignAfterE;
+				SplitNumberState = ESplitNumberState::OnSignAfterE;
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnSignAfterE )
+			else if( SplitNumberState == ESplitNumberState::OnSignAfterE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_SIGN_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterE )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterE )
 			{
-				SpiltNumberState = ESpiltNumberState::DEFAULT;
+				SplitNumberState = ESplitNumberState::DEFAULT;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnF )
+			else if( SplitNumberState == ESplitNumberState::OnF )
 			{
-				SpiltNumberState = ESpiltNumberState::DEFAULT;
+				SplitNumberState = ESplitNumberState::DEFAULT;
 			}
 		}
 		else if( LSymbol == 'f' || LSymbol == 'F' )
 		{
-			if( SpiltNumberState == ESpiltNumberState::DEFAULT )
+			if( SplitNumberState == ESplitNumberState::DEFAULT )
 			{
 				// no operation
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumber )
+			else if( SplitNumberState == ESplitNumberState::HasNumber )
 			{
 				RaiseError(EErrorMessageType::EXTRA_F_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnDot )
+			else if( SplitNumberState == ESplitNumberState::OnDot )
 			{
 				RaiseError(EErrorMessageType::EXTRA_F_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterDot )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterDot )
 			{
-				SpiltNumberState = ESpiltNumberState::OnF;
+				SplitNumberState = ESplitNumberState::OnF;
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnE )
+			else if( SplitNumberState == ESplitNumberState::OnE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_F_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnSignAfterE )
+			else if( SplitNumberState == ESplitNumberState::OnSignAfterE )
 			{
 				RaiseError(EErrorMessageType::EXTRA_F_INSIDE_NUMBER);
 			}
-			else if( SpiltNumberState == ESpiltNumberState::HasNumberAfterE )
+			else if( SplitNumberState == ESplitNumberState::HasNumberAfterE )
 			{
-				SpiltNumberState = ESpiltNumberState::OnF;
+				SplitNumberState = ESplitNumberState::OnF;
 				CurrentLexeme += LSymbol;
 				continue;
 			}
-			else if( SpiltNumberState == ESpiltNumberState::OnF )
+			else if( SplitNumberState == ESplitNumberState::OnF )
 			{
 				RaiseError(EErrorMessageType::EXTRA_F_INSIDE_NUMBER);
 			}
 		}
 		else
 		{
-			SpiltNumberState = ESpiltNumberState::DEFAULT;
+			SplitNumberState = ESplitNumberState::DEFAULT;
 		}
 
 		//.......................................................//

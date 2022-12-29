@@ -47,10 +47,15 @@ struct FCompileLogger
 	*/
 	static void Raise(EErrorStage ErrorStage, EErrorType ErrorType, const std::string& File, const std::string& Message, size_t Line, size_t Pos);
 	/*
-		Log message.
+		Log error message into stderr.
 
 		@param Message - Message to log.
-		@param IsError - Log message to stderr or not.
 	*/
-	static void Message(const std::string& Message, bool IsError = false);
+	static void MessageError(const std::string& Message);
+	/*
+		Log text message stdout.
+
+		@param Message - Message to log.
+	*/
+	static void MessageText(const std::string& Message);
 };

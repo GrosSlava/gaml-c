@@ -27,7 +27,11 @@ struct FParserStates;
 class IParserState
 {
 public:
-	virtual ~IParserState() {}
+
+	virtual ~IParserState() { }
+
+public:
+
 	virtual IParserState* Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo) = 0;
 };
 
@@ -42,7 +46,7 @@ public:
 
 
 
-//;|module|implement|import|func|struct|interface|object|component|enum|using|public|private|static_assert|template|***
+//;|module|implement|import|func|struct|interface|object|component|enum|using|public|private|static_assert|***
 DECLARE_STATE_CLASS(Default)
 
 // *** ... ***
@@ -52,9 +56,9 @@ DECLARE_STATE_CLASS(DescriptionAlign1)					 // @ -> align -> (
 DECLARE_STATE_CLASS(DescriptionAlign2)					 // align -> ( -> )
 DECLARE_STATE_CLASS(DescriptionAlign3)					 // ( -> ) -> @|***
 DECLARE_STATE_CLASS(DescriptionParam1)					 // @ -> param|return -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DescriptionParam2)					 // [IDENTIFIER] -> : -> const|mut|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DescriptionParam3)					 // : -> const|mut|[stadrad type]|[user type] -> (|@|***
-DECLARE_STATE_CLASS(DescriptionParam4)					 // [stadrad type]|[user type] -> (|@|*** -> )
+DECLARE_STATE_CLASS(DescriptionParam2)					 // [IDENTIFIER] -> : -> const|mut|[standrad type]|[user type]
+DECLARE_STATE_CLASS(DescriptionParam3)					 // : -> const|mut|[standrad type]|[user type] -> (|@|***
+DECLARE_STATE_CLASS(DescriptionParam4)					 // [standrad type]|[user type] -> (|@|*** -> )
 DECLARE_STATE_CLASS(DescriptionParam5)					 // ( -> ... -> )
 DECLARE_STATE_CLASS(DescriptionParam6)					 // ... -> ) -> @|***
 DECLARE_STATE_CLASS(EndDescription)						 // *** -> *** -> public|private|module|func|struct|interface|object|component|enum
@@ -64,7 +68,7 @@ DECLARE_STATE_CLASS(DescriptionParamUserType)			 // -> [user type] ->
 
 // public|private func|interface|object|component|struct|enum
 DECLARE_STATE_CLASS(GlobalAccessModifier) // -> public|private -> func|interface|object|component|struct|enum
-DECLARE_STATE_CLASS(LocalAccessModifier)  // -> public|protected|private -> func|static|const|[stadrad type]|[user type]
+DECLARE_STATE_CLASS(LocalAccessModifier)  // -> public|protected|private -> func|var
 
 
 
@@ -92,28 +96,32 @@ DECLARE_STATE_CLASS(DeclareFunction3)	  // [ -> ] -> ;|{
 DECLARE_STATE_CLASS(DeclareFunction4)	  // [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareClass)					   // -> struct|enum|interface|object|component -> <||[IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass1)						   // struct|enum|interface|object|component -> <| -> typename|[stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass2)						   // <| -> [stadrad type]|[user type] -> ,||>
-DECLARE_STATE_CLASS(DeclareClass3)						   // <| -> |> -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass4)						   // struct|enum|interface|object|component||> -> [IDENTIFIER] -> (|{
-DECLARE_STATE_CLASS(DeclareClass5)						   // [IDENTIFIER] -> ( -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass6)						   // ( -> [stadrad type]|[user type] -> ,|)
-DECLARE_STATE_CLASS(DeclareClass7)						   // [stadrad type]|[user type] -> ) -> {
-DECLARE_STATE_CLASS(DeclareClassInternal)				   // [IDENTIFIER]|) -> { -> ***|public|protected|private|func|static_assert|using|static|const|[stadrad type]|[user type]|}
+DECLARE_STATE_CLASS(StartDeclareClass)					   // -> struct|enum|interface|object|component -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass1)						   // struct|enum|interface|object|component| -> [IDENTIFIER] -> (|{
+DECLARE_STATE_CLASS(DeclareClass2)						   // [IDENTIFIER] -> ( -> [standrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass3)						   // ( -> [standrad type]|[user type] -> ,|)
+DECLARE_STATE_CLASS(DeclareClass4)						   // [standrad type]|[user type] -> ) -> {
+DECLARE_STATE_CLASS(DeclareClassInternal)				   // [IDENTIFIER]|) -> { -> ***|public|protected|private|func|var|static_assert|using|}
 DECLARE_STATE_CLASS(DeclareClassParentBuildinTemplateType) // -> [buildin template] ->
 DECLARE_STATE_CLASS(DeclareClassParentUserType)			   // -> [user type] ->
 
-// template<| [IDENTIFIER]...|... |> [IDENTIFIER] [ ... ] { ... }
-DECLARE_STATE_CLASS(StartDefineTemplate)
+// var static|const|[standrad type]|[user type] [IDENTIFIER];
+DECLARE_STATE_CLASS(StartDeclareField)				 // -> var -> static|const|[standrad type]|[user type]
+DECLARE_STATE_CLASS(DeclareField1)					 // var|static|const -> [standrad type]|[user type] -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareField2)					 // [standrad type]|[user type] -> [IDENTIFIER] -> =|;
+DECLARE_STATE_CLASS(DeclareField3)					 // [IDENTIFIER] -> = -> ...;
+DECLARE_STATE_CLASS(DeclareFieldBuildinTemplateType) // -> [buildin template] ->
+DECLARE_STATE_CLASS(DeclareFieldLambdaType)			 // -> [user type] ->
+DECLARE_STATE_CLASS(DeclareFieldUserType)			 // -> [user type] ->
 
 
 
-// using [IDENTIFIER] = [stadrad type]|[user type];
+
+// using [IDENTIFIER] = [standrad type]|[user type];
 DECLARE_STATE_CLASS(StartDefineAlias)				// -> using -> [IDENTIFIER]
 DECLARE_STATE_CLASS(DefineAlias1)					// using -> [IDENTIFIER] -> =
-DECLARE_STATE_CLASS(DefineAlias2)					// [IDENTIFIER] -> = -> [stadrad type]|[user type]
-DECLARE_STATE_CLASS(DefineAlias3)					// = -> [stadrad type]|[user type] -> ;
+DECLARE_STATE_CLASS(DefineAlias2)					// [IDENTIFIER] -> = -> [standrad type]|[user type]
+DECLARE_STATE_CLASS(DefineAlias3)					// = -> [standrad type]|[user type] -> ;
 DECLARE_STATE_CLASS(DefineAliasBuildinTemplateType) // -> [buildin template] ->
 DECLARE_STATE_CLASS(DefineAliasLambdaType)			// -> [lambda] ->
 DECLARE_STATE_CLASS(DefineAliasUserType)			// -> [user type] ->
@@ -148,7 +156,10 @@ struct FParserStates
 public:
 
 	FParserStates() = delete;
-	FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOptions& InCompileOptions, bool InIsMainModule) : FileInfo(InFileInfo), CompileOptions(InCompileOptions), IsMainModule(InIsMainModule) { }
+	FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOptions& InCompileOptions, bool InIsMainModule) :
+		FileInfo(InFileInfo), CompileOptions(InCompileOptions), IsMainModule(InIsMainModule)
+	{
+	}
 	~FParserStates();
 
 
@@ -203,14 +214,17 @@ public:
 	DECLARE_STATE(DeclareClass2)
 	DECLARE_STATE(DeclareClass3)
 	DECLARE_STATE(DeclareClass4)
-	DECLARE_STATE(DeclareClass5)
-	DECLARE_STATE(DeclareClass6)
-	DECLARE_STATE(DeclareClass7)
 	DECLARE_STATE(DeclareClassInternal)
 	DECLARE_STATE(DeclareClassParentBuildinTemplateType)
 	DECLARE_STATE(DeclareClassParentUserType)
 
-	DECLARE_STATE(StartDefineTemplate)
+	DECLARE_STATE(StartDeclareField)
+	DECLARE_STATE(DeclareField1)
+	DECLARE_STATE(DeclareField2)
+	DECLARE_STATE(DeclareField3)
+	DECLARE_STATE(DeclareFieldBuildinTemplateType)
+	DECLARE_STATE(DeclareFieldLambdaType)
+	DECLARE_STATE(DeclareFieldUserType)
 
 
 	DECLARE_STATE(StartDefineAlias)
@@ -237,24 +251,15 @@ public:
 	/*
 		@return information about parsing file.
 	*/
-	inline const FGamlFileInfo& GetFileInfo() const noexcept
-	{
-		return FileInfo;
-	}
+	inline const FGamlFileInfo& GetFileInfo() const noexcept { return FileInfo; }
 	/*
 		@return current compile options.
 	*/
-	inline const FCompileOptions& GetCompileOptions() const noexcept
-	{
-		return CompileOptions;
-	}
+	inline const FCompileOptions& GetCompileOptions() const noexcept { return CompileOptions; }
 	/*
 		@return true if parsing main module(false if parsing imported into main module).
 	*/
-	inline bool GetIsMainModule() const noexcept
-	{
-		return IsMainModule;
-	}
+	inline bool GetIsMainModule() const noexcept { return IsMainModule; }
 
 
 	/*
@@ -262,7 +267,7 @@ public:
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const
 	{
-		FErrorLogger::Raise(ErrorMessageType, FileInfo.GetFileFullPath(), Token.GetLine(), Token.GetPos(), CompileOptions);
+		FErrorLogger::Raise(ErrorMessageType, FileInfo.GetFileFullPath(), Token.GetLine(), Token.GetPos(), Token.GetLexeme().size() - 1, CompileOptions);
 	}
 
 
@@ -270,17 +275,11 @@ public:
 		Check that state stack is empty.
 		Should be used before using PopState.
 	*/
-	inline bool IsStateStackEmpty() noexcept
-	{
-		return StatesStack.empty();
-	}
+	inline bool IsStateStackEmpty() noexcept { return StatesStack.empty(); }
 	/*
 		Push state into state-stack.
 	*/
-	inline void PushState(IParserState* State) noexcept
-	{
-		StatesStack.push_back(State);
-	}
+	inline void PushState(IParserState* State) noexcept { StatesStack.push_back(State); }
 	/*
 		Pop state from stack.
 		NOTE! Method not check that stack is empty.

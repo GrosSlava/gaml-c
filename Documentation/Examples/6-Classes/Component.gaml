@@ -11,10 +11,10 @@ component UMyComponent // component can be inhereted only from interface(many) o
 {
     // declare component members
     // by default all members are public
-    int32 A;        // by default uninitialized members contains trash
-    float B = 5.6f; // we can give dafault value
+    var int32 A;        // by default uninitialized members contains trash
+    var float B = 5.6f; // we can give dafault value
 
-    private int32 C; // set this member as private
+    private var int32 C; // set this member as private
 
     ***
         // declare method, it is public

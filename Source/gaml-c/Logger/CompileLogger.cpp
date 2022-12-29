@@ -11,6 +11,8 @@
 void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const std::string& File, const std::string& Message, size_t Line, size_t Pos)
 {
 	std::string LErrorMessage = "";
+	LErrorMessage.reserve(64 + File.size() + Message.size());
+
 	if( !File.empty() )
 	{
 		LErrorMessage = "\"" + File + "\" ";
@@ -47,20 +49,19 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 
 	LErrorMessage += Message;
 
-	FCompileLogger::Message(LErrorMessage, true);
+	FCompileLogger::MessageError(LErrorMessage);
 }
 
-
-void FCompileLogger::Message(const std::string& Message, bool IsError)
+void FCompileLogger::MessageError(const std::string& Message)
 {
 	if( Message.empty() ) return;
 
-	if( IsError )
-	{
-		std::cerr << Message << std::endl;
-	}
-	else
-	{
-		std::cout << Message << std::endl;
-	}
+	std::cerr << Message << std::endl;
+}
+
+void FCompileLogger::MessageText(const std::string& Message)
+{
+	if( Message.empty() ) return;
+
+	std::cout << Message << std::endl;
 }

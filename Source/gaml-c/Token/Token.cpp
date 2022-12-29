@@ -11,15 +11,33 @@
 
 void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 {
-	// clang-format off
+	/*
+		Table for token type hashing.
+		Key - hash of token lexeme.
+		Value - token type.
+	*/
+	static std::unordered_map<size_t, ETokenType> TokenTypeCache;
 
+
+	// clang-format off
 	if( FTokenHelperLibrary::IsIntegerLexeme(LexemeStr) )	{ Type = ETokenType::INTEGER_CONST;	return;	}
 	if( FTokenHelperLibrary::IsFloatLexeme(LexemeStr) )		{ Type = ETokenType::FLOAT_CONST;	return; }
 	if( FTokenHelperLibrary::IsDoubleLexeme(LexemeStr) )	{ Type = ETokenType::DOUBLE_CONST;	return; }
 	if( FTokenHelperLibrary::IsCharLexeme(LexemeStr) )		{ Type = ETokenType::CHAR_CONST;	return; }
 	if( FTokenHelperLibrary::IsStringLexeme(LexemeStr) )	{ Type = ETokenType::STRING_CONST;	return; }
+	// clang-format on
 
-#define CASE_LEXEME(Lexeme, TokenType) if( LexemeStr == Lexeme ) { Type = ETokenType::TokenType; return; }
+	size_t LLexemeHash = GetHash();
+	auto LTokenTypeCacheIter = TokenTypeCache.find(LLexemeHash);
+	if( LTokenTypeCacheIter != TokenTypeCache.end() )
+	{
+		Type = LTokenTypeCacheIter->second;
+		return;
+	}
+
+	// clang-format off
+
+#define CASE_LEXEME(Lexeme, TokenType) if( LexemeStr == Lexeme ) { Type = ETokenType::TokenType; TokenTypeCache.insert(std::pair(LLexemeHash, Type)); return; }
 
 	CASE_LEXEME("<",						LESS)
 	CASE_LEXEME(">",						GREATER)
@@ -134,6 +152,15 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("vector3d",					VECTOR3D)
 	CASE_LEXEME("vector2d",					VECTOR2D)
 
+	CASE_LEXEME("cast",						CAST)
+	CASE_LEXEME("unsafe_cast",				UNSAFE_CAST)
+
+	CASE_LEXEME("assert",					ASSERT)
+	CASE_LEXEME("static_assert",			STATIC_ASSERT)
+	CASE_LEXEME("static_error",				STATIC_ERROR)
+	CASE_LEXEME("static_warning",			STATIC_WARNING)
+	CASE_LEXEME("static_message",			STATIC_MESSAGE)
+
 	CASE_LEXEME("do",						DO)
 	CASE_LEXEME("while",					WHILE)
 	CASE_LEXEME("for",						FOR)
@@ -148,6 +175,18 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("case",						CASE)
 	CASE_LEXEME("default",					DEFAULT)
 
+	CASE_LEXEME("const",					CONST)
+	CASE_LEXEME("mut",						MUTABLE)
+	CASE_LEXEME("static",					STATIC)
+	CASE_LEXEME("inline",					INLINE)
+	CASE_LEXEME("virtual",					VIRTUAL)
+	CASE_LEXEME("override",					OVERRIDE)
+	CASE_LEXEME("abstract",					ABSTRACT)
+	CASE_LEXEME("final",					FINAL)
+	CASE_LEXEME("deprecated",				DEPRECATED)
+	CASE_LEXEME("unimplemented",			UNIMPLEMENTED)
+	CASE_LEXEME("align",					ALIGN)
+
 	CASE_LEXEME("func",						FUNCTION)
 	CASE_LEXEME("lambda",					LAMBDA)
 	CASE_LEXEME("param",					PARAM)
@@ -157,29 +196,8 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("stdcall",					STDCALL)
 	CASE_LEXEME("fastcall",					FASTCALL)
 	CASE_LEXEME("thiscall",					THISCALL)
-	CASE_LEXEME("typename",					TYPENAME)
 
-	CASE_LEXEME("const",					CONST)
-	CASE_LEXEME("mut",						MUTABLE)
-	CASE_LEXEME("static",					STATIC)
-	CASE_LEXEME("inline",					INLINE)
-	CASE_LEXEME("virtual",					VIRTUAL)
-	CASE_LEXEME("override",					OVERRIDE)
-	CASE_LEXEME("abstract",					ABSTRACT)
-	CASE_LEXEME("final",					FINAL)
-	CASE_LEXEME("template",					TEMPLATE)
-	CASE_LEXEME("deprecated",				DEPRECATED)
-	CASE_LEXEME("unimplemented",			UNIMPLEMENTED)
-	CASE_LEXEME("align",					ALIGN)
-
-	CASE_LEXEME("cast",						CAST)
-	CASE_LEXEME("unsafe_cast",				UNSAFE_CAST)
-
-	CASE_LEXEME("assert",					ASSERT)
-	CASE_LEXEME("static_assert",			STATIC_ASSERT)
-	CASE_LEXEME("static_error",				STATIC_ERROR)
-	CASE_LEXEME("static_warning",			STATIC_WARNING)
-	CASE_LEXEME("static_message",			STATIC_MESSAGE)
+	CASE_LEXEME("var",						VAR)
 
 	CASE_LEXEME("struct",					STRUCT)
 	CASE_LEXEME("enum",						ENUM)
@@ -202,7 +220,14 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	if( FTokenHelperLibrary::IsCorrectIdentifier(LexemeStr) ) { Type = ETokenType::IDENTIFIER; return; }
 	// clang-format on
 
-	FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos - LexemeStr.size(), CompileOptions);
+	if( LexemeStr.empty() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos, 0, CompileOptions);
+	}
+	else
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos, LexemeStr.size() - 1, CompileOptions);
+	}
 }
 
 std::string Token::GetTypeAsStr() const noexcept
@@ -331,6 +356,15 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(VECTOR4D,					"vector4d")
 	CASE_TOKEN(VECTOR3D,					"vector3d")
 	CASE_TOKEN(VECTOR2D,					"vector2d")
+
+	CASE_TOKEN(CAST,						"cast")
+	CASE_TOKEN(UNSAFE_CAST,					"unsafe_cast")
+
+	CASE_TOKEN(ASSERT,						"assert")
+	CASE_TOKEN(STATIC_ASSERT,				"static_assert")
+	CASE_TOKEN(STATIC_ERROR,				"static_error")
+	CASE_TOKEN(STATIC_WARNING,				"static_warning")
+	CASE_TOKEN(STATIC_MESSAGE,				"static_message")
 		
 	CASE_TOKEN(DO,							"do")
 	CASE_TOKEN(WHILE,						"while")
@@ -346,6 +380,18 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(CASE,						"case")
 	CASE_TOKEN(DEFAULT,						"default")
 
+	CASE_TOKEN(CONST,						"const")
+	CASE_TOKEN(MUTABLE,						"mutable")
+	CASE_TOKEN(STATIC,						"static")
+	CASE_TOKEN(INLINE,						"inline")
+	CASE_TOKEN(VIRTUAL,						"virtual")
+	CASE_TOKEN(OVERRIDE,					"override")
+	CASE_TOKEN(ABSTRACT,					"abstract")
+	CASE_TOKEN(FINAL,						"final")
+	CASE_TOKEN(DEPRECATED,					"deprecated")
+	CASE_TOKEN(UNIMPLEMENTED,				"unimplemented")
+	CASE_TOKEN(ALIGN,						"align")
+
 	CASE_TOKEN(FUNCTION,					"function")
 	CASE_TOKEN(LAMBDA,						"lambda")
 	CASE_TOKEN(PARAM,						"param")
@@ -355,29 +401,8 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(STDCALL,						"stdcall")
 	CASE_TOKEN(FASTCALL,					"fastcall")
 	CASE_TOKEN(THISCALL,					"thiscall")
-	CASE_TOKEN(TYPENAME,					"typename")
 
-	CASE_TOKEN(CONST,						"const")
-	CASE_TOKEN(MUTABLE,						"mutable")
-	CASE_TOKEN(STATIC,						"static")
-	CASE_TOKEN(INLINE,						"inline")
-	CASE_TOKEN(VIRTUAL,						"virtual")
-	CASE_TOKEN(OVERRIDE,					"override")
-	CASE_TOKEN(ABSTRACT,					"abstract")
-	CASE_TOKEN(FINAL,						"final")
-	CASE_TOKEN(TEMPLATE,					"template")
-	CASE_TOKEN(DEPRECATED,					"deprecated")
-	CASE_TOKEN(UNIMPLEMENTED,				"unimplemented")
-	CASE_TOKEN(ALIGN,						"align")
-
-	CASE_TOKEN(CAST,						"cast")
-	CASE_TOKEN(UNSAFE_CAST,					"unsafe_cast")
-
-	CASE_TOKEN(ASSERT,						"assert")
-	CASE_TOKEN(STATIC_ASSERT,				"static_assert")
-	CASE_TOKEN(STATIC_ERROR,				"static_error")
-	CASE_TOKEN(STATIC_WARNING,				"static_warning")
-	CASE_TOKEN(STATIC_MESSAGE,				"static_message")
+	CASE_TOKEN(VAR,							"var")
 
 	CASE_TOKEN(STRUCT,						"struct")
 	CASE_TOKEN(ENUM,						"enum")

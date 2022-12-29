@@ -38,9 +38,9 @@ public:
 	/*
 		Raise error based on linker context.
 	*/
-	inline void RaiseError(EErrorMessageType ErrorMessageType, const std::string& ObjectFilePath) const 
-	{ 
-		FErrorLogger::Raise(ErrorMessageType, ObjectFilePath, 0, 0, CurrentCompileOptions); 
+	inline void RaiseError(EErrorMessageType ErrorMessageType, const std::string& ObjectFilePath) const
+	{
+		FErrorLogger::Raise(ErrorMessageType, ObjectFilePath, 0, 0, 0, CurrentCompileOptions);
 	}
 
 protected:

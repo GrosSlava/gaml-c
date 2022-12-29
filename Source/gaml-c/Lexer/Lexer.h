@@ -41,16 +41,16 @@ public:
 	/*
 		Raise error based on lexer context.
 	*/
-	inline void RaiseError(EErrorMessageType ErrorMessageType) const 
-	{ 
-		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), CurrentLine, CurrentPos, CurrentCompileOptions); 
+	inline void RaiseError(EErrorMessageType ErrorMessageType) const
+	{
+		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), CurrentLine, CurrentPos - 1, 0, CurrentCompileOptions);
 	}
 
 
 private:
 
 	//.......................Process pipeline..........................//
-	
+
 	void Split(const std::string& Code, std::vector<Token>& OutTokens);
 	void Merge(std::vector<Token>& OutTokens);
 
@@ -68,7 +68,7 @@ private:
 		size_t LCurrentPos = CurrentPos - CurrentLexeme.size();
 		if( PosBack > CurrentPos )
 		{
-			if( LLine > 0)
+			if( LLine > 0 )
 			{
 				LLine -= 1;
 			}

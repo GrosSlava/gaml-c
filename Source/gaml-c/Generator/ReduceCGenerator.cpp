@@ -2,6 +2,8 @@
 
 #include "ReduceCGenerator.h"
 
+#include <algorithm>
+
 
 
 
@@ -11,10 +13,10 @@ void ReduceCGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
 	GeneratedCodeStr = "/*\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetGenerationTime() + "\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetCompilerIdentifier() + "\n";
-	GeneratedCodeStr += "*/\n\n\n";
+	GeneratedCodeStr += "*/\n\n";
 
 
-	GeneratedCodeStr += "/*.......................................Types declaration.......................................*/\n\n";
+	GeneratedCodeStr += "\n/*.......................................Types declaration.......................................*/\n\n";
 	for( const std::pair<std::string, FClassInfo>& LClassInfo : ProgramInfo.Classes )
 	{
 		GeneratedCodeStr += "struct " + LClassInfo.first + ";\n";
@@ -24,23 +26,22 @@ void ReduceCGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
 	for( const std::pair<std::string, FClassInfo>& LClassInfo : ProgramInfo.Classes )
 	{
 		GeneratedCodeStr += GetClassDeclarationCStr(LClassInfo.first, LClassInfo.second, ProgramInfo);
-		GeneratedCodeStr += "\n\n";
+		GeneratedCodeStr += "\n";
 	}
-	GeneratedCodeStr += "/*...............................................................................................*/\n\n";
+	GeneratedCodeStr += "\n/*...............................................................................................*/\n";
 
 
-	GeneratedCodeStr += "/*..................................Global variables declaration.................................*/\n\n";
+	GeneratedCodeStr += "\n/*..................................Global variables declaration.................................*/\n\n";
 	for( const FCompilingVariableInfo& LStaticVariableInfo : ProgramInfo.CompilingStaticVariables )
 	{
 		if( !LStaticVariableInfo.IsInThisModule ) GeneratedCodeStr += "extern ";
 
 		GeneratedCodeStr += GetVariableDeclarationCStr(LStaticVariableInfo.VariableInfo, false, true, false, ProgramInfo) + ";\n";
 	}
-	GeneratedCodeStr += "\n";
-	GeneratedCodeStr += "/*...............................................................................................*/\n\n";
+	GeneratedCodeStr += "\n/*...............................................................................................*/\n";
 
 
-	GeneratedCodeStr += "/*.....................................Functions declaration.....................................*/\n\n";
+	GeneratedCodeStr += "\n/*.....................................Functions declaration.....................................*/\n\n";
 	for( const std::pair<std::string, FFunctionSignatureInfo>& LFunctionInfo : ProgramInfo.Functions )
 	{
 		if( ProgramInfo.CompilingFunctionsAST.find(LFunctionInfo.first) == ProgramInfo.CompilingFunctionsAST.end() )
@@ -49,21 +50,21 @@ void ReduceCGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
 		}
 		GeneratedCodeStr += GetFunctionSignatureCStr(LFunctionInfo.first, LFunctionInfo.second, ProgramInfo) + ";\n";
 	}
-	GeneratedCodeStr += "\n";
-	GeneratedCodeStr += "/*...............................................................................................*/\n\n";
+	GeneratedCodeStr += "\n/*...............................................................................................*/\n";
 
 
-	GeneratedCodeStr += "/*...................................Functions implementation....................................*/\n\n";
+	GeneratedCodeStr += "\n/*...................................Functions implementation....................................*/\n\n";
 	for( const std::pair<std::string, FCompilingFunctionInfo>& LCompilingFunctionInfo : ProgramInfo.CompilingFunctionsAST )
 	{
 		GeneratedCodeStr += GetFunctionSignatureCStr(LCompilingFunctionInfo.first, ProgramInfo.Functions.at(LCompilingFunctionInfo.first), ProgramInfo);
-		GeneratedCodeStr += "\n";
-		GeneratedCodeStr += "{\n";
+		GeneratedCodeStr += "\n{\n";
 		GeneratedCodeStr += GetFunctionImplementationBodyCStr(LCompilingFunctionInfo.first, LCompilingFunctionInfo.second, ProgramInfo);
-		GeneratedCodeStr += "\n}";
-		GeneratedCodeStr += "\n\n";
+		GeneratedCodeStr += "\n}\n";
 	}
-	GeneratedCodeStr += "/*................................................................................................*/\n\n";
+	GeneratedCodeStr += "\n/*................................................................................................*/\n";
+
+
+	std::replace(GeneratedCodeStr.begin(), GeneratedCodeStr.end(), FCompilerConfig::COMPILE_NAME_SEPARATOR, '_');
 }
 
 
@@ -75,8 +76,7 @@ std::string ReduceCGenerator::GetClassDeclarationCStr(const std::string& ClassCo
 	std::string LResult = "";
 
 	LResult += "struct " + ClassCompileName;
-	LResult += "\n";
-	LResult += "{\n";
+	LResult += "\n{\n";
 	LResult += GetClassVariablesCStr(ClassInfo, ProgramInfo); // tabs are included
 	LResult += "\n};";
 

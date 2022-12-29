@@ -107,4 +107,9 @@ struct FCompilerConfig
 		Reserved name of function of window program entry point.
 	*/
 	const static std::string RESERVED_WINDOW_ENTRY_POINT_FUNCTION_NAME;
+
+	/*
+		Separetor for compile names.
+	*/
+	const static char COMPILE_NAME_SEPARATOR;
 };

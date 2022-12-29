@@ -95,7 +95,9 @@ enum class EErrorMessageType
 
 	EXPECTED_ALIAS_NAME,
 
-	/* Code generator */ 
+	EXPECTED_CLASS_NAME,
+
+	/* Code generator */
 	NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM,
 	INVALID_ARCH_FOR_GENERATE,
 	INVALID_GENERATION_EXTENSION,
@@ -152,15 +154,23 @@ public:
 class FErrorLogger
 {
 public:
-	
+
+	// clang-format off
 	/*
 		@param MessageType - Type of error.
 		@param File - Context file.
 		@param Line - Context line.
 		@param Pos - Context line.
+		@param UnderlineLength - Length of underline after Pos.
 		@param CompileOptions - Current compilation options.
 	*/
-	static void Raise(EErrorMessageType MessageType, const std::string& File, size_t Line, size_t Pos, const FCompileOptions& CompileOptions);
+	static void Raise
+	(
+		EErrorMessageType MessageType, 
+		const std::string& File, size_t Line, size_t Pos, size_t UnderlineLength, 
+		const FCompileOptions& CompileOptions
+	);
+	// clang-format on
 
 private:
 

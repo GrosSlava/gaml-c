@@ -148,7 +148,18 @@ enum class ETokenType
 	VECTOR3D,                   // vector3d
 	VECTOR2D,                   // vector2d
 
+	// casts
+	CAST,                       // cast
+	UNSAFE_CAST,                // unsafe_cast
 
+
+
+	// asserts
+	ASSERT,                     // assert
+	STATIC_ASSERT,              // static_assert
+	STATIC_ERROR,				// static_error
+	STATIC_WARNING,				// static_warning
+	STATIC_MESSAGE,				// static_message
 
 	// cycles
 	DO,							// do
@@ -166,17 +177,7 @@ enum class ETokenType
 	CASE,                       // case
 	DEFAULT,                    // default
 
-	// function
-	FUNCTION,                   // func
-	LAMBDA,                     // lambda
-	PARAM,						// param
-	RETURN,                     // return
-	EXTERN_C,					// extern_c
-	CDECL,						// cdecl
-	STDCALL,					// stdcall
-	FASTCALL,					// fastcall
-	THISCALL,					// thiscall
-	TYPENAME,					// typename
+
 
 	// specifiers
 	CONST,                      // const
@@ -187,21 +188,23 @@ enum class ETokenType
 	OVERRIDE,                   // override
 	ABSTRACT,					// abstract
 	FINAL,                      // final
-	TEMPLATE,                   // template
 	DEPRECATED,					// deprecated
 	UNIMPLEMENTED,				// unimplemented
 	ALIGN,						// align
 
-	// casts
-	CAST,                       // cast
-	UNSAFE_CAST,                // unsafe_cast
+	// function
+	FUNCTION,                   // func
+	LAMBDA,                     // lambda
+	PARAM,						// param
+	RETURN,                     // return
+	EXTERN_C,					// extern_c
+	CDECL,						// cdecl
+	STDCALL,					// stdcall
+	FASTCALL,					// fastcall
+	THISCALL,					// thiscall
 
-	// asserts
-	ASSERT,                     // assert
-	STATIC_ASSERT,              // static_assert
-	STATIC_ERROR,				// static_error
-	STATIC_WARNING,				// static_warning
-	STATIC_MESSAGE,				// static_message
+	// field
+	VAR,						// var
 
 	// objects
 	STRUCT,                     // struct

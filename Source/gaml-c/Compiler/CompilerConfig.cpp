@@ -7,24 +7,28 @@
 
 
 // set your target platform for cross compiler
+// clang-format off
 #if WINDOWS_32 || WINDOWS_64
-const ETargetPlatform FCompilerConfig::DEFAULT_TARGET_PLATFORM = ETargetPlatform::Windows;
+    const ETargetPlatform FCompilerConfig::DEFAULT_TARGET_PLATFORM = ETargetPlatform::Windows;
 #elif LINUX
-const ETargetPlatform FCompilerConfig::DEFAULT_TARGET_PLATFORM = ETargetPlatform::Linux;
+    const ETargetPlatform FCompilerConfig::DEFAULT_TARGET_PLATFORM = ETargetPlatform::Linux;
 #else
-const ETargetPlatform FCompilerConfig::DEFAULT_TARGET_PLATFORM = ETargetPlatform::Undefined;
+    const ETargetPlatform FCompilerConfig::DEFAULT_TARGET_PLATFORM = ETargetPlatform::Undefined;
 #endif
+// clang-format on
 
 // set your arch for cross compiler
+// clang-format off
 #if WINDOWS_64
-const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
+    const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
 #elif WINDOWS_32
-const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86;
+    const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86;
 #elif LINUX
-const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
+    const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
 #else
-const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
+    const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
 #endif
+// clang-format on
 
 
 const std::string FCompilerConfig::COMPILE_FILE_EXTENSION = "gaml";
@@ -45,3 +49,5 @@ const std::string FCompilerConfig::RESERVED_PROGRAM_DEINIT_FUNCTION_NAME = "dein
 
 const std::string FCompilerConfig::RESERVED_CONSOLE_ENTRY_POINT_FUNCTION_NAME = "main";
 const std::string FCompilerConfig::RESERVED_WINDOW_ENTRY_POINT_FUNCTION_NAME = "WinMain";
+
+const char FCompilerConfig::COMPILE_NAME_SEPARATOR = '@';

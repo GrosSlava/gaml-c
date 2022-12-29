@@ -8,14 +8,8 @@
 #include "ProgramSymbols.h"
 
 #include "../Compiler/CompilerHelperLibrary.h"
+#include "../Compiler/CompilerConfig.h"
 
-
-
-
-/*
-	Separetor for compile names.
-*/
-const static std::string NameSeparator = "_0";
 
 
 
@@ -121,7 +115,6 @@ struct FParserHelperLibrary
 
 
 
-	
 
 	/*
 		Construct module compile name.
@@ -129,7 +122,10 @@ struct FParserHelperLibrary
 		@param ModulePathParts - module package path.
 		@return constructed module name.
 	*/
-	static inline std::string GetModuleCompileName(const std::vector<std::string>& ModulePathParts) { return FCompilerHelperLibrary::MakePathFromParts(ModulePathParts, false, '_'); }
+	static inline std::string GetModuleCompileName(const std::vector<std::string>& ModulePathParts)
+	{
+		return FCompilerHelperLibrary::MakePathFromParts(ModulePathParts, false, FCompilerConfig::COMPILE_NAME_SEPARATOR);
+	}
 	/*
 		Construct module compile name.
 
@@ -149,7 +145,10 @@ struct FParserHelperLibrary
 		@param ModuleCompileName - nome of module to convert.
 		@param OutParts - result of splitting will be here.
 	*/
-	static inline void SplitModuleNameToParts(const std::string& ModuleCompileName, std::vector<std::string>& OutParts) { FCompilerHelperLibrary::SplitPathToParts(ModuleCompileName, OutParts, '_'); }
+	static inline void SplitModuleNameToParts(const std::string& ModuleCompileName, std::vector<std::string>& OutParts)
+	{
+		FCompilerHelperLibrary::SplitPathToParts(ModuleCompileName, OutParts, FCompilerConfig::COMPILE_NAME_SEPARATOR);
+	}
 	/*
 		Return module real compile name.
 
@@ -176,7 +175,7 @@ struct FParserHelperLibrary
 	}
 	/*
 		Return module real compile name.
-		First part can be module/packege alias. 
+		First part can be module/package alias. 
 
 		@param ModulePathParts - module package path.
 		@ProgramInfo ProgramInfo - current program info.
@@ -193,94 +192,108 @@ struct FParserHelperLibrary
 		ModulePathParts[0] = LFirstPartRealName;
 		return GetModuleCompileName(ModulePathParts);
 	}
+
+
+
+
 	/*
-		Construct class compile name.
+		Construct any compile name.
 
-		@param ModuleName - name of class module.
-		@param ClassName - class original name.
-		@param TemplateArgumentNames - array of template arguments if class instantiated from template.
-		@return constructed class name.
+		@param ContextCompileName - compile name of context(module, class, function) where declared name.
+		@param OriginalName - object original name.
+		@return constructed name.
 	*/
-	static inline std::string GetClassCompileName(const std::string& ModuleName, const std::string& ClassName, const std::vector<std::string>& TemplateArgumentNames) noexcept
+	static inline std::string GetCompileName(const std::string& ContextCompileName, const std::string& OriginalName) noexcept
 	{
-		if( ClassName.empty() ) return "";
+		if( OriginalName.empty() ) return "";
 
 
-		std::string LClassCompileName = "";
+		std::string LCompileName = "";
+		LCompileName.reserve(OriginalName.size() + ContextCompileName.size() + 1);
 
-		if( !ModuleName.empty() )
+		if( !ContextCompileName.empty() )
 		{
-			LClassCompileName += ModuleName + NameSeparator;
+			LCompileName += ContextCompileName + FCompilerConfig::COMPILE_NAME_SEPARATOR;
 		}
 
-		LClassCompileName += ClassName;
-		for( const std::string& LArgumentStr : TemplateArgumentNames )
-		{
-			LClassCompileName += NameSeparator + LArgumentStr;
-		}
+		LCompileName += OriginalName;
 
-		return LClassCompileName;
+		return LCompileName;
 	}
+	/*
+		Construct any compile name.
+
+		@param ContextCompileName - compile name of context(module, class, function) where declared name.
+		@param OriginalName - object original name.
+		@param ArgumentNames - array of any argument names.
+		@return constructed name.
+	*/
+	static inline std::string GetCompileName(
+		const std::string& ContextCompileName, const std::string& OriginalName, const std::vector<std::string>& ArgumentNames) noexcept
+	{
+		if( OriginalName.empty() ) return "";
+
+
+		std::string LCompileName = "";
+		LCompileName.reserve(OriginalName.size() + ContextCompileName.size() + ArgumentNames.size() * 2);
+
+		if( !ContextCompileName.empty() )
+		{
+			LCompileName += ContextCompileName + FCompilerConfig::COMPILE_NAME_SEPARATOR;
+		}
+
+		LCompileName += OriginalName;
+		for( const std::string& LArgumentStr : ArgumentNames )
+		{
+			LCompileName += FCompilerConfig::COMPILE_NAME_SEPARATOR + LArgumentStr;
+		}
+
+		return LCompileName;
+	}
+	// clang-format off
 	/*
 		Construct function compile name.
 
-		@param ModuleName - name of function module.
-		@param ClassName - class original name.
+		@param ContextCompileName - compile name of context(module, class) where declared function.
 		@param OriginalName - function original name.
 		@param IsConst - function const overload.
 		@param ArgumentTypeNames - array of function argument types names.
 		@return constructed function name.
 	*/
-	// clang-format off
-	static inline std::string GetFunctionCompileName(
-														const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName, 
-														bool IsConst, const std::vector<std::string>& ArgumentTypeNames
-													) noexcept
+	static inline std::string GetFunctionCompileName
+	(
+		const std::string& ContextCompileName, const std::string& OriginalName, 
+		bool IsConst, const std::vector<std::string>& ArgumentTypeNames
+	) noexcept
 	// clang-format on
 	{
 		if( OriginalName.empty() ) return "";
 
 
-		std::string LFunctionCompileName = "";
+		std::string LFunctionCompileName = GetCompileName(ContextCompileName, OriginalName, ArgumentTypeNames);
 
 		if( IsConst )
 		{
-			LFunctionCompileName += "const" + NameSeparator;
-		}
-
-		if( !ModuleName.empty() )
-		{
-			LFunctionCompileName += ModuleName + NameSeparator;
-		}
-
-		if( !ClassName.empty() )
-		{
-			LFunctionCompileName += ClassName + NameSeparator;
-		}
-
-		LFunctionCompileName += OriginalName;
-		for( const std::string& LArgumentTypeStr : ArgumentTypeNames )
-		{
-			LFunctionCompileName += NameSeparator + LArgumentTypeStr;
+			LFunctionCompileName = "const" + LFunctionCompileName;
 		}
 
 		return LFunctionCompileName;
 	}
+	// clang-format off
 	/*
 		Construct function compile name.
 
-		@param ModuleName - name of function module.
-		@param ClassName - class original name.
+		@param ContextCompileName - compile name of context(module, class) where declared function.
 		@param OriginalName - function original name.
 		@param FunctionSignatureInfo - function signature info.
 		@param ProgramInfo - current program info.
 		@return constructed function name.
 	*/
-	// clang-format off
-	static inline std::string GetFunctionCompileName(	
-														const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName,
-														const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
-													) noexcept
+	static inline std::string GetFunctionCompileName
+	(	
+		const std::string& ContextCompileName, const std::string& OriginalName,
+		const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
+	) noexcept
 	// clang-format on
 	{
 		std::vector<std::string> LArgumentsNames;
@@ -294,134 +307,7 @@ struct FParserHelperLibrary
 			LArgumentsNames.push_back(LTypeName);
 		}
 
-		return GetFunctionCompileName(ModuleName, ClassName, OriginalName, FunctionSignatureInfo.Modifiers.IsConst, LArgumentsNames);
-	}
-	/*
-		Construct static variable compile name.
-
-		@param ModuleName - name of static variable module.
-		@param ClassName - class original name.
-		@param OriginalName - static variable original name.
-		@return constructed static variable name.
-	*/
-	static inline std::string GetStaticVariableCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& OriginalName) noexcept
-	{
-		if( OriginalName.empty() ) return "";
-
-
-		std::string VariableCompileName = "";
-
-		if( !ModuleName.empty() )
-		{
-			VariableCompileName += ModuleName + NameSeparator;
-		}
-		if( !ClassName.empty() )
-		{
-			VariableCompileName += ClassName + NameSeparator;
-		}
-
-		VariableCompileName += OriginalName;
-
-		return VariableCompileName;
-	}
-	/*
-		Construct static variable compile name.
-
-		@param FunctionCompileName - compile name of function where declared variable.
-		@param OriginalName - static variable original name.
-		@return constructed static variable name.
-	*/
-	static inline std::string GetStaticVariableCompileName(const std::string& FunctionCompileName, const std::string& OriginalName) noexcept
-	{
-		if( OriginalName.empty() ) return "";
-
-
-		std::string VariableCompileName = "";
-
-		if( !FunctionCompileName.empty() )
-		{
-			VariableCompileName += FunctionCompileName + NameSeparator;
-		}
-
-		VariableCompileName += OriginalName;
-
-		return VariableCompileName;
-	}
-	/*
-		Construct type alias compile name.
-
-		@param ModuleName - name of alias module.
-		@param ClassName - class original name.
-		@param FunctionName - function original name.
-		@param AliasName - alias original name.
-		@return constructed alias name.
-	*/
-	static inline std::string GetTypeAliasCompileName(const std::string& ModuleName, const std::string& ClassName, const std::string& FunctionName, const std::string& AliasName) noexcept
-	{
-		if( AliasName.empty() ) return "";
-
-
-		std::string LAliasCompileName = "";
-
-		if( !ModuleName.empty() )
-		{
-			LAliasCompileName += ModuleName + NameSeparator;
-		}
-		if( !ClassName.empty() )
-		{
-			LAliasCompileName += ClassName + NameSeparator;
-		}
-		if( !FunctionName.empty() )
-		{
-			LAliasCompileName += FunctionName + NameSeparator;
-		}
-
-		LAliasCompileName += AliasName;
-
-		return LAliasCompileName;
-	}
-	/*
-		Construct template compile name.
-
-		@param ModuleName - name of template module.
-		@param ClassName - class original name.
-		@param FunctionName - function original name.
-		@param TemplateCodeName - template original name.
-		@param TemplateArgumentNames - array of template arguments names.
-		@return constructed template name.
-	*/
-	// clang-format off
-	static inline std::string GetTemplateCodeCompileName(
-															const std::string& ModuleName, const std::string& ClassName, const std::string& FunctionName, 
-															const std::string& TemplateCodeName, const std::vector<std::string>& TemplateArgumentNames
-														) noexcept
-	// clang-format on
-	{
-		if( TemplateCodeName.empty() ) return "";
-
-
-		std::string LTemplateCodeName = "";
-
-		if( !ModuleName.empty() )
-		{
-			LTemplateCodeName += ModuleName + NameSeparator;
-		}
-		if( !ClassName.empty() )
-		{
-			LTemplateCodeName += ClassName + NameSeparator;
-		}
-		if( !FunctionName.empty() )
-		{
-			LTemplateCodeName += FunctionName + NameSeparator;
-		}
-
-		LTemplateCodeName += TemplateCodeName;
-		for( const std::string& LArgumentStr : TemplateArgumentNames )
-		{
-			LTemplateCodeName += NameSeparator + LArgumentStr;
-		}
-
-		return LTemplateCodeName;
+		return GetFunctionCompileName(ContextCompileName, OriginalName, FunctionSignatureInfo.Modifiers.IsConst, LArgumentsNames);
 	}
 
 
@@ -551,7 +437,8 @@ struct FParserHelperLibrary
 
 		for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
 		{
-			if( ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::EFunctionSignature && ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID )
+			if( ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::EFunctionSignature &&
+				ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID )
 			{
 				return i;
 			}
@@ -629,7 +516,7 @@ struct FParserHelperLibrary
 		case ETypePathSwitch::EFunctionSignature:
 		{
 			const FFunctionSignatureInfo& LFunctionSignature = ProgramInfo.FunctionSignaturesTypesMap[LTypePath.FunctionSignaturePath.FunctionSignatureID];
-			return GetFunctionCompileName("", "", "fsign", LFunctionSignature, ProgramInfo);
+			return GetFunctionCompileName("", "fsign", LFunctionSignature, ProgramInfo);
 		}
 		}
 

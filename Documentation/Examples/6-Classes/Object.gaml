@@ -11,15 +11,15 @@ object UMyObject // object can be inhereted only from interface(many) or other o
 {
     // declare object members
     // by default all members are public
-    int32 A;        // by default uninitialized members contains trash
-    float B = 5.6f; // we can give dafault value
+    var int32 A;        // by default uninitialized members contains trash
+    var float B = 5.6f; // we can give dafault value
 
-    private int32 C; // set this member as private
+    private var int32 C; // set this member as private
 
     // components can be instantiated only in object
-    UMyComponent Comp = UMyComponent();
-    UMyComponent Comp2; // this component is not instantiated, so there will be None
-    UMyComponent Comp3; // this component is instantiated in constructor
+    var UMyComponent Comp = UMyComponent();
+    var UMyComponent Comp2; // this component is not instantiated, so there will be None
+    var UMyComponent Comp3; // this component is instantiated in constructor
 
     ***
         // declare method, it is public

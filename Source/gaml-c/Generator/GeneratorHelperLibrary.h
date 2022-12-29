@@ -23,11 +23,11 @@ struct FGeneratorHelperLibrary
 	{
 		const std::time_t t = std::time(0);
 		std::tm CurrentTime;
-	#if WINDOWS_32
+#if WINDOWS_32
 		localtime_s(&CurrentTime, &t);
-	#elif LINUX
+#elif LINUX
 		localtime_r(&t, &CurrentTime);
-	#endif
+#endif
 
 		// clang-format off
 		const std::string LGenerationDateTime = std::to_string(CurrentTime.tm_year + 1900) + "." + 

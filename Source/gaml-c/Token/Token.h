@@ -9,6 +9,8 @@
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
 
+#include <unordered_map>
+
 
 
 
@@ -21,7 +23,7 @@ class Token final
 public:
 
 	Token() = delete;
-	inline Token(const FGamlFileInfo& InFileInfo, const std::string& InLexeme, size_t InLine, size_t InPos, const FCompileOptions& CompileOptions) : 
+	inline Token(const FGamlFileInfo& InFileInfo, const std::string& InLexeme, size_t InLine, size_t InPos, const FCompileOptions& CompileOptions) :
 		LexemeStr(InLexeme), FileInfo(InFileInfo), Line(InLine), Pos(InPos)
 	{
 		DetermineTokenType(CompileOptions);
@@ -58,7 +60,7 @@ public:
 	/*
 		@return hash from current lexeme str.
 	*/
-	inline size_t GetHash() const noexcept { return std::hash<std::string>{}(LexemeStr); }
+	inline size_t GetHash() const noexcept { return std::hash<std::string> {}(LexemeStr); }
 
 private:
 

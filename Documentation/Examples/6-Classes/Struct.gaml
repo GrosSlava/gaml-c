@@ -15,10 +15,10 @@ struct FMyStruct // struct can't be inhereted from any type
 {
     // Declare struct members
     // by default all members are public
-    int32 A;        // by default uninitialized members contains trash
-    float B = 5.6f; // we can give dafault value
+    var int32 A;        // by default uninitialized members contains trash
+    var float B = 5.6f; // we can give dafault value
 
-    private int32 C; // set this member as private, protected modifier can't be used with structs
+    private var int32 C; // set this member as private, protected modifier can't be used with structs
 
     // declare method, it is public
     public func foo {}

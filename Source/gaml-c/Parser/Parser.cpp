@@ -7,8 +7,13 @@
 
 
 
-
-void Parser::Process(const std::vector<Token>& Tokens, const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, bool InIsMainModule, FProgramInfo& OutProgramInfo)
+// clang-format off
+void Parser::Process
+(
+	const std::vector<Token>& Tokens, const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, bool InIsMainModule, 
+	FProgramInfo& OutProgramInfo
+)
+// clang-format on
 {
 	CurrentFileInfo = FileInfo;
 	CurrentCompileOptions = CompileOptions;
@@ -29,7 +34,7 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 
 	for( const Token& LToken : Tokens )
 	{
-		if( LToken.GetType() == ETokenType::DESCRIPTION_BLOCK)
+		if( LToken.GetType() == ETokenType::DESCRIPTION_BLOCK )
 		{
 			if( LPairTokensStack.empty() || LPairTokensStack.back().GetType() != ETokenType::DESCRIPTION_BLOCK )
 			{
@@ -139,7 +144,7 @@ void Parser::ProcessSymbolsScanning(const std::vector<Token>& Tokens, FProgramIn
 	}
 	if( LState != LParserStates.GDefault_ParserState || !LParserStates.IsStateStackEmpty() )
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, CurrentFileInfo.GetFileFullPath(), 0, 0, CurrentCompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, CurrentFileInfo.GetFileFullPath(), 0, 0, 0, CurrentCompileOptions);
 		return;
 	}
 }

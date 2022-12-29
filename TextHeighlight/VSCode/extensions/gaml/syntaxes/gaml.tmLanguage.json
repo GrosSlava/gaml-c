@@ -44,10 +44,10 @@
 					"include": "#FunctionKeywords"
 				},
 				{
-					"include": "#ModuleKeywords"
+					"include": "#FieldKeywords"
 				},
 				{
-					"include": "#TemplateKeywords"
+					"include": "#ModuleKeywords"
 				},
 				{
 					"include": "#StandardTypes"
@@ -119,19 +119,19 @@
 				}
 			]
 		},
+		"FieldKeywords": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(var)\\b"
+				}
+			]
+		},
 		"ModuleKeywords": {
 			"patterns": [
 				{
 					"name": "keyword.other.gaml",
 					"match": "\\b(module|import|implement)\\b"
-				}
-			]
-		},
-		"TemplateKeywords": {
-			"patterns": [
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(typename|template)\\b"
 				}
 			]
 		},

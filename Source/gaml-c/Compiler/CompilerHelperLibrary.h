@@ -36,7 +36,7 @@ struct FCompilerHelperLibrary
 
 		return Duration.count();
 	}
-	
+
 	/*
 		@param MillisecondsCount - Time in milliseconds.
 		@return formatted current time.
@@ -48,7 +48,12 @@ struct FCompilerHelperLibrary
 		const size_t LMinutes = LSeconds / 60;
 		const size_t LHours = LMinutes / 60;
 
-		return std::to_string(LHours) + ":" + std::to_string(LMinutes) + ":" + std::to_string(LSeconds) + "." + std::to_string(LMilliseconds / 100) + std::to_string(LMilliseconds / 10 % 10);
+		// clang-format off
+		return 	std::to_string(LHours) + ":" + 
+				std::to_string(LMinutes) + ":" + 
+				std::to_string(LSeconds) + "." + 
+				std::to_string(LMilliseconds / 100) + std::to_string(LMilliseconds / 10 % 10);
+		// clang-format on
 	}
 
 
@@ -84,6 +89,7 @@ struct FCompilerHelperLibrary
 		SplitFilePath(FilePath, LResult.PathToFileOnly, LResult.FileNameOnly, LResult.ExtensionOnly);
 		return LResult;
 	}
+	// clang-format off
 	/*
 		Split file path by separator.
 
@@ -91,8 +97,13 @@ struct FCompilerHelperLibrary
 		@param OutParts - Result of split.
 		@param Separator - Char for separate(not included into split parts).
 	*/
-	static inline void SplitPathToParts(const std::string& FilePath, std::vector<std::string>& OutParts, char Separator = std::filesystem::path::preferred_separator)
-	{ 
+	static inline void SplitPathToParts
+	(
+		const std::string& FilePath, std::vector<std::string>& OutParts, 
+		char Separator = std::filesystem::path::preferred_separator
+	)
+	// clang-format on
+	{
 		OutParts.clear();
 
 		size_t LPrevOffset = 0;
@@ -113,8 +124,8 @@ struct FCompilerHelperLibrary
 		@param Rhs - Right hand string to concatanate.
 		@param Separator - Separetor to concatanate.
 	*/
-	static inline std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator) 
-	{ 
+	static inline std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator)
+	{
 		if( Lhs.empty() ) return Rhs;
 		if( Rhs.empty() ) return Lhs;
 
@@ -132,6 +143,7 @@ struct FCompilerHelperLibrary
 		return LResult;
 	}
 
+	// clang-format off
 	/*
 		Concatanate array of path parts by given separator.
 
@@ -139,7 +151,12 @@ struct FCompilerHelperLibrary
 		@param IncludeEndSeparator - If true then path will be ended by separator.
 		@param Separator - Char to separate path parts.
 	*/
-	static inline std::string MakePathFromParts(const std::vector<std::string>& Parts, bool IncludeEndSeparator = false, char Separator = std::filesystem::path::preferred_separator)
+	static inline std::string MakePathFromParts
+	(
+		const std::vector<std::string>& Parts, bool IncludeEndSeparator = false, 
+		char Separator = std::filesystem::path::preferred_separator
+	)
+	// clang-format on
 	{
 		std::string LResult = "";
 
@@ -172,13 +189,14 @@ struct FCompilerHelperLibrary
 		{
 			LResult += LUp;
 		}
-		
+
 		return LResult;
 	}
 
 
 
 
+	// clang-format off
 	/*
 		Find all files with specific extension in given folder and it's subfolders.
 
@@ -186,7 +204,12 @@ struct FCompilerHelperLibrary
 		@param AvailableExtensions - Array of extensions to search.
 		@param OutFilesInfo - Result of the file search.
 	*/
-	static inline void GetAllFilesWithExtensionsInFolder(const std::string& Path, const std::vector<std::string>& AvailableExtensions, std::vector<FGamlFileInfo>& OutFilesInfo)
+	static inline void GetAllFilesWithExtensionsInFolder
+	(
+		const std::string& Path, const std::vector<std::string>& AvailableExtensions, 
+		std::vector<FGamlFileInfo>& OutFilesInfo
+	)
+	// clang-format on
 	{
 		OutFilesInfo.clear();
 		if( !std::filesystem::exists(Path) ) return;
@@ -210,7 +233,7 @@ struct FCompilerHelperLibrary
 	/*
 		Find all files with GAML extension in given folder and it's subfolders (search both of sources and headers).
 	*/
-	static inline void GetAllGamlFilesInFolder(const std::string& Path, std::vector<FGamlFileInfo>& OutFilesInfo) 
+	static inline void GetAllGamlFilesInFolder(const std::string& Path, std::vector<FGamlFileInfo>& OutFilesInfo)
 	{
 		GetAllFilesWithExtensionsInFolder(Path, {FCompilerConfig::COMPILE_FILE_EXTENSION, FCompilerConfig::HEADER_FILE_EXTENSION}, OutFilesInfo);
 	}
@@ -219,7 +242,7 @@ struct FCompilerHelperLibrary
 		@param Path - Directory to search.
 		@return first folder name from given directory.
 	*/
-	static std::string GetFirstFolderName(const std::string& Path) 
+	static std::string GetFirstFolderName(const std::string& Path)
 	{
 		if( !std::filesystem::exists(Path) ) return "";
 
@@ -246,7 +269,7 @@ struct FCompilerHelperLibrary
 		return "";
 	}
 
-	
+
 
 	/*
 		Read file into string.
