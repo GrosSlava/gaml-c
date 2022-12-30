@@ -33,11 +33,9 @@ struct FPlatformHelperLibrary
 		{
 			return "o";
 		}
-		default:
-		{
-			return "";
 		}
-		}
+
+		return "";
 	}
 
 
@@ -60,11 +58,9 @@ struct FPlatformHelperLibrary
 		{
 			return "out";
 		}
-		default:
-		{
-			return "";
 		}
-		}
+
+		return "";
 	}
 
 
@@ -87,10 +83,8 @@ struct FPlatformHelperLibrary
 		{
 			return "so";
 		}
-		default:
-		{
-			return "";
 		}
-		}
+
+		return "";
 	}
 };

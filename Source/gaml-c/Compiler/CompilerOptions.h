@@ -169,6 +169,10 @@ struct FCompileOptions
 		Show compilation progress. Useful when compiling multiple files.
 	*/
 	bool ShowProgress = false;
+	/*
+		Show total compilation time.
+	*/
+	bool ShowCompileTime = false;
 };
 
 

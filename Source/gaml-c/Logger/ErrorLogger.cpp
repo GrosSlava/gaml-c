@@ -8,7 +8,14 @@
 
 
 
-void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File, size_t Line, size_t Pos, size_t UnderlineLength, const FCompileOptions& CompileOptions)
+// clang-format off
+void FErrorLogger::Raise
+(
+	EErrorMessageType MessageType, 
+	const std::string& File, size_t Line, size_t Pos, size_t UnderlineLength, 
+	const FCompileOptions& CompileOptions
+)
+// clang-format on
 {
 	FErrorInfo LErrorInfo = GetErrorInfo(MessageType);
 
@@ -18,7 +25,12 @@ void FErrorLogger::Raise(EErrorMessageType MessageType, const std::string& File,
 		LErrorInfo.ErrorType = EErrorType::ERROR;
 	}
 
-	if( LErrorInfo.ErrorType == EErrorType::WARNING && (CompileOptions.WarningLevel == EWarningLevel::NoWarnings || LErrorInfo.WarningLevel > CompileOptions.WarningLevel) ) return;
+	// clang-format off
+	if( 
+		LErrorInfo.ErrorType == EErrorType::WARNING && 
+		(CompileOptions.WarningLevel == EWarningLevel::NoWarnings || LErrorInfo.WarningLevel > CompileOptions.WarningLevel)
+	   ) return;
+	// clang-format on
 
 	if( !LErrorInfo.Message.empty() && !CompileOptions.Silent )
 	{
@@ -75,6 +87,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	switch( MessageType )
 	{
 	// Initialization
+	CASE_ERROR(NO_PATH_TO_COMPILER):						return FErrorInfo(EErrorStage::INITIALIZATION, EErrorType::WARNING, EWarningLevel::SeriousWarning, "No path to compiler.");
 	CASE_ERROR(NO_FILES_TO_COMPILE):						return FErrorInfo(EErrorStage::INITIALIZATION, EErrorType::WARNING, EWarningLevel::SeriousWarning, "No files to compile.");
 
 	//Lexer
@@ -148,6 +161,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	
 	//Code generator
 	CASE_ERROR(NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM):	return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "No default compiler for current platform.");
+	CASE_ERROR(UNSUPPORTED_CODE_GENERATOR):					return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "Unsupported code generator.");
 	CASE_ERROR(INVALID_ARCH_FOR_GENERATE):					return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid architecture type for default compiler.");
 	CASE_ERROR(INVALID_GENERATION_EXTENSION):				return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid generation file extension.");
 

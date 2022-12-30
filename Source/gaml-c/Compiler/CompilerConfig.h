@@ -10,7 +10,7 @@
 /*
 	Supported target platforms.
 */
-enum class ETargetPlatform
+enum class ETargetPlatform : unsigned char
 {
 	Undefined,
 	Windows,
@@ -20,7 +20,7 @@ enum class ETargetPlatform
 /*
 	Supported target architectures.
 */
-enum class ETargetArch
+enum class ETargetArch : unsigned char
 {
 	x86,
 	x86_64,
@@ -67,7 +67,6 @@ struct FCompilerConfig
 	*/
 	const static std::string LANGUAGE_VERSION;
 
-
 	/*
 		Default name of module which can be compiled into an executable file.
 	*/
@@ -89,7 +88,6 @@ struct FCompilerConfig
 		Reserved name of user function of module init code.
 	*/
 	const static std::string RESERVED_USER_DEINIT_MODULE_FUNCTION_NAME;
-
 	/*
 		Reserved name of function of program init code.
 	*/
@@ -98,7 +96,6 @@ struct FCompilerConfig
 		Reserved name of function of program deinit code.
 	*/
 	const static std::string RESERVED_PROGRAM_DEINIT_FUNCTION_NAME;
-
 	/*
 		Reserved name of function of console program entry point.
 	*/

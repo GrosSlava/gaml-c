@@ -9,8 +9,6 @@
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
 
-#include <unordered_map>
-
 
 
 
@@ -94,7 +92,7 @@ private:
 	*/
 	size_t Line = 0;
 	/*
-		Token position in text file line.
+		Token start position in text file line.
 	*/
 	size_t Pos = 0;
 };

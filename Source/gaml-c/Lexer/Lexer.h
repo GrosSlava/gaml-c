@@ -56,32 +56,10 @@ private:
 
 	//.................................................................//
 
-
 	/*
 		Save current lexeme as token.
 	*/
-	void PushCurrentLexeme(std::vector<Token>& OutTokens, size_t PosBack = 0)
-	{
-		if( CurrentLexeme.empty() ) return;
-
-		size_t LLine = CurrentLine;
-		size_t LCurrentPos = CurrentPos - CurrentLexeme.size();
-		if( PosBack > CurrentPos )
-		{
-			if( LLine > 0 )
-			{
-				LLine -= 1;
-			}
-		}
-		else
-		{
-			LCurrentPos -= PosBack;
-		}
-
-		Token LToken(CurrentFileInfo, CurrentLexeme, LLine, LCurrentPos, CurrentCompileOptions);
-		OutTokens.push_back(LToken);
-		CurrentLexeme.clear();
-	}
+	void PushCurrentLexeme(std::vector<Token>& OutTokens, size_t PosBack = 0);
 
 
 
@@ -104,7 +82,7 @@ private:
 	/*
 		Current token position in line.
 	*/
-	size_t CurrentPos = 0;
+	size_t CurrentPos = 1;
 	/*
 		Current lexeme string.
 	*/

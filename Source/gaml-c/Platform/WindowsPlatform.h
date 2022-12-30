@@ -15,7 +15,7 @@
 
 #include "../Logger/ErrorLogger.h"
 
-#include <cstdio>
+#include <cstdlib>
 
 
 
@@ -30,8 +30,32 @@ struct FGenericPlatform
 	)
 	// clang-format on
 	{
+		switch( CompileOptions.CodeGenerationType )
+		{
+		case ECodeGenerationType::ReduceC:
+		{
+			return RunMSVC(OriginalFile, CompileOptions, FilePath, OutputDirectoryPath, CompiledObjectFilePath);
+		}
+		case ECodeGenerationType::LLVM:
+		{
+			break;
+		}
+		}
+
+		FErrorLogger::Raise(EErrorMessageType::UNSUPPORTED_CODE_GENERATOR, OriginalFile.GetFileFullPath(), 0, 0, 0, CompileOptions);
+		return 0;
+	}
+
+	// clang-format off
+	static int RunMSVC
+	(
+		const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+		const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
+	)
+	// clang-format on
+	{
 		std::string ConsoleCommand = "";
-		ConsoleCommand.reserve(128);
+		ConsoleCommand.reserve(256);
 
 		ConsoleCommand += '\"' + GetMSVCHostDirectory();
 
@@ -102,6 +126,9 @@ struct FGenericPlatform
 		return system(ConsoleCommand.c_str());
 	}
 
+
+
+
 	// clang-format off
 	static int RunThirdPartyLinker
 	(
@@ -111,7 +138,7 @@ struct FGenericPlatform
 	// clang-format on
 	{
 		std::string ConsoleCommand = "";
-		ConsoleCommand.reserve(128);
+		ConsoleCommand.reserve(256);
 
 		ConsoleCommand += '\"' + GetMSVCHostDirectory();
 
@@ -190,6 +217,7 @@ struct FGenericPlatform
 
 		return system(ConsoleCommand.c_str());
 	}
+
 
 
 

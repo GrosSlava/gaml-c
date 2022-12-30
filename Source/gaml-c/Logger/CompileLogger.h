@@ -10,7 +10,7 @@
 /*
 	Stage of compilation where error raised.
 */
-enum class EErrorStage
+enum class EErrorStage : unsigned char
 {
 	INITIALIZATION,
 	LEXER,
@@ -23,11 +23,12 @@ enum class EErrorStage
 /*
 	Severity of the error.
 */
-enum class EErrorType
+enum class EErrorType : unsigned char
 {
 	ERROR,
 	WARNING
 };
+
 
 
 /*

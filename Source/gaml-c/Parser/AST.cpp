@@ -7,6 +7,7 @@
 
 
 
+
 void AST::BuildAST(const std::vector<Token>& InTokens)
 {
 	//TODO

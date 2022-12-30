@@ -28,6 +28,10 @@ public:
 		@return original concatanated path.
 	*/
 	inline std::string GetFileFullPath() const noexcept { return PathToFileOnly + FileNameOnly + "." + ExtensionOnly; }
+	/*
+		@return length of file path string.
+	*/
+	inline size_t GetSize() const noexcept { return PathToFileOnly.size() + FileNameOnly.size() + ExtensionOnly.size() + 1; }
 
 
 

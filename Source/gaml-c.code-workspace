@@ -14,7 +14,10 @@
 		},
 		"files.associations": {
 			"iostream": "cpp",
-			"fstream": "cpp"
+			"fstream": "cpp",
+			"cstdlib": "cpp",
+			"cstdio": "cpp",
+			"algorithm": "cpp"
 		}
 	}
 }

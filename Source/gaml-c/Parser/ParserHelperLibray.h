@@ -297,6 +297,7 @@ struct FParserHelperLibrary
 	// clang-format on
 	{
 		std::vector<std::string> LArgumentsNames;
+		LArgumentsNames.reserve(FunctionSignatureInfo.Inputs.size());
 
 		for( const FVariableInfo& LVariableInfo : FunctionSignatureInfo.Inputs )
 		{
@@ -441,7 +442,7 @@ struct FParserHelperLibrary
 	{
 		// clang-format off
 		return	TokenType == ETokenType::EXTERN_C || 
-				TokenType == ETokenType::CDECL || TokenType == ETokenType::STDCALL || TokenType == ETokenType::FASTCALL || TokenType == ETokenType::THISCALL || 
+				TokenType == ETokenType::CDECL || TokenType == ETokenType::STDCALL || TokenType == ETokenType::FASTCALL || 
 				TokenType == ETokenType::CONST || TokenType == ETokenType::MUTABLE || TokenType == ETokenType::STATIC ||  
 				TokenType == ETokenType::INLINE || TokenType == ETokenType::VIRTUAL || TokenType == ETokenType::OVERRIDE || 
 				TokenType == ETokenType::ABSTRACT || TokenType == ETokenType::FINAL	|| 
@@ -522,8 +523,12 @@ struct FParserHelperLibrary
 
 		for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
 		{
-			if( ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::EFunctionSignature &&
-				ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID )
+			// clang-format off
+			if( 
+				ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::EFunctionSignature &&
+				ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID 
+			   )
+			// clang-format on
 			{
 				return i;
 			}

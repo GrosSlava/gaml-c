@@ -10,7 +10,7 @@
 
 void ReduceCGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
 {
-	GeneratedCodeStr = "/*\n";
+	GeneratedCodeStr += "/*\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetGenerationTime() + "\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetCompilerIdentifier() + "\n";
 	GeneratedCodeStr += "*/\n\n";
@@ -83,10 +83,16 @@ std::string ReduceCGenerator::GetClassDeclarationCStr(const std::string& ClassCo
 	return LResult;
 }
 
-std::string ReduceCGenerator::GetFunctionSignatureCStr(const std::string& FunctionCompileName, const FFunctionSignatureInfo& FunctionInfo, const FProgramInfo& ProgramInfo) const
+// clang-format off
+std::string ReduceCGenerator::GetFunctionSignatureCStr
+(
+	const std::string& FunctionCompileName, const FFunctionSignatureInfo& FunctionInfo, 
+	const FProgramInfo& ProgramInfo
+) const
+// clang-format on
 {
 	std::string LResult = "";
-
+	LResult.reserve(128);
 
 	FVariableInfo LReturnVariableInfo;
 	LReturnVariableInfo.Modifiers.IsConst = FunctionInfo.Return.Modifiers.IsConst;
@@ -95,7 +101,10 @@ std::string ReduceCGenerator::GetFunctionSignatureCStr(const std::string& Functi
 	// We can't return pointer to function from function, only lambda. So, recursion will stop.
 	LResult += GetVariableDeclarationCStr(LReturnVariableInfo, true, false, false, ProgramInfo) + " ";
 
-	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT ) LResult += GetCallingConventionCStr(FunctionInfo.Modifiers.CallingConvention) + " ";
+	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
+	{
+		LResult += GetCallingConventionCStr(FunctionInfo.Modifiers.CallingConvention) + " ";
+	}
 
 	LResult += FunctionCompileName;
 
@@ -118,7 +127,13 @@ std::string ReduceCGenerator::GetFunctionSignatureCStr(const std::string& Functi
 	return LResult;
 }
 
-std::string ReduceCGenerator::GetFunctionImplementationBodyCStr(const std::string& FunctionCompileName, const FCompilingFunctionInfo& FunctionCompileInfo, const FProgramInfo& ProgramInfo) const
+// clang-format off
+std::string ReduceCGenerator::GetFunctionImplementationBodyCStr
+(
+	const std::string& FunctionCompileName, const FCompilingFunctionInfo& FunctionCompileInfo,
+	const FProgramInfo& ProgramInfo
+) const
+// clang-format on
 {
 	//TODO
 
@@ -129,9 +144,16 @@ std::string ReduceCGenerator::GetFunctionImplementationBodyCStr(const std::strin
 
 
 
-std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& VariableInfo, bool IncludeConst, bool IncludeName, bool IsFunctionArgument, const FProgramInfo& ProgramInfo) const
+// clang-format off
+std::string ReduceCGenerator::GetVariableDeclarationCStr
+(
+	const FVariableInfo& VariableInfo, bool IncludeConst, bool IncludeName, bool IsFunctionArgument, 
+	const FProgramInfo& ProgramInfo
+) const
+// clang-format on
 {
 	std::string LResult = "";
+	LResult.reserve(64);
 
 
 	const FUserTypePath& LTypePath = ProgramInfo.TypesMap[VariableInfo.TypeID];
@@ -169,7 +191,7 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 
 		if( LClassInfo.ClassType == EClassType::Enum )
 		{
-			LResult += GetStandardTypeNameCStr(EStandardTypesID::UINT32_ID);
+			LResult += GetStandardTypeNameCStr(LClassInfo.ParentTypesID[0]);
 		}
 		else
 		{
@@ -206,40 +228,48 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr(const FVariableInfo& Va
 	}
 	}
 
-
 	return LResult;
 }
 
 std::string ReduceCGenerator::GetStandardTypeNameCStr(int TypeID) const
 {
-	switch( (EStandardTypesID)TypeID )
+	// clang-format off
+	switch( static_cast<EStandardTypesID>(TypeID) )
 	{
-	case EStandardTypesID::VOID_ID: return "void";
-	case EStandardTypesID::UINT8_ID: return "unsigned char";
-	case EStandardTypesID::UINT16_ID: return "unsigned short int";
-	case EStandardTypesID::UINT32_ID: return "unsigned int";
-	case EStandardTypesID::UINT64_ID: return "unsigned long long int";
-	case EStandardTypesID::INT8_ID: return "signed char";
-	case EStandardTypesID::INT16_ID: return "signed short int";
-	case EStandardTypesID::INT32_ID: return "signed int";
-	case EStandardTypesID::INT64_ID: return "signed long long int";
-	case EStandardTypesID::ADDR_T_ID: return "signed long long int";
-	case EStandardTypesID::FLOAT_ID: return "float";
-	case EStandardTypesID::DOUBLE_ID: return "double";
-	case EStandardTypesID::BOOL_ID: return "signed char";
-	case EStandardTypesID::CHAR_ID: return "unsigned short int";
-	case EStandardTypesID::STRING_ID: return "string";
+	case EStandardTypesID::VOID_ID: 	return "void";
+	case EStandardTypesID::UINT8_ID: 	return "unsigned char";
+	case EStandardTypesID::UINT16_ID: 	return "unsigned short int";
+	case EStandardTypesID::UINT32_ID: 	return "unsigned int";
+	case EStandardTypesID::UINT64_ID: 	return "unsigned long long int";
+	case EStandardTypesID::INT8_ID: 	return "signed char";
+	case EStandardTypesID::INT16_ID: 	return "signed short int";
+	case EStandardTypesID::INT32_ID: 	return "signed int";
+	case EStandardTypesID::INT64_ID: 	return "signed long long int";
+	case EStandardTypesID::ADDR_T_ID: 	return "signed long long int";
+	case EStandardTypesID::FLOAT_ID: 	return "float";
+	case EStandardTypesID::DOUBLE_ID: 	return "double";
+	case EStandardTypesID::BOOL_ID: 	return "signed char";
+	case EStandardTypesID::CHAR_ID: 	return "unsigned short int";
+	case EStandardTypesID::STRING_ID: 	return "string";
 	case EStandardTypesID::VECTOR4D_ID: return "vector4d";
 	case EStandardTypesID::VECTOR3D_ID: return "vector3d";
 	case EStandardTypesID::VECTOR2D_ID: return "vector2d";
 	}
+	// clang-format on
 
 	return "";
 }
 
-std::string ReduceCGenerator::GetFunctionPointerCStr(const std::string& Name, const FFunctionSignatureInfo& FunctionInfo, bool IncludeConst, const FProgramInfo& ProgramInfo) const
+// clang-format off
+std::string ReduceCGenerator::GetFunctionPointerCStr
+(
+	const std::string& Name, const FFunctionSignatureInfo& FunctionInfo, bool IncludeConst, 
+	const FProgramInfo& ProgramInfo
+) const
+// clang-format on
 {
 	std::string LResult = "";
+	LResult.reserve(64);
 
 	FVariableInfo LReturnVariableInfo;
 	LReturnVariableInfo.Modifiers.IsConst = FunctionInfo.Return.Modifiers.IsConst;
@@ -248,7 +278,10 @@ std::string ReduceCGenerator::GetFunctionPointerCStr(const std::string& Name, co
 	// We can't return pointer to function from function, only lambda. So, recursion will stop.
 	LResult += GetVariableDeclarationCStr(LReturnVariableInfo, true, false, false, ProgramInfo);
 	LResult += "(";
-	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT ) LResult += GetCallingConventionCStr(FunctionInfo.Modifiers.CallingConvention) + " ";
+	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
+	{
+		LResult += GetCallingConventionCStr(FunctionInfo.Modifiers.CallingConvention) + " ";
+	}
 	LResult += "*";
 	if( FunctionInfo.Modifiers.IsConst && IncludeConst )
 	{
@@ -280,6 +313,7 @@ std::string ReduceCGenerator::GetFunctionPointerCStr(const std::string& Name, co
 std::string ReduceCGenerator::GetClassVariablesCStr(const FClassInfo& ClassInfo, const FProgramInfo& ProgramInfo) const
 {
 	std::string LResult = "";
+	LResult.reserve((ClassInfo.Variables.size() + ClassInfo.VirtualFunctionsTable.size()) * 64);
 
 	for( const std::pair<std::string, FVariableInfo>& LVariableInfo : ClassInfo.Variables )
 	{
@@ -335,17 +369,6 @@ std::string ReduceCGenerator::GetCallingConventionCStr(EFunctionCallingConventio
 		else
 		{
 			return "__attribute__((__fastcall))";
-		}
-	}
-	case EFunctionCallingConvention::THISCALL:
-	{
-		if( CurrentCompileOptions.TargetPlatform == ETargetPlatform::Windows )
-		{
-			return "__thiscall";
-		}
-		else
-		{
-			return "__attribute__((__thiscall))";
 		}
 	}
 	}

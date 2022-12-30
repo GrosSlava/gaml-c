@@ -201,7 +201,6 @@ enum class ETokenType
 	CDECL,						// cdecl
 	STDCALL,					// stdcall
 	FASTCALL,					// fastcall
-	THISCALL,					// thiscall
 
 	// field
 	VAR,						// var

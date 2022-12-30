@@ -5,6 +5,8 @@
 
 #include "../Logger/ErrorLogger.h"
 
+#include <unordered_map>
+
 
 
 
@@ -27,13 +29,14 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	if( FTokenHelperLibrary::IsStringLexeme(LexemeStr) )	{ Type = ETokenType::STRING_CONST;	return; }
 	// clang-format on
 
-	size_t LLexemeHash = GetHash();
+	const size_t LLexemeHash = GetHash();
 	auto LTokenTypeCacheIter = TokenTypeCache.find(LLexemeHash);
 	if( LTokenTypeCacheIter != TokenTypeCache.end() )
 	{
 		Type = LTokenTypeCacheIter->second;
 		return;
 	}
+
 
 	// clang-format off
 
@@ -195,7 +198,6 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("cdecl",					CDECL)
 	CASE_LEXEME("stdcall",					STDCALL)
 	CASE_LEXEME("fastcall",					FASTCALL)
-	CASE_LEXEME("thiscall",					THISCALL)
 
 	CASE_LEXEME("var",						VAR)
 
@@ -400,7 +402,6 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(CDECL,						"cdecl")
 	CASE_TOKEN(STDCALL,						"stdcall")
 	CASE_TOKEN(FASTCALL,					"fastcall")
-	CASE_TOKEN(THISCALL,					"thiscall")
 
 	CASE_TOKEN(VAR,							"var")
 

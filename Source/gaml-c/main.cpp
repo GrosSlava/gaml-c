@@ -13,6 +13,44 @@
 
 
 
+void CompileSourceFiles(const std::vector<FGamlFileInfo>& SourceFilePaths, const FCompileOptions& CompileOptions, std::vector<std::string>& OutObjectFilesPaths)
+{
+	const std::string LSourceFilesCountText = std::to_string(SourceFilePaths.size());
+
+	Compiler LCompiler;
+
+	for( size_t i = 0; i < SourceFilePaths.size(); ++i )
+	{
+		const std::string LObjectFilePath = LCompiler.Process(SourceFilePaths[i], CompileOptions);
+		if( !LObjectFilePath.empty() )
+		{
+			OutObjectFilesPaths.push_back(LObjectFilePath);
+		}
+
+		if( CompileOptions.ShowProgress && !CompileOptions.Silent )
+		{
+			const std::string LIndexText = std::to_string(i + 1);
+			const std::string LProgressString = "[" + LIndexText + "/" + LSourceFilesCountText + "] " + SourceFilePaths[i].GetFileFullPath();
+
+			FCompileLogger::MessageText(LProgressString);
+		}
+	}
+}
+
+void LinkProgram(const std::vector<std::string>& ObjectFilesPaths, std::vector<std::string> LibsFilesPaths, const FCompileOptions& CompileOptions)
+{
+	if( CompileOptions.NoLinking ) return;
+
+	Linker LLinker;
+	LLinker.Process(ObjectFilesPaths, LibsFilesPaths, CompileOptions);
+}
+
+
+
+
+/*
+	gaml-c entry point.
+*/
 int main(int argc, char** argv)
 {
 	FCompileOptions LCompileOptions;
@@ -24,10 +62,9 @@ int main(int argc, char** argv)
 
 	//..........................Parse options.............................//
 
-	LCompileOptions.PathToCompiler = argv[0];
-	ParseInputOptions(argc - 1, argv + 1, LCompileOptions, LSourceFilePaths, LObjectFilesPaths, LLibsFilesPaths);
+	ParseInputOptions(argc, argv, LCompileOptions, LSourceFilePaths, LObjectFilesPaths, LLibsFilesPaths);
 
-	if( LSourceFilePaths.empty() )
+	if( LSourceFilePaths.empty() && LObjectFilesPaths.empty() )
 	{
 		FErrorLogger::Raise(EErrorMessageType::NO_FILES_TO_COMPILE, "", 0, 0, 0, LCompileOptions);
 	}
@@ -40,44 +77,14 @@ int main(int argc, char** argv)
 	const size_t LCompilationTime = FCompilerHelperLibrary::ClockCodeMilliseconds(
 		[&LSourceFilePaths, &LObjectFilesPaths, &LLibsFilesPaths, &LCompileOptions]()
 		{
-			Compiler LCompiler;
-
-			// generate object files for translation objects
-			for( size_t i = 0; i < LSourceFilePaths.size(); ++i )
-			{
-				const std::string LObjectFilePath = LCompiler.Process(LSourceFilePaths[i], LCompileOptions);
-				if( !LObjectFilePath.empty() )
-				{
-					LObjectFilesPaths.push_back(LObjectFilePath);
-				}
-
-				if( LCompileOptions.ShowProgress && !LCompileOptions.Silent )
-				{
-					// clang-format off
-					FCompileLogger::MessageText
-					(
-						"[" + 
-						std::to_string(i + 1) + "/" + std::to_string(LSourceFilePaths.size()) +
-						"] " + 
-						LSourceFilePaths[i].GetFileFullPath()
-					);
-					// clang-format on
-				}
-			}
-
-			// link object files into executable binary file
-			if( !LCompileOptions.NoLinking )
-			{
-				Linker LLinker;
-				LLinker.Process(LObjectFilesPaths, LLibsFilesPaths, LCompileOptions);
-			}
+			CompileSourceFiles(LSourceFilePaths, LCompileOptions, LObjectFilesPaths);
+			LinkProgram(LObjectFilesPaths, LLibsFilesPaths, LCompileOptions);
 		});
 
 	//....................................................................//
 
 
-	// print compile time
-	if( !LCompileOptions.Silent )
+	if( LCompileOptions.ShowCompileTime && !LCompileOptions.Silent )
 	{
 		FCompileLogger::MessageText("Compilation time " + FCompilerHelperLibrary::GetPrettyTimeStr(LCompilationTime));
 	}

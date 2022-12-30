@@ -39,14 +39,13 @@ const std::string FCompilerConfig::COMPILER_VERSION = "0.1.0";
 const std::string FCompilerConfig::LANGUAGE_VERSION = "1";
 
 const std::string FCompilerConfig::RESERVED_MAIN_MODULE_NAME = "main";
+
 const std::string FCompilerConfig::RESERVED_INIT_MODULE_FUNCTION_NAME = "init_module_internal";
 const std::string FCompilerConfig::RESERVED_USER_INIT_MODULE_FUNCTION_NAME = "init_module";
 const std::string FCompilerConfig::RESERVED_DEINIT_MODULE_FUNCTION_NAME = "deinit_module_internal";
 const std::string FCompilerConfig::RESERVED_USER_DEINIT_MODULE_FUNCTION_NAME = "deinit_module";
-
 const std::string FCompilerConfig::RESERVED_PROGRAM_INIT_FUNCTION_NAME = "init";
 const std::string FCompilerConfig::RESERVED_PROGRAM_DEINIT_FUNCTION_NAME = "deinit";
-
 const std::string FCompilerConfig::RESERVED_CONSOLE_ENTRY_POINT_FUNCTION_NAME = "main";
 const std::string FCompilerConfig::RESERVED_WINDOW_ENTRY_POINT_FUNCTION_NAME = "WinMain";
 

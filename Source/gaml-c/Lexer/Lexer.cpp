@@ -558,3 +558,30 @@ void Lexer::Merge(std::vector<Token>& OutTokens)
 	//.......................................................................//
 	*/
 }
+
+
+
+
+
+void Lexer::PushCurrentLexeme(std::vector<Token>& OutTokens, size_t PosBack)
+{
+	if( CurrentLexeme.empty() ) return;
+
+	size_t LLine = CurrentLine;
+	size_t LCurrentPos = CurrentPos - CurrentLexeme.size();
+	if( PosBack > CurrentPos )
+	{
+		if( LLine > 0 )
+		{
+			LLine -= 1;
+		}
+	}
+	else
+	{
+		LCurrentPos -= PosBack;
+	}
+
+	Token LToken(CurrentFileInfo, CurrentLexeme, LLine, LCurrentPos, CurrentCompileOptions);
+	OutTokens.push_back(LToken);
+	CurrentLexeme.clear();
+}

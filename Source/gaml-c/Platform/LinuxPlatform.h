@@ -13,7 +13,7 @@
 
 #include "../Logger/ErrorLogger.h"
 
-#include <cstdio>
+#include <cstdlib>
 
 
 
@@ -28,8 +28,32 @@ struct FGenericPlatform
 	)
 	// clang-format on
 	{
+		switch( CompileOptions.CodeGenerationType )
+		{
+		case ECodeGenerationType::ReduceC:
+		{
+			return RunGCC(OriginalFile, CompileOptions, FilePath, OutputDirectoryPath, CompiledObjectFilePath);
+		}
+		case ECodeGenerationType::LLVM:
+		{
+			return RunLLC(OriginalFile, CompileOptions, FilePath, OutputDirectoryPath, CompiledObjectFilePath);
+		}
+		}
+
+		FErrorLogger::Raise(EErrorMessageType::UNSUPPORTED_CODE_GENERATOR, OriginalFile.GetFileFullPath(), 0, 0, 0, CompileOptions);
+		return 0;
+	}
+
+	// clang-format off
+	static int RunGCC
+	(
+		const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+		const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
+	)
+	// clang-format on
+	{
 		std::string ConsoleCommand = "";
-		ConsoleCommand.reserve(128);
+		ConsoleCommand.reserve(256);
 
 		switch( CompileOptions.TargetArch )
 		{
@@ -98,6 +122,21 @@ struct FGenericPlatform
 	}
 
 	// clang-format off
+	static int RunLLC
+	(
+		const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+		const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
+	)
+	// clang-format on
+	{
+		//TODO
+		return 0;
+	}
+
+
+
+
+	// clang-format off
 	static int RunThirdPartyLinker
 	(
 		const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
@@ -106,7 +145,7 @@ struct FGenericPlatform
 	// clang-format on
 	{
 		std::string ConsoleCommand = "";
-		ConsoleCommand.reserve(128);
+		ConsoleCommand.reserve(256);
 
 		if( CompileOptions.TargetArch != FCompilerConfig::DEFAULT_TARGET_ARCH )
 		{

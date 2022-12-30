@@ -241,16 +241,6 @@ IParserState* DescriptionModifier_ParserState::Process(FParserStates& InParserSt
 		InParserStates.StatesContext.DescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::FASTCALL;
 		return InParserStates.GStartDescription_ParserState;
 	}
-	case ETokenType::THISCALL:
-	{
-		if( InParserStates.StatesContext.DescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
-		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
-			return nullptr;
-		}
-		InParserStates.StatesContext.DescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::THISCALL;
-		return InParserStates.GStartDescription_ParserState;
-	}
 	case ETokenType::CONST:
 	{
 		if( InParserStates.StatesContext.DescriptionContext.Modfiers.IsConst )

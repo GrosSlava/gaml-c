@@ -25,10 +25,10 @@ public:
 		void (*InFunction)(const std::string&, FCompileOptions&, std::vector<FGamlFileInfo>&, std::vector<std::string>&, std::vector<std::string>&)
 	) :
 		ShortOption(InShortOption), LongOption(InLongOption), Description(InDescription), HasArgument(InHasArgument), Function(InFunction)
-	{
-
-	}
 	// clang-format on
+	{
+	}
+
 
 
 public:
@@ -63,12 +63,11 @@ public:
 		return false;
 	}
 
-	// clang-format off
 	inline std::string GetHelpStr() const
-	{ 
+	{
 		return ShortOption + std::string(4 - ShortOption.size(), ' ') + LongOption + std::string(25 - LongOption.size(), ' ') + " --- " + Description;
 	}
-	// clang-format on
+
 
 
 
@@ -85,14 +84,12 @@ private:
 
 
 
-// clang-format off
-#define OPTION_FUNCTION(Name) \
-	void Name \
-	( \
-		const std::string& Argument, \
-		FCompileOptions& OutCompileOptions, std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths \
-	)
-// clang-format on
+// clang-ormat off
+#define OPTION_FUNCTION(Name)                                                                                                  \
+	void Name(const std::string& Argument, FCompileOptions& OutCompileOptions, std::vector<FGamlFileInfo>& OutSourceFilePaths, \
+		std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths)
+// clang-ormat on
+
 
 OPTION_FUNCTION(HelpOption);
 OPTION_FUNCTION(VersionOption);
@@ -125,6 +122,7 @@ OPTION_FUNCTION(NoLinkingOption);
 OPTION_FUNCTION(QuietOption);
 OPTION_FUNCTION(NoContextOption);
 OPTION_FUNCTION(ShowProgressOption);
+OPTION_FUNCTION(ShowCompileTimeOption);
 
 // clang-format off
 static const std::vector<FOptionInfo> Options = 
@@ -136,14 +134,14 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("-b",	"",							"static link package dir with object files",			true,	StaticLinkOption),
 	FOptionInfo("-l",	"--lib=",					"link library",											true,	LinkLibraryOption),
 	FOptionInfo("-o",	"--output=",				"output directory",										true,	OutputOption),
-	FOptionInfo("",		"--name=",					"compiled program name",								true,	ProgramNameOption),
-	FOptionInfo("-O",	"",							"optimization level [0 - 2]",							true,	OptimizationLevelOption),
-	FOptionInfo("-W",	"",							"warning level [0 - 3]",								true,	WarningLevelOption),
-	FOptionInfo("",		"--code_type=",				"code generation type [ReduceC, LLVM]",					true,	CodeGenerationTypeOption),
-	FOptionInfo("",		"--subsystem=",				"type of subsystem [Console, Window]",					true,	SubsystemTypeOption),
-	FOptionInfo("",		"--platform=",				"[Undefined, Windows, Linux]",							true,	TargetPlatformOption),
-	FOptionInfo("",		"--arch=",					"[x86, x86_64, ARM, ARM_64]",							true,	TargetArchOption),
-	FOptionInfo("-e",	"--entry=",					"entry point name",										true,	EntryPointOption),
+	FOptionInfo("",		"--name=",					"set compiled program name",							true,	ProgramNameOption),
+	FOptionInfo("-O",	"",							"set optimization level [0 - 2]",						true,	OptimizationLevelOption),
+	FOptionInfo("-W",	"",							"set warning level [0 - 3]",							true,	WarningLevelOption),
+	FOptionInfo("",		"--code_type=",				"set code generation type [ReduceC, LLVM]",				true,	CodeGenerationTypeOption),
+	FOptionInfo("",		"--subsystem=",				"set type of subsystem [Console, Window]",				true,	SubsystemTypeOption),
+	FOptionInfo("",		"--platform=",				"set target platform (Undefined, Windows, Linux)",		true,	TargetPlatformOption),
+	FOptionInfo("",		"--arch=",					"set target arch (x86, x86_64, ARM, ARM_64)",			true,	TargetArchOption),
+	FOptionInfo("-e",	"--entry=",					"set entry point name",									true,	EntryPointOption),
 	FOptionInfo("-L",	"--libpath=",				"add libs searching dir",								true,	LibsSearchingOption),
 
 	FOptionInfo("",		"--debug",					"include debug information",							false,	DebugOption),
@@ -164,6 +162,7 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("-q",	"--quiet",					"no compiler messages",									false,	QuietOption),
 	FOptionInfo("",		"--no_context",				"no context string with errors",						false,	NoContextOption),
 	FOptionInfo("",		"--progress",				"show compilation progress",							false,	ShowProgressOption), 
+	FOptionInfo("-t",	"--time",					"show total compilation time",							false,	ShowCompileTimeOption),
 };
 // clang-format on
 
@@ -464,6 +463,12 @@ OPTION_FUNCTION(ShowProgressOption)
 	OutCompileOptions.ShowProgress = true;
 }
 
+OPTION_FUNCTION(ShowCompileTimeOption)
+{
+	OutCompileOptions.ShowCompileTime = true;
+}
+
+
 
 
 
@@ -475,7 +480,14 @@ void ParseInputOptions
 )
 // clang-format on
 {
-	for( int i = 0; i < argc; ++i )
+	if( argc <= 0 )
+	{
+		FCompileLogger::MessageError("No path to compiler!");
+	}
+
+	OutCompileOptions.PathToCompiler = argv[0];
+
+	for( int i = 1; i < argc; ++i )
 	{
 		if( argv[i][0] != '-' )
 		{

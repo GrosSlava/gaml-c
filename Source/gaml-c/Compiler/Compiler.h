@@ -35,6 +35,8 @@ public:
 	std::string Process(const std::string& FilePath, const FCompileOptions& Options);
 	std::string Process(const FGamlFileInfo& InFileInfo, const FCompileOptions& Options);
 
+protected:
+
 	/*
 		Log error based on compiler context.
 	*/

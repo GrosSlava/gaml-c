@@ -9,6 +9,7 @@
 #include "../Compiler/CompilerFileInfo.h"
 
 #include <unordered_map>
+#include <map>
 
 
 
@@ -53,8 +54,7 @@ enum class EFunctionCallingConvention : unsigned char
 	DEFAULT, // default for current c-compiler
 	CDECL,	 // equal to thiscall(this - first argument)
 	STDCALL, // equal to pascal
-	FASTCALL,
-	THISCALL
+	FASTCALL
 };
 
 /*
@@ -286,7 +286,7 @@ struct FClassInfo
 		Key - variable name(same to in FVariableInfo).
 		Value - Variable info.
 	*/
-	std::unordered_map<std::string, FVariableInfo> Variables;
+	std::map<std::string, FVariableInfo> Variables;
 	/*
 		After semantic analis there will be full map of virtual functions.
 		All functions have in first argument hidden "this".

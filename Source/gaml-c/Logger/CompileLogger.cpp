@@ -15,7 +15,7 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 
 	if( !File.empty() )
 	{
-		LErrorMessage = "\"" + File + "\" ";
+		LErrorMessage += "\"" + File + "\" ";
 	}
 
 	if( ErrorStage != EErrorStage::INITIALIZATION && Line + Pos != 0 )
