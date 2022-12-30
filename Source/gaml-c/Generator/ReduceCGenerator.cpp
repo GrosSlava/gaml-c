@@ -77,8 +77,8 @@ std::string ReduceCGenerator::GetClassDeclarationCStr(const std::string& ClassCo
 
 	LResult += "struct " + ClassCompileName;
 	LResult += "\n{\n";
-	LResult += GetClassVariablesCStr(ClassInfo, ProgramInfo); // tabs are included
-	LResult += "\n};";
+	LResult += GetClassVariablesCStr(ClassInfo, ProgramInfo); // tabs and \n are included
+	LResult += "};";
 
 	return LResult;
 }

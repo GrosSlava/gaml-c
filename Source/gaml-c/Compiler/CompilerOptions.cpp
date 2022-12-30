@@ -34,7 +34,7 @@ public:
 public:
 
 	// clang-format off
-	inline bool Process
+	bool Process
 	(
 		const std::string& OptionStr, 
 		FCompileOptions& OutCompileOptions, std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths

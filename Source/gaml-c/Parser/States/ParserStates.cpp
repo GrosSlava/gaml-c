@@ -1246,7 +1246,8 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 	{
 		if( InParserStates.StatesContext.FunctionDeclarationContext.ClassDeclarationNamespace.empty() )
 		{
-			InParserStates.StatesContext.FunctionDeclarationContext.ClassDeclarationNamespace =	InParserStates.StatesContext.FunctionDeclarationContext.FunctionName;
+			InParserStates.StatesContext.FunctionDeclarationContext.ClassDeclarationNamespace =
+				InParserStates.StatesContext.FunctionDeclarationContext.FunctionName;
 			InParserStates.StatesContext.FunctionDeclarationContext.FunctionName.clear();
 		}
 		else
@@ -1557,6 +1558,10 @@ IParserState* DeclareClassInternal_ParserState::Process(FParserStates& InParserS
 	}
 	case ETokenType::RBRA:
 	{
+		if( !InParserStates.FinishClassRegistrationFromContext(OutProgramInfo, InToken) )
+		{
+			return nullptr;
+		}
 		return InParserStates.PopStateChecked(InToken);
 	}
 	}
@@ -1901,16 +1906,120 @@ IParserState* StartBuildinTemplateType_ParserState::Process(FParserStates& InPar
 	return nullptr;
 }
 
+
+
 IParserState* StartLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	//TODO
 	return nullptr;
 }
 
+
+
 IParserState* StartUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
-	//TODO
+	switch( InToken.GetType() )
+	{
+	case ETokenType::POINT:
+	{
+		InParserStates.StatesContext.UserTypeContext.ModuleName = InParserStates.StatesContext.UserTypeContext.TypeName + InToken.GetLexeme();
+		InParserStates.StatesContext.UserTypeContext.TypeName = "";
+		return InParserStates.GUserType1_ParserState;
+	}
+	case ETokenType::NAMESPACE_ACCESS_OPERATOR:
+	{
+		InParserStates.StatesContext.UserTypeContext.ModuleName = InParserStates.StatesContext.UserTypeContext.TypeName;
+		InParserStates.StatesContext.UserTypeContext.TypeName = "";
+		return InParserStates.GUserType3_ParserState;
+	}
+	default:
+	{
+		// clang-format off
+		const std::string LCompileName = FParserHelperLibrary::GetCompileName
+		(
+			OutProgramInfo.MainModuleName, InParserStates.StatesContext.UserTypeContext.TypeName
+		);
+		// clang-format on
+
+		int LUserTypeId = FParserHelperLibrary::GetUserTypeID(LCompileName, OutProgramInfo);
+		if( LUserTypeId == -1 )
+		{
+			FUserTypePath LTypePath;
+			LTypePath.PathSwitch = ETypePathSwitch::EClass;
+			LTypePath.ClassPath.ClassCompileName = LCompileName;
+			OutProgramInfo.TypesMap.push_back(LTypePath);
+			LUserTypeId = OutProgramInfo.TypesMap.size() - 1;
+		}
+
+		InParserStates.StatesContext.UserTypeContext.TypeID = LUserTypeId;
+
+		IParserState* LResultOperatingState = InParserStates.PopStateChecked(InToken);
+		IParserState* LPrevState = LResultOperatingState->Process(InParserStates, InToken, OutProgramInfo);
+		return LPrevState->Process(InParserStates, InToken, OutProgramInfo);
+	}
+	}
+
 	return nullptr;
+}
+
+IParserState* UserType1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() != ETokenType::IDENTIFIER )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		return nullptr;
+	}
+
+	InParserStates.StatesContext.UserTypeContext.ModuleName += InToken.GetLexeme();
+	return InParserStates.GUserType2_ParserState;
+}
+
+IParserState* UserType2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	switch( InToken.GetType() )
+	{
+	case ETokenType::POINT:
+	{
+		InParserStates.StatesContext.UserTypeContext.ModuleName += InToken.GetLexeme();
+		return InParserStates.GUserType1_ParserState;
+	}
+	case ETokenType::NAMESPACE_ACCESS_OPERATOR:
+	{
+		return InParserStates.GUserType3_ParserState;
+	}
+	}
+
+	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	return nullptr;
+}
+
+IParserState* UserType3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+{
+	if( InToken.GetType() != ETokenType::IDENTIFIER )
+	{
+		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		return nullptr;
+	}
+
+	InParserStates.StatesContext.UserTypeContext.TypeName = InToken.GetLexeme();
+
+	const std::string LModuleName = FParserHelperLibrary::GetModuleCompileName(InParserStates.StatesContext.UserTypeContext.ModuleName);
+	const std::string LCompileName = FParserHelperLibrary::GetCompileName(LModuleName, InParserStates.StatesContext.UserTypeContext.TypeName);
+
+	int LUserTypeId = FParserHelperLibrary::GetUserTypeID(LCompileName, OutProgramInfo);
+	if( LUserTypeId == -1 )
+	{
+		FUserTypePath LTypePath;
+		LTypePath.PathSwitch = ETypePathSwitch::EClass;
+		LTypePath.ClassPath.ClassCompileName = LCompileName;
+		OutProgramInfo.TypesMap.push_back(LTypePath);
+		LUserTypeId = OutProgramInfo.TypesMap.size() - 1;
+	}
+
+	InParserStates.StatesContext.UserTypeContext.TypeID = LUserTypeId;
+
+	IParserState* LResultOperatingState = InParserStates.PopStateChecked(InToken);
+	return LResultOperatingState->Process(InParserStates, InToken, OutProgramInfo);
 }
 
 
@@ -2000,6 +2109,9 @@ FParserStates::~FParserStates()
 	DELETE_STATE(StartLambdaType)
 
 	DELETE_STATE(StartUserType)
+	DELETE_STATE(UserType1)
+	DELETE_STATE(UserType2)
+	DELETE_STATE(UserType3)
 }
 
 
@@ -2346,7 +2458,7 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 		LLexer.Process(LSourceCode, LFileInfo, CompileOptions, LTokens);
 
 		// return empty name for implementing modules, so do not include them
-		const std::string LPackageModuleRealName = FParserHelperLibrary::GetFirstModuleName(LTokens); 
+		const std::string LPackageModuleRealName = FParserHelperLibrary::GetFirstModuleName(LTokens);
 		if( LPackageModuleRealName.empty() || LPackageModuleRealName == FCompilerConfig::RESERVED_MAIN_MODULE_NAME )
 		{
 			continue;
@@ -2490,6 +2602,7 @@ bool FParserStates::RegisterVariableFromContext(FProgramInfo& OutProgramInfo, co
 
 
 
+	StatesContext.VariableDeclarationContext.VariableInfo.VariableName = StatesContext.VariableDeclarationContext.VariableName;
 	StatesContext.VariableDeclarationContext.VariableInfo.DefaultValueTree.BuildAST(StatesContext.VariableDeclarationContext.DefaultValueTokens);
 
 	// clang-format off
@@ -2538,6 +2651,35 @@ bool FParserStates::RegisterClassFromContext(FProgramInfo& OutProgramInfo, const
 
 	return true;
 }
+
+bool FParserStates::FinishClassRegistrationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX)
+{
+	if( StatesContext.ClassDeclarationContext.ClassName.empty() )
+	{
+		RaiseError(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
+		return false;
+	}
+
+	const std::string LClassCompileName = GetCTXClassCompileName(OutProgramInfo);
+	if( LClassCompileName.empty() )
+	{
+		RaiseError(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
+		return false;
+	}
+
+	auto LClassInfoIter = OutProgramInfo.Classes.find(LClassCompileName);
+	if( LClassInfoIter == OutProgramInfo.Classes.end() )
+	{
+		RaiseError(EErrorMessageType::CLASS_NAME_NOT_FOUND, TokenCTX);
+		return false;
+	}
+
+	LClassInfoIter->second.Variables = StatesContext.ClassDeclarationContext.ClassInfo.Variables;
+	LClassInfoIter->second.VirtualFunctionsTable = StatesContext.ClassDeclarationContext.ClassInfo.VirtualFunctionsTable;
+
+	return true;
+}
+
 
 bool FParserStates::RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX)
 {
@@ -2617,7 +2759,7 @@ std::string FParserStates::GetCTXFunctionCompileName(const FProgramInfo& OutProg
 {
 	if( StatesContext.FunctionDeclarationContext.SignatureInfo.Modifiers.IsExternC )
 	{
-		// clang-format on
+		// clang-format off
 		return FParserHelperLibrary::GetFunctionCompileName
 		(
 			"", 
@@ -2625,7 +2767,7 @@ std::string FParserStates::GetCTXFunctionCompileName(const FProgramInfo& OutProg
 			StatesContext.FunctionDeclarationContext.SignatureInfo, 
 			OutProgramInfo
 		);
-		// clang-format off
+		// clang-format on
 	}
 
 

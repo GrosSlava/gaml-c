@@ -53,8 +53,15 @@ int main(int argc, char** argv)
 
 				if( LCompileOptions.ShowProgress && !LCompileOptions.Silent )
 				{
-					FCompileLogger::MessageText(
-						"[" + std::to_string(i + 1) + "/" + std::to_string(LSourceFilePaths.size()) + "] " + LSourceFilePaths[i].GetFileFullPath());
+					// clang-format off
+					FCompileLogger::MessageText
+					(
+						"[" + 
+						std::to_string(i + 1) + "/" + std::to_string(LSourceFilePaths.size()) +
+						"] " + 
+						LSourceFilePaths[i].GetFileFullPath()
+					);
+					// clang-format on
 				}
 			}
 

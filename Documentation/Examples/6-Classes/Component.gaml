@@ -44,7 +44,7 @@ component UMyComponent // component can be inhereted only from interface(many) o
 
 component UMyComponent2(UMyComponent) 
 {
-    func bar {} // we can declare method with the same name as parent method, but it is not virtual
+    func foo {} // we can declare method with the same name as parent method, but it is not virtual
 
     ***
         @final

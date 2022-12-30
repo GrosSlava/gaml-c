@@ -25,7 +25,7 @@ struct FCompilerHelperLibrary
 		@param Lambda - code to check.
 	*/
 	template<class CODE>
-	static inline size_t ClockCodeMilliseconds(CODE Lambda)
+	static size_t ClockCodeMilliseconds(CODE Lambda)
 	{
 		const auto LStartTime = std::chrono::high_resolution_clock::now();
 
@@ -41,7 +41,7 @@ struct FCompilerHelperLibrary
 		@param MillisecondsCount - Time in milliseconds.
 		@return formatted current time.
 	*/
-	static inline std::string GetPrettyTimeStr(size_t MillisecondsCount) noexcept
+	static std::string GetPrettyTimeStr(size_t MillisecondsCount) noexcept
 	{
 		const size_t LSeconds = MillisecondsCount / 1000;
 		const size_t LMilliseconds = MillisecondsCount - LSeconds * 1000;
@@ -67,7 +67,7 @@ struct FCompilerHelperLibrary
 		@param OutNameOnly - Result of file name only.
 		@param OutExtensionOnly - Result of file extension only.
 	*/
-	static inline void SplitFilePath(const std::string& FilePath, std::string& OutPathOnly, std::string& OutNameOnly, std::string& OutExtensionOnly)
+	static void SplitFilePath(const std::string& FilePath, std::string& OutPathOnly, std::string& OutNameOnly, std::string& OutExtensionOnly)
 	{
 		const size_t FileExtensionDotPos = FilePath.find_last_of('.');
 		const size_t FileExtensionLastSlashPos = FilePath.find_last_of(std::filesystem::path::preferred_separator);
@@ -97,7 +97,7 @@ struct FCompilerHelperLibrary
 		@param OutParts - Result of split.
 		@param Separator - Char for separate(not included into split parts).
 	*/
-	static inline void SplitPathToParts
+	static void SplitPathToParts
 	(
 		const std::string& FilePath, std::vector<std::string>& OutParts, 
 		char Separator = std::filesystem::path::preferred_separator
@@ -124,7 +124,7 @@ struct FCompilerHelperLibrary
 		@param Rhs - Right hand string to concatanate.
 		@param Separator - Separetor to concatanate.
 	*/
-	static inline std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator)
+	static std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator)
 	{
 		if( Lhs.empty() ) return Rhs;
 		if( Rhs.empty() ) return Lhs;
@@ -151,7 +151,7 @@ struct FCompilerHelperLibrary
 		@param IncludeEndSeparator - If true then path will be ended by separator.
 		@param Separator - Char to separate path parts.
 	*/
-	static inline std::string MakePathFromParts
+	static std::string MakePathFromParts
 	(
 		const std::vector<std::string>& Parts, bool IncludeEndSeparator = false, 
 		char Separator = std::filesystem::path::preferred_separator
@@ -177,7 +177,7 @@ struct FCompilerHelperLibrary
 
 		@param UpCount - Count of directories to up.
 	*/
-	static inline std::string MakeUpDirectoryStr(size_t UpCount)
+	static std::string MakeUpDirectoryStr(size_t UpCount)
 	{
 		if( UpCount == 0 ) return "";
 
@@ -204,7 +204,7 @@ struct FCompilerHelperLibrary
 		@param AvailableExtensions - Array of extensions to search.
 		@param OutFilesInfo - Result of the file search.
 	*/
-	static inline void GetAllFilesWithExtensionsInFolder
+	static void GetAllFilesWithExtensionsInFolder
 	(
 		const std::string& Path, const std::vector<std::string>& AvailableExtensions, 
 		std::vector<FGamlFileInfo>& OutFilesInfo
@@ -277,7 +277,7 @@ struct FCompilerHelperLibrary
 		@param File - opened file to read.
 		@param OutFileSource - Result string.
 	*/
-	static inline void ReadAllFileToStr(std::ifstream& File, std::string& OutFileSource)
+	static void ReadAllFileToStr(std::ifstream& File, std::string& OutFileSource)
 	{
 		OutFileSource.clear();
 		if( !File.is_open() ) return;

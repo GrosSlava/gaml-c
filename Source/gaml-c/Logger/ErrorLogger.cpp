@@ -107,10 +107,15 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(EXPECTED_LTRI):								return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected '<|'.");
 	CASE_ERROR(EXPECTED_RTRI):								return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected '|>'.");
 	CASE_ERROR(EXPECTED_DESCRIPTION_BLOCK):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected '***'.");
+	CASE_ERROR(EXPECTED_FUNCTION_RETURN_TYPE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected return type.");
+	CASE_ERROR(EXPECTED_FUNCTION_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected function name.");
+	CASE_ERROR(EXPECTED_ARGUMENT_TYPE):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument type.");
+	CASE_ERROR(EXPECTED_ARGUMENT_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument name.");
+	CASE_ERROR(EXPECTED_ALIAS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected alias name.");
+	CASE_ERROR(EXPECTED_CLASS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected class name.");
 	CASE_ERROR(INVALID_CLOSE_PAIR):							return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid close pair.");
 	CASE_ERROR(OPEN_PAIR_SHOULD_HAVE_CLOSE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Open pair should have close.");
 	CASE_ERROR(MODULE_NAME_REDEFINITION):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module name redefinition.");
-	CASE_ERROR(MODULE_ALIAS_CONTAINS_INVALID_CHAR):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module alias name contains invalid char.");
 	CASE_ERROR(MODULE_ALIAS_NAME_REDEFINITION):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module alias name redefinition.");
 	CASE_ERROR(FUNCTION_NAME_REDEFINITION):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function implementation name redefinition.");
 	CASE_ERROR(FUNCTION_IMPLEMENTATION_NAME_REDEFINITION):	return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function name redefinition.");
@@ -132,19 +137,15 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(MODULE_NAME_NOT_MATCH_FILE_NAME):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module name does not match the file name.");
 	CASE_ERROR(IMPORTING_MAIN_MODULE):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Main module can't be imported.");
 	CASE_ERROR(IMPORTING_IMPLEMENT_MODULE):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Implement module can only main module.");
+	CASE_ERROR(MODULE_ALIAS_CONTAINS_INVALID_CHAR):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module alias name contains invalid char.");
 	CASE_ERROR(DOUBLE_MODIFIER):							return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Double modifier.");
 	CASE_ERROR(RETURN_TYPE_DOUBLE_MODIFIER):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Return type double modifier.");
 	CASE_ERROR(MEMBER_DOUBLE_MODIFIER):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Member double modifier.");
-	CASE_ERROR(EXPECTED_FUNCTION_RETURN_TYPE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected return type.");
-	CASE_ERROR(EXPECTED_FUNCTION_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected function name.");
-	CASE_ERROR(EXPECTED_ARGUMENT_TYPE):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument type.");
-	CASE_ERROR(EXPECTED_ARGUMENT_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument name.");
 	CASE_ERROR(FUNCTION_DECLARATION_NOT_FOUND):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function declaration not found.");
 	CASE_ERROR(FUNCTION_ARGUMENT_NAME_MISMATCH):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Mismatch of the function declaration argument name.");
 	CASE_ERROR(FUNCTION_STATIC_CODE_OVERRIDE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function static code override.");
-	CASE_ERROR(EXPECTED_ALIAS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected alias name.");
-	CASE_ERROR(EXPECTED_CLASS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected class name.");
-
+	CASE_ERROR(CLASS_NAME_NOT_FOUND):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Class name was not found.");
+	
 	//Code generator
 	CASE_ERROR(NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM):	return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "No default compiler for current platform.");
 	CASE_ERROR(INVALID_ARCH_FOR_GENERATE):					return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid architecture type for default compiler.");

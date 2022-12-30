@@ -60,7 +60,7 @@ private:
 	/*
 		Save current lexeme as token.
 	*/
-	inline void PushCurrentLexeme(std::vector<Token>& OutTokens, size_t PosBack = 0)
+	void PushCurrentLexeme(std::vector<Token>& OutTokens, size_t PosBack = 0)
 	{
 		if( CurrentLexeme.empty() ) return;
 

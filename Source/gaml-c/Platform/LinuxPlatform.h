@@ -60,11 +60,7 @@ struct FGenericPlatform
 		}
 		}
 
-		ConsoleCommand += " -c -Wextra -Wall";
-		ConsoleCommand += " -fexec-charset=UTF-8 -finput-charset=UTF-8"; // set charset
-		ConsoleCommand += "";											 // set floating point behaviour (use default options)
-		ConsoleCommand += " -masm=intel";								 // set assembler syntax
-		ConsoleCommand += "";											 // disable exceptions(gcc does not support exceptions because it is compiler for C)
+		ConsoleCommand += " -c -Wextra -Wall -fexec-charset=UTF-8 -finput-charset=UTF-8 -masm=intel";
 
 		switch( CompileOptions.OptimizationLevel )
 		{

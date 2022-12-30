@@ -65,11 +65,7 @@ struct FGenericPlatform
 		}
 		}
 
-		ConsoleCommand += " -TC -Gd -c -nologo -Wall -Qspectre-";
-		ConsoleCommand += " -source-charset:utf-8 -execution-charset:utf-8"; // set charset
-		ConsoleCommand += " -fp:precise";									 // set floating point behaviour
-		ConsoleCommand += "";												 // set assembler syntax (intel syntax is by default, no option to set directly)
-		ConsoleCommand += "";												 // disable exceptions (not pass argument for exception)
+		ConsoleCommand += " -TC -Gd -c -nologo -Wall -Qspectre- -source-charset:utf-8 -execution-charset:utf-8 -fp:precise";
 
 		switch( CompileOptions.OptimizationLevel )
 		{

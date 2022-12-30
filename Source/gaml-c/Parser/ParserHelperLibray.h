@@ -79,7 +79,7 @@ struct FParserHelperLibrary
 	/*
 		Check that pair TokenA matchs pair TokenB.
 	*/
-	static inline bool DoesPairTokensMatch(const Token& TokenA, const Token& TokenB) noexcept
+	static bool DoesPairTokensMatch(const Token& TokenA, const Token& TokenB) noexcept
 	{
 		ETokenType LLeftTokenType = ETokenType::IDENTIFIER;
 		ETokenType LRightTokenType = ETokenType::IDENTIFIER;
@@ -156,7 +156,7 @@ struct FParserHelperLibrary
 		@ProgramInfo ProgramInfo - current program info.
 		@return module real compile name.
 	*/
-	static inline std::string GetModuleRealName(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo)
+	static std::string GetModuleRealName(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo)
 	{
 		if( ProgramInfo.ImportedModulesInfo.find(ModuleNameOrAlias) != ProgramInfo.ImportedModulesInfo.end() ) return ModuleNameOrAlias;
 
@@ -181,7 +181,7 @@ struct FParserHelperLibrary
 		@ProgramInfo ProgramInfo - current program info.
 		@return module real compile name.
 	*/
-	static inline std::string GetModuleRealName(std::vector<std::string> ModulePathParts, const FProgramInfo& ProgramInfo)
+	static std::string GetModuleRealName(std::vector<std::string> ModulePathParts, const FProgramInfo& ProgramInfo)
 	{
 		if( ModulePathParts.empty() ) return "";
 
@@ -192,10 +192,6 @@ struct FParserHelperLibrary
 		ModulePathParts[0] = LFirstPartRealName;
 		return GetModuleCompileName(ModulePathParts);
 	}
-
-
-
-
 	/*
 		Construct any compile name.
 
@@ -203,7 +199,7 @@ struct FParserHelperLibrary
 		@param OriginalName - object original name.
 		@return constructed name.
 	*/
-	static inline std::string GetCompileName(const std::string& ContextCompileName, const std::string& OriginalName) noexcept
+	static std::string GetCompileName(const std::string& ContextCompileName, const std::string& OriginalName) noexcept
 	{
 		if( OriginalName.empty() ) return "";
 
@@ -220,6 +216,7 @@ struct FParserHelperLibrary
 
 		return LCompileName;
 	}
+	// clang-format off
 	/*
 		Construct any compile name.
 
@@ -228,8 +225,11 @@ struct FParserHelperLibrary
 		@param ArgumentNames - array of any argument names.
 		@return constructed name.
 	*/
-	static inline std::string GetCompileName(
-		const std::string& ContextCompileName, const std::string& OriginalName, const std::vector<std::string>& ArgumentNames) noexcept
+	static std::string GetCompileName
+	(
+		const std::string& ContextCompileName, const std::string& OriginalName, const std::vector<std::string>& ArgumentNames
+	) noexcept
+	// clang-format on
 	{
 		if( OriginalName.empty() ) return "";
 
@@ -260,7 +260,7 @@ struct FParserHelperLibrary
 		@param ArgumentTypeNames - array of function argument types names.
 		@return constructed function name.
 	*/
-	static inline std::string GetFunctionCompileName
+	static std::string GetFunctionCompileName
 	(
 		const std::string& ContextCompileName, const std::string& OriginalName, 
 		bool IsConst, const std::vector<std::string>& ArgumentTypeNames
@@ -289,7 +289,7 @@ struct FParserHelperLibrary
 		@param ProgramInfo - current program info.
 		@return constructed function name.
 	*/
-	static inline std::string GetFunctionCompileName
+	static std::string GetFunctionCompileName
 	(	
 		const std::string& ContextCompileName, const std::string& OriginalName,
 		const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
@@ -308,6 +308,73 @@ struct FParserHelperLibrary
 		}
 
 		return GetFunctionCompileName(ContextCompileName, OriginalName, FunctionSignatureInfo.Modifiers.IsConst, LArgumentsNames);
+	}
+	/*
+		Construct standard type compile name.
+
+		@param StandardTypeID - ID of standard type.
+		@return constructed type name.
+	*/
+	static std::string GetStandardTypeCompileName(EStandardTypesID StandardTypeID)
+	{
+		// clang-format off
+		switch( StandardTypeID )
+		{
+		case EStandardTypesID::VOID_ID:		return "vv";
+		case EStandardTypesID::UINT8_ID:	return "u8";
+		case EStandardTypesID::UINT16_ID:	return "u16";
+		case EStandardTypesID::UINT32_ID:	return "u32";
+		case EStandardTypesID::UINT64_ID:	return "u64";
+		case EStandardTypesID::INT8_ID:		return "i8";
+		case EStandardTypesID::INT16_ID:	return "i16";
+		case EStandardTypesID::INT32_ID:	return "i32";
+		case EStandardTypesID::INT64_ID:	return "i64";
+		case EStandardTypesID::ADDR_T_ID:	return "addr";
+		case EStandardTypesID::FLOAT_ID:	return "f";
+		case EStandardTypesID::DOUBLE_ID:	return "d";
+		case EStandardTypesID::BOOL_ID:		return "b";
+		case EStandardTypesID::CHAR_ID:		return "c";
+		case EStandardTypesID::STRING_ID:	return "s";
+		case EStandardTypesID::VECTOR4D_ID: return "v4";
+		case EStandardTypesID::VECTOR3D_ID: return "v3";
+		case EStandardTypesID::VECTOR2D_ID: return "v2";
+		}
+		// clang-format on
+
+		return "";
+	}
+	/*
+		Try to get type as string.
+
+		@param TypeID - ID of type.
+		@param ProgramInfo - current program info.
+		@return constructed type name.
+	*/
+	static std::string GetTypeName(int TypeID, const FProgramInfo& ProgramInfo) noexcept
+	{
+		if( TypeID < 0 || TypeID >= ProgramInfo.TypesMap.size() ) return "";
+
+
+		const FUserTypePath& LTypePath = ProgramInfo.TypesMap[TypeID];
+
+		switch( LTypePath.PathSwitch )
+		{
+		case ETypePathSwitch::EStandard:
+		{
+			return GetStandardTypeCompileName(static_cast<EStandardTypesID>(TypeID));
+		}
+		case ETypePathSwitch::EClass:
+		{
+			return LTypePath.ClassPath.ClassCompileName;
+		}
+		case ETypePathSwitch::EFunctionSignature:
+		{
+			const FFunctionSignatureInfo& LFunctionSignature = ProgramInfo.FunctionSignaturesTypesMap[LTypePath.FunctionSignaturePath.FunctionSignatureID];
+			return GetFunctionCompileName("", "fsign", LFunctionSignature, ProgramInfo);
+		}
+		}
+
+		return "";
 	}
 
 
@@ -367,6 +434,24 @@ struct FParserHelperLibrary
 		Check that given token is builtin template type.
 	*/
 	static inline bool IsBuiltinTemplateType(const Token& InToken) noexcept { return IsBuiltinTemplateType(InToken.GetType()); }
+	/*
+		Check that given token is modifier.
+	*/
+	static inline bool IsModifierToken(ETokenType TokenType) noexcept
+	{
+		// clang-format off
+		return	TokenType == ETokenType::EXTERN_C || 
+				TokenType == ETokenType::CDECL || TokenType == ETokenType::STDCALL || TokenType == ETokenType::FASTCALL || TokenType == ETokenType::THISCALL || 
+				TokenType == ETokenType::CONST || TokenType == ETokenType::MUTABLE || TokenType == ETokenType::STATIC ||  
+				TokenType == ETokenType::INLINE || TokenType == ETokenType::VIRTUAL || TokenType == ETokenType::OVERRIDE || 
+				TokenType == ETokenType::ABSTRACT || TokenType == ETokenType::FINAL	|| 
+				TokenType == ETokenType::DEPRECATED || TokenType == ETokenType::UNIMPLEMENTED;
+		// clang-format on
+	}
+	/*
+		Check that given token is modifier.
+	*/
+	static inline bool IsModifierToken(const Token& InToken) noexcept { return IsModifierToken(InToken.GetType()); }
 
 
 
@@ -405,7 +490,7 @@ struct FParserHelperLibrary
 	/*
 		Try to get function signature ID.
 	*/
-	static inline int GetFunctionSignatureID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
+	static int GetFunctionSignatureID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
 	{
 		for( int i = 0; i < ProgramInfo.FunctionSignaturesTypesMap.size(); ++i )
 		{
@@ -430,7 +515,7 @@ struct FParserHelperLibrary
 	/*
 		Try to get function signature as type ID.
 	*/
-	static inline int GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
+	static int GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
 	{
 		const int LFunctionSignatureID = GetFunctionSignatureID(FunctionSignatureInfo, ProgramInfo);
 		if( LFunctionSignatureID < 0 ) return -1;
@@ -459,7 +544,7 @@ struct FParserHelperLibrary
 	/*
 		Try to get class as type ID.
 	*/
-	static inline int GetClassTypeID(const std::string& ClassCompileName, const FProgramInfo& ProgramInfo) noexcept
+	static int GetClassTypeID(const std::string& ClassCompileName, const FProgramInfo& ProgramInfo) noexcept
 	{
 		for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
 		{
@@ -472,78 +557,22 @@ struct FParserHelperLibrary
 		return -1;
 	}
 	/*
-		Try to get type as string.
+		Try to get user type ID by compile name.
 	*/
-	static inline std::string GetTypeName(int TypeID, const FProgramInfo& ProgramInfo) noexcept
+	static inline int GetUserTypeID(const std::string& CompileName, const FProgramInfo& ProgramInfo) noexcept
 	{
-		if( TypeID < 0 || TypeID >= ProgramInfo.TypesMap.size() ) return "";
-
-
-		const FUserTypePath& LTypePath = ProgramInfo.TypesMap[TypeID];
-
-		switch( LTypePath.PathSwitch )
+		int LTypeID = GetClassTypeID(CompileName, ProgramInfo);
+		if( LTypeID == -1 )
 		{
-		case ETypePathSwitch::EStandard:
-		{
-			// clang-format off
-			switch( static_cast<EStandardTypesID>(TypeID) )
+			auto LAliasIter = ProgramInfo.TypeAliases.find(CompileName);
+			if( LAliasIter != ProgramInfo.TypeAliases.end() )
 			{
-			case EStandardTypesID::VOID_ID:		return "vv";
-			case EStandardTypesID::UINT8_ID:	return "u8";
-			case EStandardTypesID::UINT16_ID:	return "u16";
-			case EStandardTypesID::UINT32_ID:	return "u32";
-			case EStandardTypesID::UINT64_ID:	return "u64";
-			case EStandardTypesID::INT8_ID:		return "i8";
-			case EStandardTypesID::INT16_ID:	return "i16";
-			case EStandardTypesID::INT32_ID:	return "i32";
-			case EStandardTypesID::INT64_ID:	return "i64";
-			case EStandardTypesID::ADDR_T_ID:	return "addr";
-			case EStandardTypesID::FLOAT_ID:	return "f";
-			case EStandardTypesID::DOUBLE_ID:	return "d";
-			case EStandardTypesID::BOOL_ID:		return "b";
-			case EStandardTypesID::CHAR_ID:		return "c";
-			case EStandardTypesID::STRING_ID:	return "s";
-			case EStandardTypesID::VECTOR4D_ID: return "v4";
-			case EStandardTypesID::VECTOR3D_ID: return "v3";
-			case EStandardTypesID::VECTOR2D_ID: return "v2";
+				LTypeID = LAliasIter->second;
 			}
-			// clang-format on
-		}
-		case ETypePathSwitch::EClass:
-		{
-			return LTypePath.ClassPath.ClassCompileName;
-		}
-		case ETypePathSwitch::EFunctionSignature:
-		{
-			const FFunctionSignatureInfo& LFunctionSignature = ProgramInfo.FunctionSignaturesTypesMap[LTypePath.FunctionSignaturePath.FunctionSignatureID];
-			return GetFunctionCompileName("", "fsign", LFunctionSignature, ProgramInfo);
-		}
 		}
 
-		return "";
+		return LTypeID;
 	}
-
-
-
-
-	/*
-		Check that given token is modifier.
-	*/
-	static inline bool IsModifierToken(ETokenType TokenType) noexcept
-	{
-		// clang-format off
-		return	TokenType == ETokenType::EXTERN_C || 
-				TokenType == ETokenType::CDECL || TokenType == ETokenType::STDCALL || TokenType == ETokenType::FASTCALL || TokenType == ETokenType::THISCALL || 
-				TokenType == ETokenType::CONST || TokenType == ETokenType::MUTABLE || TokenType == ETokenType::STATIC ||  
-				TokenType == ETokenType::INLINE || TokenType == ETokenType::VIRTUAL || TokenType == ETokenType::OVERRIDE || 
-				TokenType == ETokenType::ABSTRACT || TokenType == ETokenType::FINAL	|| 
-				TokenType == ETokenType::DEPRECATED || TokenType == ETokenType::UNIMPLEMENTED;
-		// clang-format on
-	}
-	/*
-		Check that given token is modifier.
-	*/
-	static inline bool IsModifierToken(const Token& InToken) noexcept { return IsModifierToken(InToken.GetType()); }
 
 
 
@@ -551,7 +580,7 @@ struct FParserHelperLibrary
 	/*
 		Check that given function signatures are same.
 	*/
-	static inline bool AreFunctionSignaturesSame(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept
+	static bool AreFunctionSignaturesSame(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept
 	{
 		if( FS1.Inputs.size() != FS2.Inputs.size() ) return false;
 
@@ -568,7 +597,7 @@ struct FParserHelperLibrary
 	/*
 		Find first module name declaration in tokens array.
 	*/
-	static inline std::string GetFirstModuleName(const std::vector<Token>& Tokens) noexcept
+	static std::string GetFirstModuleName(const std::vector<Token>& Tokens) noexcept
 	{
 		if( Tokens.empty() ) return "";
 

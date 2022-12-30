@@ -56,9 +56,9 @@ DECLARE_STATE_CLASS(DescriptionAlign1)					 // @ -> align -> (
 DECLARE_STATE_CLASS(DescriptionAlign2)					 // align -> ( -> )
 DECLARE_STATE_CLASS(DescriptionAlign3)					 // ( -> ) -> @|***
 DECLARE_STATE_CLASS(DescriptionParam1)					 // @ -> param|return -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DescriptionParam2)					 // [IDENTIFIER] -> : -> const|mut|[standrad type]|[user type]
-DECLARE_STATE_CLASS(DescriptionParam3)					 // : -> const|mut|[standrad type]|[user type] -> (|@|***
-DECLARE_STATE_CLASS(DescriptionParam4)					 // [standrad type]|[user type] -> (|@|*** -> )
+DECLARE_STATE_CLASS(DescriptionParam2)					 // [IDENTIFIER] -> : -> const|mut|[standard type]|[user type]
+DECLARE_STATE_CLASS(DescriptionParam3)					 // : -> const|mut|[standard type]|[user type] -> (|@|***
+DECLARE_STATE_CLASS(DescriptionParam4)					 // [standard type]|[user type] -> (|@|*** -> )
 DECLARE_STATE_CLASS(DescriptionParam5)					 // ( -> ... -> )
 DECLARE_STATE_CLASS(DescriptionParam6)					 // ... -> ) -> @|***
 DECLARE_STATE_CLASS(EndDescription)						 // *** -> *** -> public|private|module|func|struct|interface|object|component|enum
@@ -98,17 +98,17 @@ DECLARE_STATE_CLASS(DeclareFunction4)	  // [IDENTIFIER]|] -> { -> }
 // struct|enum|interface|object|component [IDENTIFIER];
 DECLARE_STATE_CLASS(StartDeclareClass)					   // -> struct|enum|interface|object|component -> [IDENTIFIER]
 DECLARE_STATE_CLASS(DeclareClass1)						   // struct|enum|interface|object|component| -> [IDENTIFIER] -> (|{
-DECLARE_STATE_CLASS(DeclareClass2)						   // [IDENTIFIER] -> ( -> [standrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass3)						   // ( -> [standrad type]|[user type] -> ,|)
-DECLARE_STATE_CLASS(DeclareClass4)						   // [standrad type]|[user type] -> ) -> {
+DECLARE_STATE_CLASS(DeclareClass2)						   // [IDENTIFIER] -> ( -> [standard type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass3)						   // ( -> [standard type]|[user type] -> ,|)
+DECLARE_STATE_CLASS(DeclareClass4)						   // [standard type]|[user type] -> ) -> {
 DECLARE_STATE_CLASS(DeclareClassInternal)				   // [IDENTIFIER]|) -> { -> ***|public|protected|private|func|var|static_assert|using|}
 DECLARE_STATE_CLASS(DeclareClassParentBuildinTemplateType) // -> [buildin template] ->
 DECLARE_STATE_CLASS(DeclareClassParentUserType)			   // -> [user type] ->
 
-// var static|const|[standrad type]|[user type] [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareField)				 // -> var -> static|const|[standrad type]|[user type]
-DECLARE_STATE_CLASS(DeclareField1)					 // var|static|const -> [standrad type]|[user type] -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareField2)					 // [standrad type]|[user type] -> [IDENTIFIER] -> =|;
+// var static|const|[standard type]|[user type] [IDENTIFIER];
+DECLARE_STATE_CLASS(StartDeclareField)				 // -> var -> static|const|[standard type]|[user type]
+DECLARE_STATE_CLASS(DeclareField1)					 // var|static|const -> [standard type]|[user type] -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareField2)					 // [standard type]|[user type] -> [IDENTIFIER] -> =|;
 DECLARE_STATE_CLASS(DeclareField3)					 // [IDENTIFIER] -> = -> ...;
 DECLARE_STATE_CLASS(DeclareFieldBuildinTemplateType) // -> [buildin template] ->
 DECLARE_STATE_CLASS(DeclareFieldLambdaType)			 // -> [user type] ->
@@ -117,11 +117,11 @@ DECLARE_STATE_CLASS(DeclareFieldUserType)			 // -> [user type] ->
 
 
 
-// using [IDENTIFIER] = [standrad type]|[user type];
+// using [IDENTIFIER] = [standard type]|[user type];
 DECLARE_STATE_CLASS(StartDefineAlias)				// -> using -> [IDENTIFIER]
 DECLARE_STATE_CLASS(DefineAlias1)					// using -> [IDENTIFIER] -> =
-DECLARE_STATE_CLASS(DefineAlias2)					// [IDENTIFIER] -> = -> [standrad type]|[user type]
-DECLARE_STATE_CLASS(DefineAlias3)					// = -> [standrad type]|[user type] -> ;
+DECLARE_STATE_CLASS(DefineAlias2)					// [IDENTIFIER] -> = -> [standard type]|[user type]
+DECLARE_STATE_CLASS(DefineAlias3)					// = -> [standard type]|[user type] -> ;
 DECLARE_STATE_CLASS(DefineAliasBuildinTemplateType) // -> [buildin template] ->
 DECLARE_STATE_CLASS(DefineAliasLambdaType)			// -> [lambda] ->
 DECLARE_STATE_CLASS(DefineAliasUserType)			// -> [user type] ->
@@ -134,13 +134,22 @@ DECLARE_STATE_CLASS(StaticAssert2)	   // ( -> ) -> ;
 
 
 // class|array <|[stadrad type]|[user type]|>
-DECLARE_STATE_CLASS(StartBuildinTemplateType)
+DECLARE_STATE_CLASS(StartBuildinTemplateType) // -> class|array -> <|
+//DECLARE_STATE_CLASS(BuildinTemplateType1)	  // class|array -> <| -> [standard type]|[user type]
+//DECLARE_STATE_CLASS(BuildinTemplateType2)	  // <| -> [standard type]|[user type] -> |>
 
 // lambda ([stadrad type]|[user type]) => [stadrad type]|[user type]
-DECLARE_STATE_CLASS(StartLambdaType)
+DECLARE_STATE_CLASS(StartLambdaType) // -> lambda -> (
+//DECLARE_STATE_CLASS(LambdaType1)	 // lambda -> ( -> [stadrad type]|[user type]
+//DECLARE_STATE_CLASS(LambdaType2)	 // ( -> [stadrad type]|[user type] -> ,|)
+//DECLARE_STATE_CLASS(LambdaType3)	 // [stadrad type]|[user type] -> ) -> =>
+//DECLARE_STATE_CLASS(LambdaType4)	 // ) -> => -> [stadrad type]|[user type]
 
-// [IDENTIFIER].[IDENTIFIER]::[IDENTIFIER]<|...|>
-DECLARE_STATE_CLASS(StartUserType) // [IDENTIFIER] -> .|::|<|
+// [IDENTIFIER].[IDENTIFIER]::[IDENTIFIER]
+DECLARE_STATE_CLASS(StartUserType) // -> [IDENTIFIER] -> .|::|[return to prev state]
+DECLARE_STATE_CLASS(UserType1)	   // [IDENTIFIER] -> . -> [IDENTIFIER]
+DECLARE_STATE_CLASS(UserType2)	   // . -> [IDENTIFIER] -> .|::
+DECLARE_STATE_CLASS(UserType3)	   // [IDENTIFIER] -> :: -> [IDENTIFIER]
 
 //.........................................................................................................................//
 
@@ -245,6 +254,9 @@ public:
 	DECLARE_STATE(StartLambdaType)
 
 	DECLARE_STATE(StartUserType)
+	DECLARE_STATE(UserType1)
+	DECLARE_STATE(UserType2)
+	DECLARE_STATE(UserType3)
 
 public:
 
@@ -312,6 +324,7 @@ public:
 	bool RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bool SkipIfExist, const Token& TokenCTX);
 	bool RegisterVariableFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterClassFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
+	bool FinishClassRegistrationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterFunctionImplementationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 
