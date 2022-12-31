@@ -63,4 +63,4 @@ To have base guide see examples in *Documentation\Examples*. \
 ```-q```, ```--quiet```                 no compiler messages \
 ```--no_context```                      no context string with errors \
 ```--progress```                        show compilation progress \
-```-t```, ```--time```                  show total compilation time \
+```-t```, ```--time```                  show total compilation time

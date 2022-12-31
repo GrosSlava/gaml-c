@@ -9,9 +9,9 @@
 */
 enum EMyEnum(uint8) // enum can be inhereted from any integer type(by default uint32)
 {
-    One,        // each field is number
-    Two = 3,    // we can give custom number for field
-    Three       // there will be 4
+    var One;        // each field is number
+    var Two = 3;    // we can give custom number for field
+    var Three;      // there will be 4
 
     ***
         // enum as a class can have methods, but only static
@@ -24,9 +24,9 @@ enum EMyEnum(uint8) // enum can be inhereted from any integer type(by default ui
 
 enum EMyStringEnum(string) // enum can be inhereted from string
 {
-    One = "One",    // each field is string, so, we need to init it
-    Two = "Two",        
-    Three = "Three" 
+    var One = "One";    // each field is string, so, we need to init it
+    var Two = "Two";
+    var Three = "Three";
 }
 
 

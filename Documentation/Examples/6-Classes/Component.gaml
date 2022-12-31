@@ -18,6 +18,7 @@ component UMyComponent // component can be inhereted only from interface(many) o
 
     ***
         // declare method, it is public
+        @const
     ***
     public func foo {}
 
@@ -31,7 +32,7 @@ component UMyComponent // component can be inhereted only from interface(many) o
     ***
     func UMyComponent {}
     ***
-         // constructor overloading
+        // constructor overloading
         @param OtherComponent: const UMyComponent
     ***
     func UMyComponent {}

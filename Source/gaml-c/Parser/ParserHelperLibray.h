@@ -145,7 +145,7 @@ struct FParserHelperLibrary
 		@param ModuleCompileName - nome of module to convert.
 		@param OutParts - result of splitting will be here.
 	*/
-	static inline void SplitModuleNameToParts(const std::string& ModuleCompileName, std::vector<std::string>& OutParts)
+	static inline void SplitModuleRealNameToParts(const std::string& ModuleCompileName, std::vector<std::string>& OutParts)
 	{
 		FCompilerHelperLibrary::SplitPathToParts(ModuleCompileName, OutParts, FCompilerConfig::COMPILE_NAME_SEPARATOR);
 	}
@@ -191,6 +191,23 @@ struct FParserHelperLibrary
 
 		ModulePathParts[0] = LFirstPartRealName;
 		return GetModuleCompileName(ModulePathParts);
+	}
+	/*
+		Return module real compile name.
+		First part can be module/package alias. 
+
+		@param ModuleNameOrAlias - module compile name or alias.
+		@ProgramInfo ProgramInfo - current program info.
+		@return module real compile name.
+	*/
+	static std::string GetModuleRealNameWithFirstPartCheck(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo)
+	{
+		if( ModuleNameOrAlias.empty() ) return "";
+
+		std::vector<std::string> SplittedParts;
+		FCompilerHelperLibrary::SplitPathToParts(ModuleNameOrAlias, SplittedParts, '.');
+
+		return GetModuleRealName(SplittedParts, ProgramInfo);
 	}
 	/*
 		Construct any compile name.

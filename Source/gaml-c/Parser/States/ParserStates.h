@@ -328,8 +328,6 @@ public:
 	bool RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterFunctionImplementationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 
-private:
-
 	bool ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX);
 	bool ImportPackage(FProgramInfo& OutProgramInfo, const std::string& ImportPackageRelativePath, const Token& TokenCTX);
 
