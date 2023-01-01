@@ -236,14 +236,32 @@ struct FFunctionSignatureInfo
 		Context modifiers.
 	*/
 	FModfiers Modifiers;
-	/*
-		Meta info.
-	*/
-	FSymbolMetaInfo MetaInfo;
+
 	/*
 		AST for function static code.
 	*/
 	AST StaticCodeTree;
+};
+
+/*
+	Information about function.
+*/
+struct FFunctionInfo
+{
+	/*
+		Compile name of context class.
+		Empty if declared in global space.
+	*/
+	std::string ClassDeclarationNamespace = "";
+	/*
+		Function signature info.
+	*/
+	FFunctionSignatureInfo SignatureInfo;
+
+	/*
+		Meta info.
+	*/
+	FSymbolMetaInfo MetaInfo;
 };
 
 /*
@@ -397,9 +415,9 @@ public:
 		Class methods are functions too.
 
 		Key - function compile name.
-		Value - function signature info.
+		Value - function info.
 	*/
-	std::unordered_map<std::string, FFunctionSignatureInfo> Functions;
+	std::unordered_map<std::string, FFunctionInfo> Functions;
 
 	/*
 		Unique function signatures. Each new signature is new type with unique id.

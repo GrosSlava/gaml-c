@@ -42,13 +42,13 @@ void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FP
 
 
 	GeneratedCodeStr += "\n/*.....................................Functions declaration.....................................*/\n\n";
-	for( const std::pair<std::string, FFunctionSignatureInfo>& LFunctionInfo : ProgramInfo.Functions )
+	for( const std::pair<std::string, FFunctionInfo>& LFunctionInfo : ProgramInfo.Functions )
 	{
 		if( ProgramInfo.CompilingFunctionsAST.find(LFunctionInfo.first) == ProgramInfo.CompilingFunctionsAST.end() )
 		{
 			GeneratedCodeStr += "extern ";
 		}
-		GeneratedCodeStr += GetFunctionSignatureCStr(LFunctionInfo.first, LFunctionInfo.second, ProgramInfo) + ";\n";
+		GeneratedCodeStr += GetFunctionSignatureCStr(LFunctionInfo.first, LFunctionInfo.second.SignatureInfo, ProgramInfo) + ";\n";
 	}
 	GeneratedCodeStr += "\n/*...............................................................................................*/\n";
 
@@ -56,7 +56,13 @@ void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FP
 	GeneratedCodeStr += "\n/*...................................Functions implementation....................................*/\n\n";
 	for( const std::pair<std::string, FCompilingFunctionInfo>& LCompilingFunctionInfo : ProgramInfo.CompilingFunctionsAST )
 	{
-		GeneratedCodeStr += GetFunctionSignatureCStr(LCompilingFunctionInfo.first, ProgramInfo.Functions.at(LCompilingFunctionInfo.first), ProgramInfo);
+		// clang-format off
+		GeneratedCodeStr += GetFunctionSignatureCStr
+		(
+			LCompilingFunctionInfo.first, ProgramInfo.Functions.at(LCompilingFunctionInfo.first).SignatureInfo, ProgramInfo
+		);
+		// clang-format on
+
 		GeneratedCodeStr += "\n{\n";
 		GeneratedCodeStr += GetFunctionImplementationBodyCStr(LCompilingFunctionInfo.first, LCompilingFunctionInfo.second, ProgramInfo);
 		GeneratedCodeStr += "\n}\n";
@@ -321,14 +327,16 @@ std::string ReduceCGenerator::GetClassVariablesCStr(const FClassInfo& ClassInfo,
 
 	for( const std::pair<std::string, FVariableInfo>& LVariableInfo : ClassInfo.Variables )
 	{
-		if( LVariableInfo.second.Modifiers.IsStatic ) continue; // static variables compile on another stage
-
 		LResult += "\t" + GetVariableDeclarationCStr(LVariableInfo.second, false, true, false, ProgramInfo) + ";\n";
 	}
 
 	for( const std::pair<std::string, std::string>& LVirtualFunctionRow : ClassInfo.VirtualFunctionsTable )
 	{
-		LResult += "\t" + GetFunctionPointerCStr(LVirtualFunctionRow.first, ProgramInfo.Functions.at(LVirtualFunctionRow.second), false, ProgramInfo) + ";\n";
+		// clang-format off
+		LResult += "\t" +
+				   GetFunctionPointerCStr(LVirtualFunctionRow.first, ProgramInfo.Functions.at(LVirtualFunctionRow.second).SignatureInfo, false, ProgramInfo) +
+				   ";\n";
+		// clang-format on
 	}
 
 	return LResult;

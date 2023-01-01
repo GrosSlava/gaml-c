@@ -117,9 +117,8 @@ public:
 
 	inline void Clear() noexcept
 	{
-		SignatureInfo = FFunctionSignatureInfo();
+		FunctionInfo = FFunctionInfo();
 		FunctionName.clear();
-		ClassDeclarationNamespace.clear();
 		StaticCodeTokens.clear();
 		StaticCodeOpenBracketLayer = 0;
 	}
@@ -127,13 +126,34 @@ public:
 
 public:
 
-	FFunctionSignatureInfo SignatureInfo;
-	std::string ClassDeclarationNamespace = "";
+	FFunctionInfo FunctionInfo;
 	std::string FunctionName = "";
 
 	std::vector<Token> StaticCodeTokens;
 	int StaticCodeOpenBracketLayer = 0;
 };
+
+struct FFunctionImplementationContext
+{
+public:
+
+	inline void Clear() noexcept
+	{
+		CompilingFunctionInfo = FCompilingFunctionInfo();
+		FunctionCodeTokens.clear();
+		FunctionCodeOpenBracketLayer = 0;
+	}
+
+
+public:
+
+	FCompilingFunctionInfo CompilingFunctionInfo;
+
+	std::vector<Token> FunctionCodeTokens;
+	int FunctionCodeOpenBracketLayer = 0;
+};
+
+
 
 struct FVariableDeclarationContext
 {
@@ -154,6 +174,8 @@ public:
 
 	std::vector<Token> DefaultValueTokens;
 };
+
+
 
 struct FClassDeclarationContext
 {
@@ -215,60 +237,7 @@ public:
 
 
 
-struct FFunctionImplementationContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		CompilingFunctionInfo = FCompilingFunctionInfo();
-		FunctionCodeTokens.clear();
-		FunctionCodeOpenBracketLayer = 0;
-	}
-
-
-public:
-
-	FCompilingFunctionInfo CompilingFunctionInfo;
-	std::vector<Token> FunctionCodeTokens;
-	int FunctionCodeOpenBracketLayer = 0;
-};
-
-
-
-struct FBuildinTemplateTypeContext
-{
-public:
-
-	inline void Clear() noexcept
-	{
-		TypeName.clear();
-		TypeID = -1;
-	}
-
-
-public:
-
-	std::string TypeName = "";
-	int TypeID = -1;
-};
-
-struct FLambdaTypeContext
-{
-public:
-
-	inline void Clear() noexcept 
-	{
-		TypeID = -1;
-	}
-
-
-public:
-
-	int TypeID = -1;
-};
-
-struct FUserTypeContext
+struct FTypeDetectionContext
 {
 public:
 
@@ -310,11 +279,11 @@ public:
 		ModuleImportingContext.Clear();
 		DescriptionContext.Clear();
 		FunctionDeclarationContext.Clear();
+		FunctionImplementationContext.Clear();
 		VariableDeclarationContext.Clear();
 		ClassDeclarationContext.Clear();
 		AliasDeclarationContext.Clear();
 		StaticAssertContext.Clear();
-		FunctionImplementationContext.Clear();
 
 		ClearTypeContexts();
 	}
@@ -327,11 +296,11 @@ public:
 
 		DescriptionContext.Clear();
 		FunctionDeclarationContext.Clear();
+		FunctionImplementationContext.Clear();
 		VariableDeclarationContext.Clear();
 		AliasDeclarationContext.Clear();
 		StaticAssertContext.Clear();
-		FunctionImplementationContext.Clear();
-
+		
 		ClearTypeContexts();
 	}
 	/*
@@ -339,9 +308,7 @@ public:
 	*/
 	inline void ClearTypeContexts() noexcept 
 	{ 
-		BuildinTemplateTypeContext.Clear();
-		LambdaTypeContext.Clear();
-		UserTypeContext.Clear();
+		TypeDetectionContext.Clear();
 	}
 
 
@@ -351,7 +318,6 @@ public:
 
 	bool ModuleNameDeclared = false;
 	EStateContextType StateContextType = EStateContextType::Global;
-
 	EAccessModifier AccessModifierContextType = EAccessModifier::Public;
 
 	FModuleDeclarationContext ModuleDeclarationContext;
@@ -359,13 +325,11 @@ public:
 	FModuleImportingContext ModuleImportingContext;
 	FDescriptionContext DescriptionContext;
 	FFunctionDeclarationContext FunctionDeclarationContext;
+	FFunctionImplementationContext FunctionImplementationContext;
 	FVariableDeclarationContext VariableDeclarationContext;
 	FClassDeclarationContext ClassDeclarationContext;
 	FAliasDeclarationContext AliasDeclarationContext;
 	FStaticAssertContext StaticAssertContext;
-	FFunctionImplementationContext FunctionImplementationContext;
-
-	FBuildinTemplateTypeContext BuildinTemplateTypeContext;
-	FLambdaTypeContext LambdaTypeContext;
-	FUserTypeContext UserTypeContext;
+	
+	FTypeDetectionContext TypeDetectionContext;
 };

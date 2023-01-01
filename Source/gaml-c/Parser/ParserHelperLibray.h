@@ -508,7 +508,7 @@ struct FParserHelperLibrary
 		auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
 		if( LFunctionInfoIterator == ProgramInfo.Functions.end() ) return -1;
 
-		return GetFunctionSignatureID(LFunctionInfoIterator->second, ProgramInfo);
+		return GetFunctionSignatureID(LFunctionInfoIterator->second.SignatureInfo, ProgramInfo);
 	}
 	/*
 		Try to get function signature as type ID.
@@ -541,7 +541,7 @@ struct FParserHelperLibrary
 		auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
 		if( LFunctionInfoIterator == ProgramInfo.Functions.end() ) return -1;
 
-		return GetFunctionSignatureTypeID(LFunctionInfoIterator->second, ProgramInfo);
+		return GetFunctionSignatureTypeID(LFunctionInfoIterator->second.SignatureInfo, ProgramInfo);
 	}
 	/*
 		Try to get class as type ID.

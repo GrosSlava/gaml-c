@@ -52,21 +52,19 @@ public:
 DECLARE_STATE_CLASS(Default)
 
 // *** ... ***
-DECLARE_STATE_CLASS(StartDescription)					 // -> *** -> @|***
-DECLARE_STATE_CLASS(DescriptionModifier)				 // *** -> @ -> [MODIFIER]|param|return|align
-DECLARE_STATE_CLASS(DescriptionAlign1)					 // @ -> align -> (
-DECLARE_STATE_CLASS(DescriptionAlign2)					 // align -> ( -> )
-DECLARE_STATE_CLASS(DescriptionAlign3)					 // ( -> ) -> @|***
-DECLARE_STATE_CLASS(DescriptionParam1)					 // @ -> param|return -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DescriptionParam2)					 // [IDENTIFIER] -> : -> const|mut|[standard type]|[user type]
-DECLARE_STATE_CLASS(DescriptionParam3)					 // : -> const|mut|[standard type]|[user type] -> (|@|***
-DECLARE_STATE_CLASS(DescriptionParam4)					 // [standard type]|[user type] -> (|@|*** -> )
-DECLARE_STATE_CLASS(DescriptionParam5)					 // ( -> ... -> )
-DECLARE_STATE_CLASS(DescriptionParam6)					 // ... -> ) -> @|***
-DECLARE_STATE_CLASS(EndDescription)						 // *** -> *** -> public|private|module|func|struct|interface|object|component|enum
-DECLARE_STATE_CLASS(DescriptionParamBuildinTemplateType) // -> [buildin template] ->
-DECLARE_STATE_CLASS(DescriptionParamLambdaType)			 // -> [lambda] ->
-DECLARE_STATE_CLASS(DescriptionParamUserType)			 // -> [user type] ->
+DECLARE_STATE_CLASS(StartDescription)	  // -> *** -> @|***
+DECLARE_STATE_CLASS(DescriptionModifier)  // *** -> @ -> [MODIFIER]|param|return|align
+DECLARE_STATE_CLASS(DescriptionAlign1)	  // @ -> align -> (
+DECLARE_STATE_CLASS(DescriptionAlign2)	  // align -> ( -> )
+DECLARE_STATE_CLASS(DescriptionAlign3)	  // ( -> ) -> @|***
+DECLARE_STATE_CLASS(DescriptionParam1)	  // @ -> param|return -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DescriptionParam2)	  // [IDENTIFIER] -> : -> const|mut|[standard type]|[user type]
+DECLARE_STATE_CLASS(DescriptionParam3)	  // : -> const|mut|[standard type]|[user type] -> (|@|***
+DECLARE_STATE_CLASS(DescriptionParam4)	  // [standard type]|[user type] -> (|@|*** -> )
+DECLARE_STATE_CLASS(DescriptionParam5)	  // ( -> ... -> )
+DECLARE_STATE_CLASS(DescriptionParam6)	  // ... -> ) -> @|***
+DECLARE_STATE_CLASS(EndDescription)		  // *** -> *** -> public|private|module|func|struct|interface|object|component|enum
+DECLARE_STATE_CLASS(DescriptionParamType) // -> [user type]|[lambda]|[buildin template] ->
 
 // public|private func|interface|object|component|struct|enum
 DECLARE_STATE_CLASS(GlobalAccessModifier) // -> public|private -> func|interface|object|component|struct|enum
@@ -98,35 +96,30 @@ DECLARE_STATE_CLASS(DeclareFunction3)	  // [ -> ] -> ;|{
 DECLARE_STATE_CLASS(DeclareFunction4)	  // [IDENTIFIER]|] -> { -> }
 
 // struct|enum|interface|object|component [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareClass)					   // -> struct|enum|interface|object|component -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareClass1)						   // struct|enum|interface|object|component| -> [IDENTIFIER] -> (|{
-DECLARE_STATE_CLASS(DeclareClass2)						   // [IDENTIFIER] -> ( -> [standard type]|[user type]
-DECLARE_STATE_CLASS(DeclareClass3)						   // ( -> [standard type]|[user type] -> ,|)
-DECLARE_STATE_CLASS(DeclareClass4)						   // [standard type]|[user type] -> ) -> {
-DECLARE_STATE_CLASS(DeclareClassInternal)				   // [IDENTIFIER]|) -> { -> ***|public|protected|private|func|var|static_assert|using|}
-DECLARE_STATE_CLASS(DeclareClassParentBuildinTemplateType) // -> [buildin template] ->
-DECLARE_STATE_CLASS(DeclareClassParentUserType)			   // -> [user type] ->
+DECLARE_STATE_CLASS(StartDeclareClass)		// -> struct|enum|interface|object|component -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareClass1)			// struct|enum|interface|object|component| -> [IDENTIFIER] -> (|{
+DECLARE_STATE_CLASS(DeclareClass2)			// [IDENTIFIER] -> ( -> [standard type]|[user type]
+DECLARE_STATE_CLASS(DeclareClass3)			// ( -> [standard type]|[user type] -> ,|)
+DECLARE_STATE_CLASS(DeclareClass4)			// [standard type]|[user type] -> ) -> {
+DECLARE_STATE_CLASS(DeclareClassInternal)	// [IDENTIFIER]|) -> { -> ***|public|protected|private|func|var|static_assert|using|}
+DECLARE_STATE_CLASS(DeclareClassParentType) // -> [user type]|[buildin template] ->
 
 // var static|const|[standard type]|[user type] [IDENTIFIER];
-DECLARE_STATE_CLASS(StartDeclareField)				 // -> var -> static|const|[standard type]|[user type]
-DECLARE_STATE_CLASS(DeclareField1)					 // var|static|const -> [standard type]|[user type] -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DeclareField2)					 // [standard type]|[user type] -> [IDENTIFIER] -> =|;
-DECLARE_STATE_CLASS(DeclareField3)					 // [IDENTIFIER] -> = -> ...;
-DECLARE_STATE_CLASS(DeclareFieldBuildinTemplateType) // -> [buildin template] ->
-DECLARE_STATE_CLASS(DeclareFieldLambdaType)			 // -> [user type] ->
-DECLARE_STATE_CLASS(DeclareFieldUserType)			 // -> [user type] ->
+DECLARE_STATE_CLASS(StartDeclareField) // -> var -> static|const|[standard type]|[user type]
+DECLARE_STATE_CLASS(DeclareField1)	   // var|static|const -> [standard type]|[user type] -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DeclareField2)	   // [standard type]|[user type] -> [IDENTIFIER] -> =|;
+DECLARE_STATE_CLASS(DeclareField3)	   // [IDENTIFIER] -> = -> ...;
+DECLARE_STATE_CLASS(DeclareFieldType)  // -> [user type]|[buildin template]| ->
 
 
 
 
 // using [IDENTIFIER] = [standard type]|[user type];
-DECLARE_STATE_CLASS(StartDefineAlias)				// -> using -> [IDENTIFIER]
-DECLARE_STATE_CLASS(DefineAlias1)					// using -> [IDENTIFIER] -> =
-DECLARE_STATE_CLASS(DefineAlias2)					// [IDENTIFIER] -> = -> [standard type]|[user type]
-DECLARE_STATE_CLASS(DefineAlias3)					// = -> [standard type]|[user type] -> ;
-DECLARE_STATE_CLASS(DefineAliasBuildinTemplateType) // -> [buildin template] ->
-DECLARE_STATE_CLASS(DefineAliasLambdaType)			// -> [lambda] ->
-DECLARE_STATE_CLASS(DefineAliasUserType)			// -> [user type] ->
+DECLARE_STATE_CLASS(StartDefineAlias) // -> using -> [IDENTIFIER]
+DECLARE_STATE_CLASS(DefineAlias1)	  // using -> [IDENTIFIER] -> =
+DECLARE_STATE_CLASS(DefineAlias2)	  // [IDENTIFIER] -> = -> [standard type]|[user type]
+DECLARE_STATE_CLASS(DefineAlias3)	  // = -> [standard type]|[user type] -> ;
+DECLARE_STATE_CLASS(DefineAliasType)  // -> [user type]|[buildin template]|[lambda] ->
 
 // static_assert(expression);
 DECLARE_STATE_CLASS(StartStaticAssert) // -> static_assert -> (
@@ -194,9 +187,7 @@ public:
 	DECLARE_STATE(DescriptionParam5)
 	DECLARE_STATE(DescriptionParam6)
 	DECLARE_STATE(EndDescription)
-	DECLARE_STATE(DescriptionParamBuildinTemplateType)
-	DECLARE_STATE(DescriptionParamLambdaType)
-	DECLARE_STATE(DescriptionParamUserType)
+	DECLARE_STATE(DescriptionParamType)
 
 	DECLARE_STATE(GlobalAccessModifier)
 	DECLARE_STATE(LocalAccessModifier)
@@ -226,25 +217,20 @@ public:
 	DECLARE_STATE(DeclareClass3)
 	DECLARE_STATE(DeclareClass4)
 	DECLARE_STATE(DeclareClassInternal)
-	DECLARE_STATE(DeclareClassParentBuildinTemplateType)
-	DECLARE_STATE(DeclareClassParentUserType)
+	DECLARE_STATE(DeclareClassParentType)
 
 	DECLARE_STATE(StartDeclareField)
 	DECLARE_STATE(DeclareField1)
 	DECLARE_STATE(DeclareField2)
 	DECLARE_STATE(DeclareField3)
-	DECLARE_STATE(DeclareFieldBuildinTemplateType)
-	DECLARE_STATE(DeclareFieldLambdaType)
-	DECLARE_STATE(DeclareFieldUserType)
+	DECLARE_STATE(DeclareFieldType)
 
 
 	DECLARE_STATE(StartDefineAlias)
 	DECLARE_STATE(DefineAlias1)
 	DECLARE_STATE(DefineAlias2)
 	DECLARE_STATE(DefineAlias3)
-	DECLARE_STATE(DefineAliasBuildinTemplateType)
-	DECLARE_STATE(DefineAliasLambdaType)
-	DECLARE_STATE(DefineAliasUserType)
+	DECLARE_STATE(DefineAliasType)
 
 	DECLARE_STATE(StartStaticAssert)
 	DECLARE_STATE(StaticAssert1)
