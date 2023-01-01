@@ -113,7 +113,6 @@ DECLARE_STATE_CLASS(DeclareFieldType)  // -> [user type]|[buildin template]| ->
 
 
 
-
 // using [IDENTIFIER] = [standard type]|[user type];
 DECLARE_STATE_CLASS(StartDefineAlias) // -> using -> [IDENTIFIER]
 DECLARE_STATE_CLASS(DefineAlias1)	  // using -> [IDENTIFIER] -> =

@@ -71,7 +71,7 @@
 				},
 				{
 					"name": "keyword.other.gaml",
-					"match": "\\b(param|return|extern_c|cdecl|stdcall|fastcall|thiscall|const|static|inline|virtual|override|abstract|final|deprecated|unimplemented|align)\\b"
+					"match": "\\b(param|return|extern_c|cdecl|stdcall|fastcall|const|static|inline|virtual|override|abstract|final|deprecated|unimplemented|align)\\b"
 				}
 			]
 		},
