@@ -2,6 +2,8 @@
 
 #include "SemanticAnalyser.h"
 
+#include "../Parser/ProgramSymbols.h"
+
 
 
 

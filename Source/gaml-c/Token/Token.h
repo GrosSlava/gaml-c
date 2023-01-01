@@ -5,10 +5,12 @@
 #include "../CoreMinimal.h"
 
 #include "TokenType.h"
-
 #include "../Compiler/CompilerFileInfo.h"
-#include "../Compiler/CompilerOptions.h"
 
+
+
+
+struct FCompileOptions;
 
 
 

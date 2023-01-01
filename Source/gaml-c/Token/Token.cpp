@@ -3,6 +3,7 @@
 #include "Token.h"
 #include "TokenHelperLibrary.h"
 
+#include "../Compiler/CompilerOptions.h"
 #include "../Logger/ErrorLogger.h"
 
 #include <unordered_map>

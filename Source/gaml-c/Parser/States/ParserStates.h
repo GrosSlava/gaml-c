@@ -14,6 +14,8 @@
 
 #include "../../Logger/ErrorLogger.h"
 
+#include <memory>
+
 
 
 
@@ -32,15 +34,15 @@ public:
 
 public:
 
-	virtual IParserState* Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo) = 0;
+	virtual std::shared_ptr<IParserState> Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo) = 0;
 };
 
-#define DECLARE_STATE_CLASS(StateName)                                                                                             \
-	class StateName##_ParserState : public IParserState                                                                            \
-	{                                                                                                                              \
-	public:                                                                                                                        \
-                                                                                                                                   \
-		virtual IParserState* Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo) override; \
+#define DECLARE_STATE_CLASS(StateName)                                                                                                             \
+	class StateName##_ParserState : public IParserState                                                                                            \
+	{                                                                                                                                              \
+	public:                                                                                                                                        \
+                                                                                                                                                   \
+		virtual std::shared_ptr<IParserState> Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo) override; \
 	};
 
 
@@ -169,13 +171,13 @@ public:
 		FileInfo(InFileInfo), CompileOptions(InCompileOptions), IsMainModule(InIsMainModule)
 	{
 	}
-	~FParserStates();
+	~FParserStates() { }
 
 
 
 public:
 
-#define DECLARE_STATE(StateName) StateName##_ParserState* G##StateName##_ParserState = new StateName##_ParserState();
+#define DECLARE_STATE(StateName) std::shared_ptr<StateName##_ParserState> G##StateName##_ParserState = std::make_shared<StateName##_ParserState>();
 
 
 	DECLARE_STATE(Default)
@@ -291,22 +293,22 @@ public:
 	/*
 		Push state into state-stack.
 	*/
-	inline void PushState(IParserState* State) noexcept { StatesStack.push_back(State); }
+	inline void PushState(std::weak_ptr<IParserState> State) noexcept { StatesStack.push_back(State); }
 	/*
 		Pop state from stack.
 		NOTE! Method not check that stack is empty.
 	*/
-	inline IParserState* PopState() noexcept
+	inline std::shared_ptr<IParserState> PopState() noexcept
 	{
-		IParserState* LState = StatesStack.back();
+		std::weak_ptr<IParserState> LState = StatesStack.back();
 		StatesStack.pop_back();
-		return LState;
+		return LState.lock();
 	}
 	/*
 		Pop state from stack.
 		If stack is empty cause error.
 	*/
-	inline IParserState* PopStateChecked(const Token& ContextToken) noexcept
+	inline std::shared_ptr<IParserState> PopStateChecked(const Token& ContextToken) noexcept
 	{
 		if( IsStateStackEmpty() )
 		{
@@ -317,16 +319,19 @@ public:
 	}
 
 
+public:
+
 	void RegisterMainModule(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterModuleFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool ImplementModuleFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool ImportModuleFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bool SkipIfExist, const Token& TokenCTX);
+	bool RegisterFunctionImplementationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterVariableFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterClassFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool FinishClassRegistrationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
-	bool RegisterFunctionImplementationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
+	bool RegisterStaticAssertFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 
 	bool ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX);
 	bool ImportPackage(FProgramInfo& OutProgramInfo, const std::string& ImportPackageRelativePath, const Token& TokenCTX);
@@ -337,6 +342,13 @@ public:
 
 
 
+
+public:
+
+	/*
+		Contexts for states.
+	*/
+	FStatesContext StatesContext;
 
 private:
 
@@ -356,12 +368,5 @@ private:
 	/*
 		States stack.
 	*/
-	std::vector<IParserState*> StatesStack;
-
-public:
-
-	/*
-		Contexts for states.
-	*/
-	FStatesContext StatesContext;
+	std::vector<std::weak_ptr<IParserState>> StatesStack;
 };

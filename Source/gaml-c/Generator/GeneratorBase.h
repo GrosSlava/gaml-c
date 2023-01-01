@@ -17,8 +17,6 @@
 #include "../Parser/ProgramSymbols.h"
 #include "../Logger/ErrorLogger.h"
 
-#include <fstream>
-
 
 
 
@@ -66,21 +64,25 @@ protected:
 	/*
 		Translate code to other language.
 	*/
-	virtual void ProcessGeneration(const FProgramInfo& ProgramInfo) { }
+	virtual void ProcessGeneration(std::string& GeneratedCodeStr, const FProgramInfo& ProgramInfo) { }
 
 protected:
+
+	/*
+		Raise error based on compiler context.
+	*/
+	inline void RaiseError(EErrorMessageType ErrorMessageType, size_t Line, size_t Pos, size_t UnderlineLength) const
+	{
+		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Line, Pos, UnderlineLength, CurrentCompileOptions);
+	}
+
 
 	/*
 		@return path to output folder.
 	*/
 	inline std::string GetOutputDirectoryPath() const noexcept
 	{
-		if( CurrentCompileOptions.OutputDir.empty() )
-		{
-			return CurrentFileInfo.PathToFileOnly;
-		}
-
-		return CurrentCompileOptions.OutputDir;
+		return CurrentCompileOptions.OutputDir.empty() ? CurrentFileInfo.PathToFileOnly : CurrentCompileOptions.OutputDir;
 	}
 	/*
 		@param ExtensionOnlyStr - file extension wihout '.'
@@ -89,15 +91,6 @@ protected:
 	inline std::string GetOutputFilePath(const std::string& ExtensionOnlyStr) const noexcept
 	{
 		return FCompilerHelperLibrary::CatPaths(GetOutputDirectoryPath(), CurrentFileInfo.FileNameOnly + "." + ExtensionOnlyStr);
-	}
-
-
-	/*
-		Raise error based on compiler context.
-	*/
-	inline void RaiseError(EErrorMessageType ErrorMessageType, size_t Line, size_t Pos, size_t UnderlineLength) const
-	{
-		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Line, Pos, UnderlineLength, CurrentCompileOptions);
 	}
 
 
@@ -113,8 +106,4 @@ protected:
 		Cached compiler options.
 	*/
 	FCompileOptions CurrentCompileOptions;
-	/*
-		Result of generating the code to write to the file.
-	*/
-	std::string GeneratedCodeStr = "";
 };

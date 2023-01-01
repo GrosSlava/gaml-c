@@ -37,7 +37,7 @@ void CompileSourceFiles(const std::vector<FGamlFileInfo>& SourceFilePaths, const
 	}
 }
 
-void LinkProgram(const std::vector<std::string>& ObjectFilesPaths, std::vector<std::string> LibsFilesPaths, const FCompileOptions& CompileOptions)
+void LinkProgram(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths, const FCompileOptions& CompileOptions)
 {
 	if( CompileOptions.NoLinking ) return;
 

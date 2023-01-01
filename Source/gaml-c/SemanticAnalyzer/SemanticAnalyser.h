@@ -6,8 +6,11 @@
 
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
-#include "../Parser/ProgramSymbols.h"
 
+
+
+
+struct FProgramInfo;
 
 
 
@@ -22,4 +25,19 @@ public:
 public:
 
 	void Process(const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, FProgramInfo& ProgramInfo);
+
+
+
+
+private:
+
+	/*
+		Information about compiling file.
+	*/
+	FGamlFileInfo FileInfo;
+
+	/*
+		Cached compiler options.
+	*/
+	FCompileOptions CurrentOptions;
 };

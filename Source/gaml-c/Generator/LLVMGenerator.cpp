@@ -6,7 +6,7 @@
 
 
 
-void LLVMGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
+void LLVMGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FProgramInfo& ProgramInfo)
 {
 	//TODO
 }

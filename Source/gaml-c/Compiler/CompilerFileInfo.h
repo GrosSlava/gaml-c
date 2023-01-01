@@ -32,6 +32,19 @@ public:
 		@return length of file path string.
 	*/
 	inline size_t GetSize() const noexcept { return PathToFileOnly.size() + FileNameOnly.size() + ExtensionOnly.size() + 1; }
+	/*
+		@return true if path to file is empty. 
+	*/
+	inline bool IsEmpty() const noexcept { return PathToFileOnly.empty() && FileNameOnly.empty(); }
+	/*
+		Clear content.
+	*/
+	inline void Clear() noexcept
+	{
+		PathToFileOnly.clear();
+		FileNameOnly.clear();
+		ExtensionOnly.clear();
+	}
 
 
 

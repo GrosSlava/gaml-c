@@ -17,7 +17,7 @@ struct FPlatformHelperLibrary
 	/*
 		Check that extension is any type of object file extension.
 	*/
-	static inline bool IsObjectFileExtension(const std::string& Extension) noexcept { return Extension == "o" || Extension == "obj"; }
+	static inline bool IsObjectFileExtension(const std::string& Extension) noexcept { return Extension == "obj" || Extension == "o"; }
 	/*
 		@return object file extension for TargetPlatform, if supported.
 	*/
@@ -37,6 +37,11 @@ struct FPlatformHelperLibrary
 
 		return "";
 	}
+	/*
+		@return array of all supported object file extensions.
+	*/
+	static inline std::vector<std::string> GetAllObjectFileExtensions() noexcept { return {"obj", "o"}; }
+
 
 
 	/*
@@ -62,6 +67,11 @@ struct FPlatformHelperLibrary
 
 		return "";
 	}
+	/*
+		@return array of all supported executable file extensions.
+	*/
+	static inline std::vector<std::string> GetAllExecutableFileExtensions() noexcept { return {"exe", "out"}; }
+
 
 
 	/*
@@ -87,4 +97,8 @@ struct FPlatformHelperLibrary
 
 		return "";
 	}
+	/*
+		@return array of all supported library file extensions.
+	*/
+	static inline std::vector<std::string> GetAllLibraryFileExtensions() noexcept { return {"dll", "so"}; }
 };

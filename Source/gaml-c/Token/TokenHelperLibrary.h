@@ -83,7 +83,7 @@ struct FTokenHelperLibrary
 	/*
 		Check that c is symbol which separate tokens.
 	*/
-	static inline bool IsSeparateSymbol(char c) noexcept { return IsWhitespace(c) || IsOperatorChar(c); }
+	static inline bool IsSeparateSymbol(const char c) noexcept { return IsWhitespace(c) || IsOperatorChar(c); }
 
 
 
@@ -173,7 +173,7 @@ struct FTokenHelperLibrary
 	{
 		if( s.empty() || (!IsLetter(s[0]) && s[0] != '_') ) return false;
 
-		for( const char& c : s )
+		for( const char c : s )
 		{
 			if( !IsLetter(c) && !IsDigit(c) && c != '_' )
 			{
@@ -220,7 +220,7 @@ struct FTokenHelperLibrary
 		bool LHasX = false;
 		bool LHasDigitAfterX = false;
 		bool LHasB = false;
-		for( const char& c : Lexeme )
+		for( const char c : Lexeme )
 		{
 			if( IsBinary && LHasB ) return false;
 
@@ -268,7 +268,7 @@ struct FTokenHelperLibrary
 		bool LHasSignAfterE = false;
 		bool LHasDigitAfterE = false;
 
-		for( const char& c : Lexeme )
+		for( const char c : Lexeme )
 		{
 			if( c == '.' )
 			{
@@ -316,7 +316,7 @@ struct FTokenHelperLibrary
 		bool LHasDigitAfterE = false;
 		bool LHasF = false;
 
-		for( const char& c : Lexeme )
+		for( const char c : Lexeme )
 		{
 			if( LHasF ) return false;
 

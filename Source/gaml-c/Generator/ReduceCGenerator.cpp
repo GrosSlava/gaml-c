@@ -8,7 +8,7 @@
 
 
 
-void ReduceCGenerator::ProcessGeneration(const FProgramInfo& ProgramInfo)
+void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FProgramInfo& ProgramInfo)
 {
 	GeneratedCodeStr += "/*\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetGenerationTime() + "\n";
@@ -115,10 +115,12 @@ std::string ReduceCGenerator::GetFunctionSignatureCStr
 	}
 	else
 	{
-		for( size_t i = 0; i < FunctionInfo.Inputs.size(); ++i )
+		int i = 0;
+		for( const FVariableInfo& LInputInfo : FunctionInfo.Inputs )
 		{
-			LResult += GetVariableDeclarationCStr(FunctionInfo.Inputs[i], true, true, true, ProgramInfo);
+			LResult += GetVariableDeclarationCStr(LInputInfo, true, true, true, ProgramInfo);
 			if( i + 1 < FunctionInfo.Inputs.size() ) LResult += ", ";
+			++i;
 		}
 	}
 
@@ -159,7 +161,7 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr
 	const FUserTypePath& LTypePath = ProgramInfo.TypesMap[VariableInfo.TypeID];
 	switch( LTypePath.PathSwitch )
 	{
-	case ETypePathSwitch::EStandard:
+	case ETypePathSwitch::Standard:
 	{
 		if( VariableInfo.Modifiers.IsConst && IncludeConst ) LResult += "const ";
 
@@ -182,7 +184,7 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr
 
 		break;
 	}
-	case ETypePathSwitch::EClass:
+	case ETypePathSwitch::Class:
 	{
 		const std::string& LClassCompileName = LTypePath.ClassPath.ClassCompileName;
 		const FClassInfo& LClassInfo = ProgramInfo.Classes.at(LClassCompileName);
@@ -219,7 +221,7 @@ std::string ReduceCGenerator::GetVariableDeclarationCStr
 
 		break;
 	}
-	case ETypePathSwitch::EFunctionSignature:
+	case ETypePathSwitch::FunctionSignature:
 	{
 		const FFunctionSignatureInfo& LFunctionSignature = ProgramInfo.FunctionSignaturesTypesMap[LTypePath.FunctionSignaturePath.FunctionSignatureID];
 
@@ -299,10 +301,12 @@ std::string ReduceCGenerator::GetFunctionPointerCStr
 	}
 	else
 	{
-		for( size_t i = 0; i < FunctionInfo.Inputs.size(); ++i )
+		int i = 0;
+		for( const FVariableInfo& LInputInfo : FunctionInfo.Inputs )
 		{
-			LResult += GetVariableDeclarationCStr(FunctionInfo.Inputs[i], true, false, true, ProgramInfo);
+			LResult += GetVariableDeclarationCStr(LInputInfo, true, false, true, ProgramInfo);
 			if( i + 1 < FunctionInfo.Inputs.size() ) LResult += ", ";
+			++i;
 		}
 	}
 	LResult += ")";

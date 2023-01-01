@@ -55,28 +55,14 @@ protected:
 	*/
 	inline std::string GetOutputDirectoryPath() const noexcept
 	{
-		if( CurrentCompileOptions.OutputDir.empty() )
-		{
-			return FirstFileInfo.PathToFileOnly;
-		}
-
-		return CurrentCompileOptions.OutputDir;
+		return CurrentCompileOptions.OutputDir.empty() ? FirstFileInfo.PathToFileOnly : CurrentCompileOptions.OutputDir;
 	}
 	/*
 		@return path to resulting file.
 	*/
 	inline std::string GetOutputFilePath(const std::string& Extension) const noexcept
 	{
-		std::string LProgramName = "";
-		if( CurrentCompileOptions.ProgramName.empty() )
-		{
-			LProgramName = FirstFileInfo.FileNameOnly;
-		}
-		else
-		{
-			LProgramName = CurrentCompileOptions.ProgramName;
-		}
-
+		const std::string LProgramName = CurrentCompileOptions.ProgramName.empty() ? FirstFileInfo.FileNameOnly : CurrentCompileOptions.ProgramName;
 		return FCompilerHelperLibrary::CatPaths(GetOutputDirectoryPath(), LProgramName + "." + Extension);
 	}
 

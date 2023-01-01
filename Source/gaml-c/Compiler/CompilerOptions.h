@@ -5,8 +5,11 @@
 #include "../CoreMinimal.h"
 
 #include "CompilerConfig.h"
-#include "CompilerFileInfo.h"
 
+
+
+
+struct FGamlFileInfo;
 
 
 

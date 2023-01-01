@@ -1,7 +1,7 @@
 // Copyright 2022 GrosSlava.
 
 #include "CompilerOptions.h"
-#include "CompilerConfig.h"
+#include "CompilerFileInfo.h"
 #include "CompilerHelperLibrary.h"
 
 #include "../Platform/PlatformHelperLibrary.h"
@@ -11,6 +11,8 @@
 
 
 
+
+using OptionHandlerSign = void (*)(const std::string&, FCompileOptions&, std::vector<FGamlFileInfo>&, std::vector<std::string>&, std::vector<std::string>&);
 
 struct FOptionInfo
 {
@@ -22,7 +24,7 @@ public:
 	FOptionInfo
 	(
 		const std::string& InShortOption, const std::string& InLongOption, const std::string& InDescription, bool InHasArgument,
-		void (*InFunction)(const std::string&, FCompileOptions&, std::vector<FGamlFileInfo>&, std::vector<std::string>&, std::vector<std::string>&)
+		OptionHandlerSign InFunction
 	) :
 		ShortOption(InShortOption), LongOption(InLongOption), Description(InDescription), HasArgument(InHasArgument), Function(InFunction)
 	// clang-format on
@@ -36,8 +38,8 @@ public:
 	// clang-format off
 	bool Process
 	(
-		const std::string& OptionStr, 
-		FCompileOptions& OutCompileOptions, std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths
+		const std::string& OptionStr, FCompileOptions& OutCompileOptions, 
+		std::vector<FGamlFileInfo>& OutSourceFilePaths, std::vector<std::string>& OutObjectFiles, std::vector<std::string>& OutLibsFilesPaths
 	) const
 	// clang-format on
 	{
@@ -78,7 +80,7 @@ private:
 	std::string Description = "";
 	bool HasArgument = false;
 
-	void (*Function)(const std::string&, FCompileOptions&, std::vector<FGamlFileInfo>&, std::vector<std::string>&, std::vector<std::string>&) = nullptr;
+	OptionHandlerSign Function = nullptr;
 };
 
 
@@ -201,7 +203,7 @@ OPTION_FUNCTION(PackageOption)
 OPTION_FUNCTION(StaticLinkOption)
 {
 	std::vector<FGamlFileInfo> LPackegeFilesInfo;
-	FCompilerHelperLibrary::GetAllFilesWithExtensionsInFolder(Argument, {"o", "obj"}, LPackegeFilesInfo);
+	FCompilerHelperLibrary::GetAllFilesWithExtensionsInFolder(Argument, FPlatformHelperLibrary::GetAllObjectFileExtensions(), LPackegeFilesInfo);
 
 	if( LPackegeFilesInfo.empty() )
 	{

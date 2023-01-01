@@ -3,10 +3,13 @@
 #include "Compiler.h"
 #include "CompilerConfig.h"
 
+#include "../Token/Token.h"
 #include "../Lexer/Lexer.h"
 #include "../Parser/Parser.h"
+#include "../Parser/ProgramSymbols.h"
 #include "../SemanticAnalyzer/SemanticAnalyser.h"
 
+#include "../Generator/GeneratorBase.h"
 #include "../Generator/ReduceCGenerator.h"
 #include "../Generator/LLVMGenerator.h"
 
@@ -168,7 +171,10 @@ void Compiler::DumpModuleDependencies(const FProgramInfo& ProgramInfo)
 	}
 
 
-	std::string LStr = "Main module name: " + ProgramInfo.MainModuleName + "\n";
+	std::string LStr = "";
+	LStr.reserve(2048);
+
+	LStr += "Main module name: " + ProgramInfo.MainModuleName + "\n";
 	for( const std::pair<std::string, FModuleInfo>& LImportedModulePair : ProgramInfo.ImportedModulesInfo )
 	{
 		LStr += LImportedModulePair.first + ": ";

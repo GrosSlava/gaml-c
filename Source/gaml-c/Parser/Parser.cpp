@@ -132,7 +132,7 @@ void Parser::CheckPairs(const std::vector<Token>& Tokens)
 void Parser::ProcessSymbolsScanning(const std::vector<Token>& Tokens, FProgramInfo& OutProgramInfo)
 {
 	FParserStates LParserStates(CurrentFileInfo, CurrentCompileOptions, IsMainModule);
-	IParserState* LState = LParserStates.GDefault_ParserState;
+	std::shared_ptr<IParserState> LState = LParserStates.GDefault_ParserState;
 
 	for( const Token& LToken : Tokens )
 	{

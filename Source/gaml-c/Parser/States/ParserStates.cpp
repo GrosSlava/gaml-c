@@ -16,7 +16,7 @@
 
 
 
-IParserState* Default_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.StateContextType = EStateContextType::Global;
 	InParserStates.StatesContext.ClearContexts();
@@ -177,7 +177,7 @@ IParserState* Default_ParserState::Process(FParserStates& InParserStates, const 
 
 
 
-IParserState* StartDescription_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartDescription_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -195,7 +195,7 @@ IParserState* StartDescription_ParserState::Process(FParserStates& InParserState
 	return nullptr;
 }
 
-IParserState* DescriptionModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.DescriptionContext.PrepareForNextModifier();
 
@@ -366,7 +366,7 @@ IParserState* DescriptionModifier_ParserState::Process(FParserStates& InParserSt
 	return nullptr;
 }
 
-IParserState* DescriptionAlign1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionAlign1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::LPAR )
 	{
@@ -378,7 +378,7 @@ IParserState* DescriptionAlign1_ParserState::Process(FParserStates& InParserStat
 	return InParserStates.GDescriptionAlign2_ParserState;
 }
 
-IParserState* DescriptionAlign2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionAlign2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -410,7 +410,7 @@ IParserState* DescriptionAlign2_ParserState::Process(FParserStates& InParserStat
 	return nullptr;
 }
 
-IParserState* DescriptionAlign3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionAlign3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -433,7 +433,7 @@ IParserState* DescriptionAlign3_ParserState::Process(FParserStates& InParserStat
 	return nullptr;
 }
 
-IParserState* DescriptionParam1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParam1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -475,7 +475,7 @@ IParserState* DescriptionParam1_ParserState::Process(FParserStates& InParserStat
 	return InParserStates.GDescriptionParam2_ParserState;
 }
 
-IParserState* DescriptionParam2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParam2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::COLON )
 	{
@@ -486,7 +486,7 @@ IParserState* DescriptionParam2_ParserState::Process(FParserStates& InParserStat
 	return InParserStates.GDescriptionParam3_ParserState;
 }
 
-IParserState* DescriptionParam3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( FParserHelperLibrary::IsModifierToken(InToken) )
 	{
@@ -621,7 +621,7 @@ IParserState* DescriptionParam3_ParserState::Process(FParserStates& InParserStat
 	return nullptr;
 }
 
-IParserState* DescriptionParam4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParam4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -644,7 +644,7 @@ IParserState* DescriptionParam4_ParserState::Process(FParserStates& InParserStat
 	return nullptr;
 }
 
-IParserState* DescriptionParam5_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParam5_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -676,7 +676,7 @@ IParserState* DescriptionParam5_ParserState::Process(FParserStates& InParserStat
 	return nullptr;
 }
 
-IParserState* DescriptionParam6_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParam6_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InParserStates.StatesContext.DescriptionContext.DescriptionContext )
 	{
@@ -714,7 +714,7 @@ IParserState* DescriptionParam6_ParserState::Process(FParserStates& InParserStat
 	return nullptr;
 }
 
-IParserState* EndDescription_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	// state to return already pushed
 
@@ -878,7 +878,7 @@ IParserState* EndDescription_ParserState::Process(FParserStates& InParserStates,
 	return nullptr;
 }
 
-IParserState* DescriptionParamBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParamBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InParserStates.StatesContext.DescriptionContext.DescriptionContext )
 	{
@@ -902,7 +902,7 @@ IParserState* DescriptionParamBuildinTemplateType_ParserState::Process(FParserSt
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DescriptionParamLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParamLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InParserStates.StatesContext.DescriptionContext.DescriptionContext )
 	{
@@ -926,7 +926,7 @@ IParserState* DescriptionParamLambdaType_ParserState::Process(FParserStates& InP
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DescriptionParamUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DescriptionParamUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InParserStates.StatesContext.DescriptionContext.DescriptionContext )
 	{
@@ -952,7 +952,7 @@ IParserState* DescriptionParamUserType_ParserState::Process(FParserStates& InPar
 
 
 
-IParserState* GlobalAccessModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	// global state already pushed
 
@@ -1031,7 +1031,7 @@ IParserState* GlobalAccessModifier_ParserState::Process(FParserStates& InParserS
 	return nullptr;
 }
 
-IParserState* LocalAccessModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> LocalAccessModifier_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	// local state already pushed
 
@@ -1071,7 +1071,7 @@ IParserState* LocalAccessModifier_ParserState::Process(FParserStates& InParserSt
 
 
 
-IParserState* StartDeclareModule_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartDeclareModule_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1085,7 +1085,7 @@ IParserState* StartDeclareModule_ParserState::Process(FParserStates& InParserSta
 	return InParserStates.GDeclareModule1_ParserState;
 }
 
-IParserState* DeclareModule1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareModule1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1110,7 +1110,7 @@ IParserState* DeclareModule1_ParserState::Process(FParserStates& InParserStates,
 
 
 
-IParserState* StartImplementModule_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartImplementModule_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1124,7 +1124,7 @@ IParserState* StartImplementModule_ParserState::Process(FParserStates& InParserS
 	return InParserStates.GImplementModule1_ParserState;
 }
 
-IParserState* ImplementModule1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> ImplementModule1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1149,7 +1149,7 @@ IParserState* ImplementModule1_ParserState::Process(FParserStates& InParserState
 
 
 
-IParserState* StartImportModule_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartImportModule_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1163,7 +1163,7 @@ IParserState* StartImportModule_ParserState::Process(FParserStates& InParserStat
 	return InParserStates.GImportModule1_ParserState;
 }
 
-IParserState* ImportModule1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> ImportModule1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1190,7 +1190,7 @@ IParserState* ImportModule1_ParserState::Process(FParserStates& InParserStates, 
 	return nullptr;
 }
 
-IParserState* ImportModule2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> ImportModule2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1204,7 +1204,7 @@ IParserState* ImportModule2_ParserState::Process(FParserStates& InParserStates, 
 	return InParserStates.GImportModule3_ParserState;
 }
 
-IParserState* ImportModule3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> ImportModule3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::SEMICOLON )
 	{
@@ -1225,7 +1225,7 @@ IParserState* ImportModule3_ParserState::Process(FParserStates& InParserStates, 
 
 
 
-IParserState* StartDeclareFunction_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartDeclareFunction_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1238,7 +1238,7 @@ IParserState* StartDeclareFunction_ParserState::Process(FParserStates& InParserS
 	return InParserStates.GDeclareFunction1_ParserState;
 }
 
-IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareFunction1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1294,7 +1294,7 @@ IParserState* DeclareFunction1_ParserState::Process(FParserStates& InParserState
 	return nullptr;
 }
 
-IParserState* DeclareFunction2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareFunction2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1326,7 +1326,7 @@ IParserState* DeclareFunction2_ParserState::Process(FParserStates& InParserState
 	return nullptr;
 }
 
-IParserState* DeclareFunction3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareFunction3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1355,7 +1355,7 @@ IParserState* DeclareFunction3_ParserState::Process(FParserStates& InParserState
 	return nullptr;
 }
 
-IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareFunction4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1395,7 +1395,7 @@ IParserState* DeclareFunction4_ParserState::Process(FParserStates& InParserState
 
 
 
-IParserState* StartDeclareClass_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartDeclareClass_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1406,7 +1406,7 @@ IParserState* StartDeclareClass_ParserState::Process(FParserStates& InParserStat
 	return InParserStates.GDeclareClass1_ParserState;
 }
 
-IParserState* DeclareClass1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareClass1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1428,7 +1428,7 @@ IParserState* DeclareClass1_ParserState::Process(FParserStates& InParserStates, 
 	return nullptr;
 }
 
-IParserState* DeclareClass2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareClass2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( FParserHelperLibrary::IsStandardType(InToken) )
 	{
@@ -1461,7 +1461,7 @@ IParserState* DeclareClass2_ParserState::Process(FParserStates& InParserStates, 
 	return nullptr;
 }
 
-IParserState* DeclareClass3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareClass3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1479,7 +1479,7 @@ IParserState* DeclareClass3_ParserState::Process(FParserStates& InParserStates, 
 	return nullptr;
 }
 
-IParserState* DeclareClass4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareClass4_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::LBRA )
 	{
@@ -1495,7 +1495,7 @@ IParserState* DeclareClass4_ParserState::Process(FParserStates& InParserStates, 
 	return InParserStates.GDeclareClassInternal_ParserState;
 }
 
-IParserState* DeclareClassInternal_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareClassInternal_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.StateContextType = EStateContextType::InClass;
 	InParserStates.StatesContext.ClearContextsLocal();
@@ -1577,14 +1577,14 @@ IParserState* DeclareClassInternal_ParserState::Process(FParserStates& InParserS
 	return nullptr;
 }
 
-IParserState* DeclareClassParentBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareClassParentBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.ClassDeclarationContext.ClassInfo.ParentTypesID.push_back(InParserStates.StatesContext.BuildinTemplateTypeContext.TypeID);
 
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DeclareClassParentUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareClassParentUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.ClassDeclarationContext.ClassInfo.ParentTypesID.push_back(InParserStates.StatesContext.UserTypeContext.TypeID);
 
@@ -1593,7 +1593,7 @@ IParserState* DeclareClassParentUserType_ParserState::Process(FParserStates& InP
 
 
 
-IParserState* StartDeclareField_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartDeclareField_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InParserStates.StatesContext.StateContextType == EStateContextType::InClass )
 	{
@@ -1668,7 +1668,7 @@ IParserState* StartDeclareField_ParserState::Process(FParserStates& InParserStat
 	return nullptr;
 }
 
-IParserState* DeclareField1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareField1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1680,7 +1680,7 @@ IParserState* DeclareField1_ParserState::Process(FParserStates& InParserStates, 
 	return InParserStates.GDeclareField2_ParserState;
 }
 
-IParserState* DeclareField2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareField2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1703,7 +1703,7 @@ IParserState* DeclareField2_ParserState::Process(FParserStates& InParserStates, 
 	return nullptr;
 }
 
-IParserState* DeclareField3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareField3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() == ETokenType::SEMICOLON )
 	{
@@ -1727,21 +1727,21 @@ IParserState* DeclareField3_ParserState::Process(FParserStates& InParserStates, 
 	return InParserStates.GDeclareField3_ParserState;
 }
 
-IParserState* DeclareFieldBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareFieldBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.VariableDeclarationContext.VariableInfo.TypeID = InParserStates.StatesContext.BuildinTemplateTypeContext.TypeID;
 
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DeclareFieldLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareFieldLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.VariableDeclarationContext.VariableInfo.TypeID = InParserStates.StatesContext.LambdaTypeContext.TypeID;
 
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DeclareFieldUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DeclareFieldUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.VariableDeclarationContext.VariableInfo.TypeID = InParserStates.StatesContext.UserTypeContext.TypeID;
 
@@ -1752,7 +1752,7 @@ IParserState* DeclareFieldUserType_ParserState::Process(FParserStates& InParserS
 
 
 
-IParserState* StartDefineAlias_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartDefineAlias_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -1765,7 +1765,7 @@ IParserState* StartDefineAlias_ParserState::Process(FParserStates& InParserState
 	return InParserStates.GDefineAlias1_ParserState;
 }
 
-IParserState* DefineAlias1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DefineAlias1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::ASSIGN )
 	{
@@ -1777,7 +1777,7 @@ IParserState* DefineAlias1_ParserState::Process(FParserStates& InParserStates, c
 	return InParserStates.GDefineAlias2_ParserState;
 }
 
-IParserState* DefineAlias2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DefineAlias2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( FParserHelperLibrary::IsStandardType(InToken) )
 	{
@@ -1818,7 +1818,7 @@ IParserState* DefineAlias2_ParserState::Process(FParserStates& InParserStates, c
 	return nullptr;
 }
 
-IParserState* DefineAlias3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DefineAlias3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::SEMICOLON )
 	{
@@ -1835,21 +1835,21 @@ IParserState* DefineAlias3_ParserState::Process(FParserStates& InParserStates, c
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DefineAliasBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DefineAliasBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.AliasDeclarationContext.OriginalTypeID = InParserStates.StatesContext.BuildinTemplateTypeContext.TypeID;
 
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DefineAliasLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DefineAliasLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.AliasDeclarationContext.OriginalTypeID = InParserStates.StatesContext.LambdaTypeContext.TypeID;
 
 	return InParserStates.PopStateChecked(InToken);
 }
 
-IParserState* DefineAliasUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> DefineAliasUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	InParserStates.StatesContext.AliasDeclarationContext.OriginalTypeID = InParserStates.StatesContext.UserTypeContext.TypeID;
 
@@ -1858,7 +1858,7 @@ IParserState* DefineAliasUserType_ParserState::Process(FParserStates& InParserSt
 
 
 
-IParserState* StartStaticAssert_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartStaticAssert_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::LPAR )
 	{
@@ -1872,15 +1872,16 @@ IParserState* StartStaticAssert_ParserState::Process(FParserStates& InParserStat
 	return InParserStates.GStaticAssert1_ParserState;
 }
 
-IParserState* StaticAssert1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StaticAssert1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() == ETokenType::RPAR )
 	{
 		if( InParserStates.StatesContext.StaticAssertContext.OpenBracketLayer == 0 )
 		{
-			AST LAST;
-			LAST.BuildAST(InParserStates.StatesContext.StaticAssertContext.Expression);
-			LAST.InterpretAST(OutProgramInfo);
+			if( !InParserStates.RegisterStaticAssertFromContext(OutProgramInfo, InToken) )
+			{
+				return nullptr;
+			}
 
 			return InParserStates.GStaticAssert2_ParserState;
 		}
@@ -1901,7 +1902,7 @@ IParserState* StaticAssert1_ParserState::Process(FParserStates& InParserStates, 
 	return InParserStates.GStaticAssert1_ParserState;
 }
 
-IParserState* StaticAssert2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StaticAssert2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::SEMICOLON )
 	{
@@ -1917,7 +1918,7 @@ IParserState* StaticAssert2_ParserState::Process(FParserStates& InParserStates, 
 
 
 
-IParserState* StartBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartBuildinTemplateType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	//TODO
 	return nullptr;
@@ -1925,7 +1926,7 @@ IParserState* StartBuildinTemplateType_ParserState::Process(FParserStates& InPar
 
 
 
-IParserState* StartLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartLambdaType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	//TODO
 	return nullptr;
@@ -1933,7 +1934,7 @@ IParserState* StartLambdaType_ParserState::Process(FParserStates& InParserStates
 
 
 
-IParserState* StartUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> StartUserType_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -1979,7 +1980,7 @@ IParserState* StartUserType_ParserState::Process(FParserStates& InParserStates, 
 		if( LUserTypeId == -1 )
 		{
 			FUserTypePath LTypePath;
-			LTypePath.PathSwitch = ETypePathSwitch::EClass;
+			LTypePath.PathSwitch = ETypePathSwitch::Class;
 			LTypePath.ClassPath.ClassCompileName = LGlobalCompileName;
 			OutProgramInfo.TypesMap.push_back(LTypePath);
 			LUserTypeId = OutProgramInfo.TypesMap.size() - 1;
@@ -1987,8 +1988,8 @@ IParserState* StartUserType_ParserState::Process(FParserStates& InParserStates, 
 
 		InParserStates.StatesContext.UserTypeContext.TypeID = LUserTypeId;
 
-		IParserState* LResultOperatingState = InParserStates.PopStateChecked(InToken);
-		IParserState* LPrevState = LResultOperatingState->Process(InParserStates, InToken, OutProgramInfo);
+		std::shared_ptr<IParserState> LResultOperatingState = InParserStates.PopStateChecked(InToken);
+		std::shared_ptr<IParserState> LPrevState = LResultOperatingState->Process(InParserStates, InToken, OutProgramInfo);
 		return LPrevState->Process(InParserStates, InToken, OutProgramInfo);
 	}
 	}
@@ -1996,7 +1997,7 @@ IParserState* StartUserType_ParserState::Process(FParserStates& InParserStates, 
 	return nullptr;
 }
 
-IParserState* UserType1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> UserType1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -2008,7 +2009,7 @@ IParserState* UserType1_ParserState::Process(FParserStates& InParserStates, cons
 	return InParserStates.GUserType2_ParserState;
 }
 
-IParserState* UserType2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> UserType2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	switch( InToken.GetType() )
 	{
@@ -2027,7 +2028,7 @@ IParserState* UserType2_ParserState::Process(FParserStates& InParserStates, cons
 	return nullptr;
 }
 
-IParserState* UserType3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
+std::shared_ptr<IParserState> UserType3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
@@ -2051,7 +2052,7 @@ IParserState* UserType3_ParserState::Process(FParserStates& InParserStates, cons
 	if( LUserTypeId == -1 )
 	{
 		FUserTypePath LTypePath;
-		LTypePath.PathSwitch = ETypePathSwitch::EClass;
+		LTypePath.PathSwitch = ETypePathSwitch::Class;
 		LTypePath.ClassPath.ClassCompileName = LCompileName;
 		OutProgramInfo.TypesMap.push_back(LTypePath);
 		LUserTypeId = OutProgramInfo.TypesMap.size() - 1;
@@ -2059,104 +2060,13 @@ IParserState* UserType3_ParserState::Process(FParserStates& InParserStates, cons
 
 	InParserStates.StatesContext.UserTypeContext.TypeID = LUserTypeId;
 
-	IParserState* LResultOperatingState = InParserStates.PopStateChecked(InToken);
+	std::shared_ptr<IParserState> LResultOperatingState = InParserStates.PopStateChecked(InToken);
 	return LResultOperatingState->Process(InParserStates, InToken, OutProgramInfo);
 }
 
 
 //.............................................................................................................................//
 //.............................................................................................................................//
-
-
-FParserStates::~FParserStates()
-{
-#define DELETE_STATE(StateName) \
-	if( G##StateName##_ParserState != nullptr ) delete G##StateName##_ParserState;
-
-
-	DELETE_STATE(Default)
-
-	DELETE_STATE(StartDescription)
-	DELETE_STATE(DescriptionModifier)
-	DELETE_STATE(DescriptionAlign1)
-	DELETE_STATE(DescriptionAlign2)
-	DELETE_STATE(DescriptionAlign3)
-	DELETE_STATE(DescriptionParam1)
-	DELETE_STATE(DescriptionParam2)
-	DELETE_STATE(DescriptionParam3)
-	DELETE_STATE(DescriptionParam4)
-	DELETE_STATE(DescriptionParam5)
-	DELETE_STATE(DescriptionParam6)
-	DELETE_STATE(EndDescription)
-	DELETE_STATE(DescriptionParamBuildinTemplateType)
-	DELETE_STATE(DescriptionParamLambdaType)
-	DELETE_STATE(DescriptionParamUserType)
-
-	DELETE_STATE(GlobalAccessModifier)
-	DELETE_STATE(LocalAccessModifier)
-
-
-	DELETE_STATE(StartDeclareModule)
-	DELETE_STATE(DeclareModule1)
-
-	DELETE_STATE(StartImplementModule)
-	DELETE_STATE(ImplementModule1)
-
-	DELETE_STATE(StartImportModule)
-	DELETE_STATE(ImportModule1)
-	DELETE_STATE(ImportModule2)
-	DELETE_STATE(ImportModule3)
-
-
-	DELETE_STATE(StartDeclareFunction)
-	DELETE_STATE(DeclareFunction1)
-	DELETE_STATE(DeclareFunction2)
-	DELETE_STATE(DeclareFunction3)
-	DELETE_STATE(DeclareFunction4)
-
-	DELETE_STATE(StartDeclareClass)
-	DELETE_STATE(DeclareClass1)
-	DELETE_STATE(DeclareClass2)
-	DELETE_STATE(DeclareClass3)
-	DELETE_STATE(DeclareClass4)
-	DELETE_STATE(DeclareClassInternal)
-	DELETE_STATE(DeclareClassParentBuildinTemplateType)
-	DELETE_STATE(DeclareClassParentUserType)
-
-	DELETE_STATE(StartDeclareField)
-	DELETE_STATE(DeclareField1)
-	DELETE_STATE(DeclareField2)
-	DELETE_STATE(DeclareField3)
-	DELETE_STATE(DeclareFieldBuildinTemplateType)
-	DELETE_STATE(DeclareFieldLambdaType)
-	DELETE_STATE(DeclareFieldUserType)
-
-
-	DELETE_STATE(StartDefineAlias)
-	DELETE_STATE(DefineAlias1)
-	DELETE_STATE(DefineAlias2)
-	DELETE_STATE(DefineAlias3)
-	DELETE_STATE(DefineAliasBuildinTemplateType)
-	DELETE_STATE(DefineAliasLambdaType)
-	DELETE_STATE(DefineAliasUserType)
-
-	DELETE_STATE(StartStaticAssert)
-	DELETE_STATE(StaticAssert1)
-	DELETE_STATE(StaticAssert2)
-
-
-	DELETE_STATE(StartBuildinTemplateType)
-
-	DELETE_STATE(StartLambdaType)
-
-	DELETE_STATE(StartUserType)
-	DELETE_STATE(UserType1)
-	DELETE_STATE(UserType2)
-	DELETE_STATE(UserType3)
-}
-
-
-
 
 
 void FParserStates::RegisterMainModule(FProgramInfo& OutProgramInfo, const Token& TokenCTX)
@@ -2350,7 +2260,7 @@ bool FParserStates::ImportModule
 	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
-	FParserHelperLibrary::SplitModuleRealNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
+	FParserHelperLibrary::SplitModuleCompileNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
 	const std::string LUpDirectory = FCompilerHelperLibrary::MakeUpDirectoryStr(LCurrentModulePathParts.size() - 1);
 
 
@@ -2454,7 +2364,7 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
-	FParserHelperLibrary::SplitModuleRealNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
+	FParserHelperLibrary::SplitModuleCompileNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
 	const std::string LUpDirectory = FCompilerHelperLibrary::MakeUpDirectoryStr(LCurrentModulePathParts.size() - 1);
 
 
@@ -2610,7 +2520,7 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 		OutProgramInfo.FunctionSignaturesTypesMap.push_back(StatesContext.FunctionDeclarationContext.SignatureInfo);
 
 		FUserTypePath LTypePath;
-		LTypePath.PathSwitch = ETypePathSwitch::EFunctionSignature;
+		LTypePath.PathSwitch = ETypePathSwitch::FunctionSignature;
 		LTypePath.FunctionSignaturePath.FunctionSignatureID = OutProgramInfo.FunctionSignaturesTypesMap.size() - 1; // size > 0
 		OutProgramInfo.TypesMap.push_back(LTypePath);
 	}
@@ -2635,6 +2545,46 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 		);
 		// clang-format on
 	}
+
+	return true;
+}
+
+bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX)
+{
+	// our function implementation based on declaration context as a part of function declaration/implementation usage
+	if( StatesContext.FunctionDeclarationContext.FunctionName.empty() )
+	{
+		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
+		return false;
+	}
+
+	const std::string LFunctionCompileName = GetCTXFunctionCompileName(OutProgramInfo);
+
+	if( LFunctionCompileName.empty() )
+	{
+		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
+		return false;
+	}
+
+	if( OutProgramInfo.Functions.find(LFunctionCompileName) == OutProgramInfo.Functions.end() )
+	{
+		RaiseError(EErrorMessageType::FUNCTION_DECLARATION_NOT_FOUND, TokenCTX);
+		return false;
+	}
+
+	if( OutProgramInfo.CompilingFunctionsAST.find(LFunctionCompileName) != OutProgramInfo.CompilingFunctionsAST.end() )
+	{
+		RaiseError(EErrorMessageType::FUNCTION_IMPLEMENTATION_NAME_REDEFINITION, TokenCTX);
+		return false;
+	}
+
+	if( !GetIsMainModule() ) return true;
+
+
+
+	StatesContext.FunctionImplementationContext.CompilingFunctionInfo.FunctionCodeTree.BuildAST(StatesContext.FunctionImplementationContext.FunctionCodeTokens);
+
+	OutProgramInfo.CompilingFunctionsAST.insert(std::pair(LFunctionCompileName, StatesContext.FunctionImplementationContext.CompilingFunctionInfo));
 
 	return true;
 }
@@ -2708,7 +2658,7 @@ bool FParserStates::RegisterClassFromContext(FProgramInfo& OutProgramInfo, const
 	if( !ThisClassTypeExists )
 	{
 		FUserTypePath LTypePath;
-		LTypePath.PathSwitch = ETypePathSwitch::EClass;
+		LTypePath.PathSwitch = ETypePathSwitch::Class;
 		LTypePath.ClassPath.ClassCompileName = LClassCompileName;
 		OutProgramInfo.TypesMap.push_back(LTypePath);
 	}
@@ -2746,7 +2696,6 @@ bool FParserStates::FinishClassRegistrationFromContext(FProgramInfo& OutProgramI
 	return true;
 }
 
-
 bool FParserStates::RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX)
 {
 	if( StatesContext.AliasDeclarationContext.AliasName.empty() )
@@ -2776,42 +2725,13 @@ bool FParserStates::RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const
 	return true;
 }
 
-bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX)
+bool FParserStates::RegisterStaticAssertFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX)
 {
-	// our function implementation based on declaration context as a part of function declaration/implementation usage
-	if( StatesContext.FunctionDeclarationContext.FunctionName.empty() )
-	{
-		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
-		return false;
-	}
-
-	const std::string LFunctionCompileName = GetCTXFunctionCompileName(OutProgramInfo);
-
-	if( LFunctionCompileName.empty() )
-	{
-		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
-		return false;
-	}
-
-	if( OutProgramInfo.Functions.find(LFunctionCompileName) == OutProgramInfo.Functions.end() )
-	{
-		RaiseError(EErrorMessageType::FUNCTION_DECLARATION_NOT_FOUND, TokenCTX);
-		return false;
-	}
-
-	if( OutProgramInfo.CompilingFunctionsAST.find(LFunctionCompileName) != OutProgramInfo.CompilingFunctionsAST.end() )
-	{
-		RaiseError(EErrorMessageType::FUNCTION_IMPLEMENTATION_NAME_REDEFINITION, TokenCTX);
-		return false;
-	}
-
-	if( !GetIsMainModule() ) return true;
-
-
-
-	StatesContext.FunctionImplementationContext.CompilingFunctionInfo.FunctionCodeTree.BuildAST(StatesContext.FunctionImplementationContext.FunctionCodeTokens);
-
-	OutProgramInfo.CompilingFunctionsAST.insert(std::pair(LFunctionCompileName, StatesContext.FunctionImplementationContext.CompilingFunctionInfo));
+	StatesContext.StaticAssertContext.StaticAssertInfo.CodeTree.BuildAST(StatesContext.StaticAssertContext.Expression);
+	StatesContext.StaticAssertContext.StaticAssertInfo.ModuleContextName = OutProgramInfo.MainModuleName;
+	StatesContext.StaticAssertContext.StaticAssertInfo.ClassContextName = GetCTXClassCompileName(OutProgramInfo);
+	
+	OutProgramInfo.StaticAsserts.push_back(StatesContext.StaticAssertContext.StaticAssertInfo);
 
 	return true;
 }

@@ -199,12 +199,15 @@ public:
 
 	inline void Clear() noexcept
 	{
+		StaticAssertInfo = FStaticAssertInfo();
 		Expression.clear();
 		OpenBracketLayer = 0;
 	}
 
 
 public:
+
+	FStaticAssertInfo StaticAssertInfo;
 
 	std::vector<Token> Expression;
 	int OpenBracketLayer = 0;

@@ -81,35 +81,14 @@ struct FParserHelperLibrary
 	*/
 	static bool DoesPairTokensMatch(const Token& TokenA, const Token& TokenB) noexcept
 	{
-		ETokenType LLeftTokenType = ETokenType::IDENTIFIER;
-		ETokenType LRightTokenType = ETokenType::IDENTIFIER;
-
-		if( IsOpenPairToken(TokenA) )
-		{
-			LLeftTokenType = TokenA.GetType();
-		}
-		else if( IsClosePairToken(TokenA) )
-		{
-			LRightTokenType = TokenA.GetType();
-		}
-
-		if( IsOpenPairToken(TokenB) )
-		{
-			LLeftTokenType = TokenB.GetType();
-		}
-		else if( IsClosePairToken(TokenB) )
-		{
-			LRightTokenType = TokenB.GetType();
-		}
-
-		// check that both of tokens set.
-		if( LLeftTokenType == ETokenType::IDENTIFIER || LRightTokenType == ETokenType::IDENTIFIER ) return false;
+		const ETokenType LAType = TokenA.GetType();
+		const ETokenType LBType = TokenB.GetType();
 
 		// clang-format off
-		return	(LLeftTokenType == ETokenType::LBRA && LRightTokenType == ETokenType::RBRA) || 
-				(LLeftTokenType == ETokenType::LPAR && LRightTokenType == ETokenType::RPAR) ||
-				(LLeftTokenType == ETokenType::LSQR && LRightTokenType == ETokenType::RSQR) || 
-				(LLeftTokenType == ETokenType::LTRI && LRightTokenType == ETokenType::RTRI);
+		return	(LAType == ETokenType::LBRA && LBType == ETokenType::RBRA) || (LAType == ETokenType::RBRA && LBType == ETokenType::LBRA) || 
+				(LAType == ETokenType::LPAR && LBType == ETokenType::RPAR) || (LAType == ETokenType::RPAR && LBType == ETokenType::LPAR) ||
+				(LAType == ETokenType::LSQR && LBType == ETokenType::RSQR) || (LAType == ETokenType::RSQR && LBType == ETokenType::LSQR) ||
+				(LAType == ETokenType::LTRI && LBType == ETokenType::RTRI) || (LAType == ETokenType::RTRI && LBType == ETokenType::LTRI);
 		// clang-format on
 	}
 
@@ -145,7 +124,7 @@ struct FParserHelperLibrary
 		@param ModuleCompileName - nome of module to convert.
 		@param OutParts - result of splitting will be here.
 	*/
-	static inline void SplitModuleRealNameToParts(const std::string& ModuleCompileName, std::vector<std::string>& OutParts)
+	static inline void SplitModuleCompileNameToParts(const std::string& ModuleCompileName, std::vector<std::string>& OutParts)
 	{
 		FCompilerHelperLibrary::SplitPathToParts(ModuleCompileName, OutParts, FCompilerConfig::COMPILE_NAME_SEPARATOR);
 	}
@@ -209,6 +188,7 @@ struct FParserHelperLibrary
 
 		return GetModuleRealName(SplittedParts, ProgramInfo);
 	}
+
 	/*
 		Construct any compile name.
 
@@ -319,7 +299,7 @@ struct FParserHelperLibrary
 		for( const FVariableInfo& LVariableInfo : FunctionSignatureInfo.Inputs )
 		{
 			// it is finite recursion with function signature as argument
-			std::string LTypeName = GetTypeName(LVariableInfo.TypeID, ProgramInfo);
+			const std::string LTypeName = GetTypeName(LVariableInfo.TypeID, ProgramInfo);
 			if( LTypeName.empty() ) return "";
 
 			LArgumentsNames.push_back(LTypeName);
@@ -377,15 +357,15 @@ struct FParserHelperLibrary
 
 		switch( LTypePath.PathSwitch )
 		{
-		case ETypePathSwitch::EStandard:
+		case ETypePathSwitch::Standard:
 		{
 			return GetStandardTypeCompileName(static_cast<EStandardTypesID>(TypeID));
 		}
-		case ETypePathSwitch::EClass:
+		case ETypePathSwitch::Class:
 		{
 			return LTypePath.ClassPath.ClassCompileName;
 		}
-		case ETypePathSwitch::EFunctionSignature:
+		case ETypePathSwitch::FunctionSignature:
 		{
 			const FFunctionSignatureInfo& LFunctionSignature = ProgramInfo.FunctionSignaturesTypesMap[LTypePath.FunctionSignaturePath.FunctionSignatureID];
 			return GetFunctionCompileName("", "fsign", LFunctionSignature, ProgramInfo);
@@ -458,11 +438,11 @@ struct FParserHelperLibrary
 	static inline bool IsModifierToken(ETokenType TokenType) noexcept
 	{
 		// clang-format off
-		return	TokenType == ETokenType::EXTERN_C || 
-				TokenType == ETokenType::CDECL || TokenType == ETokenType::STDCALL || TokenType == ETokenType::FASTCALL || 
-				TokenType == ETokenType::CONST || TokenType == ETokenType::MUTABLE || TokenType == ETokenType::STATIC ||  
-				TokenType == ETokenType::INLINE || TokenType == ETokenType::VIRTUAL || TokenType == ETokenType::OVERRIDE || 
-				TokenType == ETokenType::ABSTRACT || TokenType == ETokenType::FINAL	|| 
+		return	TokenType == ETokenType::EXTERN_C 	|| 
+				TokenType == ETokenType::CDECL 		|| TokenType == ETokenType::STDCALL 		|| TokenType == ETokenType::FASTCALL 	|| 
+				TokenType == ETokenType::CONST 		|| TokenType == ETokenType::MUTABLE 		|| TokenType == ETokenType::STATIC 		||  
+				TokenType == ETokenType::INLINE 	|| TokenType == ETokenType::VIRTUAL 		|| TokenType == ETokenType::OVERRIDE 	|| 
+				TokenType == ETokenType::ABSTRACT 	|| TokenType == ETokenType::FINAL			|| 
 				TokenType == ETokenType::DEPRECATED || TokenType == ETokenType::UNIMPLEMENTED;
 		// clang-format on
 	}
@@ -542,7 +522,7 @@ struct FParserHelperLibrary
 		{
 			// clang-format off
 			if( 
-				ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::EFunctionSignature &&
+				ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::FunctionSignature &&
 				ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID 
 			   )
 			// clang-format on
@@ -570,7 +550,7 @@ struct FParserHelperLibrary
 	{
 		for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
 		{
-			if( ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::EClass && ProgramInfo.TypesMap[i].ClassPath.ClassCompileName == ClassCompileName )
+			if( ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::Class && ProgramInfo.TypesMap[i].ClassPath.ClassCompileName == ClassCompileName )
 			{
 				return i;
 			}
@@ -606,9 +586,15 @@ struct FParserHelperLibrary
 	{
 		if( FS1.Inputs.size() != FS2.Inputs.size() ) return false;
 
-		for( int i = 0; i < FS1.Inputs.size(); ++i )
+		auto LFS1Iter = FS1.Inputs.begin();
+		auto LFS2Iter = FS2.Inputs.begin();
+
+		while( LFS1Iter != FS1.Inputs.end() )
 		{
-			if( FS1.Inputs[i].TypeID != FS2.Inputs[i].TypeID ) return false;
+			if( LFS1Iter->TypeID != LFS2Iter->TypeID ) return false;
+
+			++LFS1Iter;
+			++LFS2Iter;
 		}
 
 		if( FS1.Modifiers.IsConst != FS2.Modifiers.IsConst ) return false;

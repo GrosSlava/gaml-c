@@ -187,9 +187,6 @@ struct FGenericPlatform
 		if( !CompileOptions.EntryPoint.empty() )
 		{
 			ConsoleCommand += " -e" + CompileOptions.EntryPoint;
-		}
-		else
-		{
 			ConsoleCommand += " -nostartfiles";
 		}
 		if( CompileOptions.IsDebug ) ConsoleCommand += "";

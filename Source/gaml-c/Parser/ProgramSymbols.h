@@ -132,9 +132,9 @@ struct FModfiers
 enum class ETypePathSwitch
 {
 	UNDEFINED,
-	EStandard,
-	EClass,
-	EFunctionSignature
+	Standard,
+	Class,
+	FunctionSignature
 };
 /*
 	Path to information about class.
@@ -226,6 +226,9 @@ struct FFunctionSignatureInfo
 	FVariableInfo Return;
 	/*
 		Info about function inputs.
+
+		Key - variable name(same to in FVariableInfo).
+		Value - Variable info.
 	*/
 	std::vector<FVariableInfo> Inputs;
 
@@ -324,6 +327,28 @@ struct FModuleInfo
 };
 
 
+/*
+	Information about static assert.
+*/
+struct FStaticAssertInfo
+{
+	/*
+		Assert AST.
+	*/
+	AST CodeTree;
+
+	/*
+		Context module compile name.
+	*/
+	std::string ModuleContextName = "";
+	/*
+		Context class compile name.
+	*/
+	std::string ClassContextName = "";
+};
+
+
+
 
 
 /*
@@ -338,7 +363,7 @@ public:
 		for( int i = 0; i < EStandardTypesID::StandardTypesID_MAX; ++i )
 		{
 			FUserTypePath LUserTypePath;
-			LUserTypePath.PathSwitch = ETypePathSwitch::EStandard;
+			LUserTypePath.PathSwitch = ETypePathSwitch::Standard;
 			TypesMap.push_back(LUserTypePath);
 		}
 	}
@@ -396,6 +421,16 @@ public:
 		Value - path to type.
 	*/
 	std::vector<FUserTypePath> TypesMap;
+
+	//............................................................................................//
+
+
+	//.................................Compile time actions.......................................//
+
+	/*
+		Array of all static asserts from all imported modules.
+	*/
+	std::vector<FStaticAssertInfo> StaticAsserts;
 
 	//............................................................................................//
 

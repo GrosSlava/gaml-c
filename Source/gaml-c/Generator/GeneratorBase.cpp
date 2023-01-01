@@ -2,6 +2,8 @@
 
 #include "GeneratorBase.h"
 
+#include <fstream>
+
 
 
 
@@ -17,14 +19,14 @@ bool BaseGenerator::GenerateCode
 	// set context
 	CurrentFileInfo = FileInfo;
 	CurrentCompileOptions = CompileOptions;
-	GeneratedCodeStr.clear();
 
 	OutCompiledObjectFilePath.clear();
 
 
 	// generate code for low-level language
+	std::string GeneratedCodeStr;
 	GeneratedCodeStr.reserve(16384);
-	ProcessGeneration(ProgramInfo);
+	ProcessGeneration(GeneratedCodeStr, ProgramInfo);
 
 
 	// create other language file

@@ -8,11 +8,14 @@
 #include "CompilerOptions.h"
 #include "CompilerHelperLibrary.h"
 
-#include "../Token/Token.h"
-#include "../Parser/ProgramSymbols.h"
 #include "../Logger/ErrorLogger.h"
-#include "../Generator/GeneratorBase.h"
 
+
+
+
+class Token;
+class BaseGenerator;
+struct FProgramInfo;
 
 
 
@@ -47,22 +50,12 @@ protected:
 		FCompileLogger::Raise(ErrorStage, ErrorType, FileName, Message, Line, Pos);
 	}
 
-
 	/*
 		@return path to result directory.
 	*/
 	inline std::string GetCompilerOutputDir(const std::string& FileName) const noexcept
 	{
-		std::string LFilePath = "";
-		if( CurrentOptions.OutputDir.empty() )
-		{
-			LFilePath = FileInfo.PathToFileOnly;
-		}
-		else
-		{
-			LFilePath = CurrentOptions.OutputDir;
-		}
-
+		const std::string LFilePath = CurrentOptions.OutputDir.empty() ? FileInfo.PathToFileOnly : CurrentOptions.OutputDir;
 		return FCompilerHelperLibrary::CatPaths(LFilePath, FileName);
 	}
 

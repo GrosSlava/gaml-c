@@ -24,7 +24,7 @@ public:
 protected:
 
 	virtual std::string GetOutFileExtension() const override { return "c"; }
-	virtual void ProcessGeneration(const FProgramInfo& ProgramInfo) override;
+	virtual void ProcessGeneration(std::string& GeneratedCodeStr, const FProgramInfo& ProgramInfo) override;
 
 private:
 
