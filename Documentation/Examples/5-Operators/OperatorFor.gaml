@@ -8,7 +8,7 @@ func main
     /*
         for is similar to c/c++, but we don't have version without brackets
     */
-    for( int32 i = 0; i < 999; i++ )
+    for( var int32 i = 0; i < 999; i++ )
     {
         // for namespace
 
@@ -23,7 +23,7 @@ func main
         Body of this 'for' will be interpreted during compile time and will be converted into code.
         e.g copy body code N times
     */
-    static for( int32 i = 0; i < 999; i++ )
+    static for( var int32 i = 0; i < 999; i++ )
     {
 
     }

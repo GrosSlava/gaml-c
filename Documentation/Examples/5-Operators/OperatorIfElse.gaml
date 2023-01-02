@@ -23,7 +23,7 @@ func main
     /*
         if hasn't got version without brackets
     */
-    int8 a;
+    var int8 a;
     if( true ) { a = 5; }
 
 

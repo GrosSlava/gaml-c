@@ -3,13 +3,13 @@
 	"scopeName": "source.gaml",
 	"patterns": [
 		{
-			"include": "#GlobalSpace"
-		},
-		{
 			"include": "#Comments"
 		},
 		{
 			"include": "#Strings"
+		},
+		{
+			"include": "#GlobalSpace"
 		}
 	],
 	"repository": {
@@ -23,147 +23,6 @@
 				},
 				{
 					"include": "#DescriptionComment"
-				}
-			]
-		},
-		"GlobalSpace": {
-			"patterns": [
-				{
-					"include": "#GlobalSpaceModifiers"
-				},
-				{
-					"include": "#AccessModifiers"
-				},
-				{
-					"include": "#Operators"
-				},
-				{
-					"include": "#ClassKeywords"
-				},
-				{
-					"include": "#FunctionKeywords"
-				},
-				{
-					"include": "#FieldKeywords"
-				},
-				{
-					"include": "#ModuleKeywords"
-				},
-				{
-					"include": "#StandardTypes"
-				},
-				{
-					"include": "#StandardConstants"
-				},
-				{
-					"include": "#BuildinOperators"
-				},
-				{
-					"include": "#Asserts"
-				}
-			]
-		},
-		"DescriptionModifiers": {
-			"patterns": [
-				{
-					"name": "storage.modifier.gaml",
-					"match": "@"
-				},
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(param|return|extern_c|cdecl|stdcall|fastcall|const|static|inline|virtual|override|abstract|final|deprecated|unimplemented|align)\\b"
-				}
-			]
-		},
-		"GlobalSpaceModifiers": {
-			"patterns": [
-				{
-					"name": "storage.modifier.gaml",
-					"match": "\\b(const|mut)\\b"
-				}
-			]
-		},
-		"AccessModifiers": {
-			"patterns": [
-				{
-					"name": "storage.modifier.gaml",
-					"match": "\\b(public|protected|private)\\b"
-				}
-			]
-		},
-		"Operators": {
-			"patterns": [
-				{
-					"name": "keyword.control.gaml",
-					"match": "\\b(static|do|while|for|foreach|break|continue|if|else|switch|switch_all|case|default|return)\\b"
-				}
-			]
-		},
-		"ClassKeywords": {
-			"patterns": [
-				{
-					"name": "storage.type.gaml",
-					"match": "\\b(struct|enum|interface|object|component)\\b"
-				},
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(this|super)\\b"
-				}
-			]
-		},
-		"FunctionKeywords": {
-			"patterns": [
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(func|lambda)\\b"
-				}
-			]
-		},
-		"FieldKeywords": {
-			"patterns": [
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(var)\\b"
-				}
-			]
-		},
-		"ModuleKeywords": {
-			"patterns": [
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(module|import|implement)\\b"
-				}
-			]
-		},
-		"StandardTypes": {
-			"patterns": [
-				{
-					"name": "support.type.gaml",
-					"match": "\\b(void|class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
-				}
-			]
-		},
-		"StandardConstants": {
-			"patterns": [
-				{
-					"name": "constant.language.gaml",
-					"match": "\\b(true|false|None)\\b"
-				}
-			]
-		},
-		"BuildinOperators": {
-			"patterns": [
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|isiterable|isabstract|in|is|as|addr|cast|unsafe_cast|using)\\b"
-				}
-			]
-		},
-		"Asserts": {
-			"patterns": [
-				{
-					"name": "keyword.other.gaml",
-					"match": "\\b(assert|static_assert|static_error|static_warning|static_message)\\b"
 				}
 			]
 		},
@@ -181,11 +40,75 @@
 				}
 			]
 		},
+		"GlobalSpace": {
+			"patterns": [
+				{
+					"include": "#ModuleDeclaration"
+				},
+				{
+					"include": "#ModuleImport"
+				},
+				{
+					"include": "#ModuleImplemention"
+				},
+				{
+					"include": "#ClassDeclaration"
+				},
+				{
+					"include": "#FunctionDeclaration"
+				},
+				{
+					"include": "#LambdaDeclaration"
+				},
+				{
+					"include": "#UntypedVariableDeclaration"
+				},
+				{
+					"include": "#VariableDeclaration"
+				},
+				{
+					"include": "#AliasDeclaration"
+				},
+				{
+					"include": "#AccessModifiers"
+				},
+				{
+					"include": "#Operators"
+				},
+				{
+					"include": "#BuildinOperators"
+				},
+				{
+					"include": "#ClassKeywords"
+				},
+				{
+					"include": "#StandardConstants"
+				},
+				{
+					"include": "#PredefinedVariables"
+				},
+				{
+					"include": "#Asserts"
+				},
+				{
+					"include": "#Casts"
+				},
+				{
+					"include": "#StandardTypes"
+				},
+				{
+					"include": "#Numbers"
+				}
+			]
+		},
+
+
+
 		"BlockComment": {
 			"patterns": [
 				{
 					"name": "comment.block.gaml",
-					"begin": "\\s*+(\\/\\*)",
+					"begin": "\\/\\*",
 					"end": "\\*\\/"
 				}
 			]
@@ -193,28 +116,16 @@
 		"LineComment": {
 			"patterns": [
 				{
-					"name": "comment.line.double-slash.gaml",
-					"begin": "\\s*+(\\/\\/)",
-					"end": "(?<=\\n)(?<!\\\\\\n)",
-					"patterns": [
-						{
-							"include": "#LineContinuationCharacter"
-						}
-					]
-				}
-			]
-		},
-		"LineContinuationCharacter": {
-			"patterns": [
-				{
-					"match": "(\\\\)\\n"
+					"name": "comment.line.gaml",
+					"begin": "\\/\\/",
+					"end": "\\n"
 				}
 			]
 		},
 		"DescriptionComment": {
 			"patterns": [
 				{
-					"name": "block.gaml",
+					"name": "block.description.gaml",
 					"begin": "\\*\\*\\*",
 					"end": "\\*\\*\\*",
 					"patterns": [
@@ -231,21 +142,368 @@
 							"include": "#DescriptionModifiers"
 						},
 						{
-							"include": "#GlobalSpaceModifiers"
-						},
-						{
-							"include": "#FunctionKeywords"
-						},
-						{
-							"include": "#StandardTypes"
+							"include": "#BuildinOperators"
 						},
 						{
 							"include": "#StandardConstants"
 						},
 						{
-							"include": "#BuildinOperators"
+							"include": "#PredefinedVariables"
+						},
+						{
+							"include": "#LambdaDeclaration"
+						},
+						{
+							"include": "#Casts"
+						},
+						{
+							"include": "#StandardTypes"
+						},
+						{
+							"include": "#Numbers"
 						}
 					]
+				}
+			]
+		},
+
+
+
+		"DescriptionModifiers": {
+			"patterns": [
+				{
+					"match": "(\\@)(?:\\s*)\\b(extern_c|cdecl|stdcall|fastcall|const|static|inline|virtual|override|abstract|final|deprecated|unimplemented|align)\\b",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "keyword.other.gaml"
+						}
+					}
+				},
+				{
+					"match": "(\\@)(?:\\s*)\\b(param|return)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_])*)(?:\\s*)(?:\\:)(?:\\s*)((?:\\b(?:const|mut)\\b(?:\\s\\s*))*)((?:[a-zA-Z0-9_.:])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "keyword.other.gaml"
+						},
+						"3": {
+							"name": "variable.other.gaml"
+						},
+						"4": {
+							"name": "keyword.other.gaml"
+						},
+						"5": {
+							"patterns": [
+								{
+									"include": "#UserTypeDetection"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"ModuleDeclaration": {
+			"patterns": [
+				{
+					"match": "\\b(module)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_.])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "keyword.control.module.gaml"
+						}
+					}
+				}
+			]
+		},
+		"ModuleImport": {
+			"patterns": [
+				{
+					"match": "\\b(import)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_.])*)(?:\\s*)(?:(\\bas\\b)?)(?:\\s?\\s*)((?:[a-zA-Z0-9_])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "keyword.control.module.gaml"
+						},
+						"3": {
+							"name": "keyword.other.gaml"
+						},
+						"4": {
+							"name": "keyword.control.module_alias.gaml"
+						}
+					}
+				}
+			]
+		},
+		"ModuleImplemention": {
+			"patterns": [
+				{
+					"match": "\\b(implement)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_.])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "keyword.control.module.gaml"
+						}
+					}
+				}
+			]
+		},
+		"ClassDeclaration": {
+			"patterns": [
+				{
+					"match": "\\b(interface|object|component|struct|enum)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_])*)(?:\\s*)(?:\\(?)(?:\\s*)((?:[a-zA-Z0-9_.:])*)(?:\\s*)(?:\\)?)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "entity.name.type.gaml"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#UserTypeDetection"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"FunctionDeclaration": {
+			"patterns": [
+				{
+					"match": "\\b(func)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_])*)(?:\\s*)(?:\\:\\:)(?:\\s*)((?:[a-zA-Z0-9_])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "entity.name.type.gaml"
+						},
+						"3": {
+							"name": "entity.name.function.gaml"
+						}
+					}
+				},
+				{
+					"match": "\\b(func)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "entity.name.function.gaml"
+						}
+					}
+				}
+			]	
+		},
+		"LambdaDeclaration": {
+			
+		},
+		"VariableDeclaration": {
+			"patterns": [
+				{
+					"match": "\\b(var)\\b(?:\\s\\s*)((?:\\b(?:static|const)\\b(?:\\s\\s*))*)((?:[a-zA-Z0-9_.:])*)(?:\\s\\s*)((?:[a-zA-Z0-9_])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "keyword.other.gaml"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#UserTypeDetection"
+								}
+							]
+						},
+						"4": {
+							"name": "variable.other.gaml"
+						}
+					}
+				}
+			]
+		},
+		"UntypedVariableDeclaration": {
+			"patterns": [
+				{
+					"match": "\\b(var)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_])*)(?:\\s*)(?:\\;|\\=)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "variable.other.gaml"
+						}
+					}
+				}
+			]
+		},
+		"AliasDeclaration": {
+			"patterns": [
+				{
+					"match": "\\b(using)\\b(?:\\s\\s*)((?:[a-zA-Z0-9_])*)(?:\\s*)(?:\\=)(?:\\s*)((?:[a-zA-Z0-9_.:])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"name": "entity.name.type.gaml"
+						},
+						"3": {
+							"patterns": [
+								{
+									"include": "#UserTypeDetection"
+								}
+							]
+						}
+					}
+				}
+			]	
+		},
+
+
+
+		"AccessModifiers": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(public|protected|private)\\b"
+				}
+			]
+		},
+		"Operators": {
+			"patterns": [
+				{
+					"name": "keyword.control.gaml",
+					"match": "\\b(do|while|static while|for|static for|foreach|static foreach|break|continue|if|static if|else|switch|static switch|switch_all|static switch_all|case|default|return|static)\\b"
+				}
+			]
+		},
+		"BuildinOperators": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|isiterable|isabstract|in|is|addr)\\b"
+				}
+			]
+		},
+		"ClassKeywords": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(this|super)\\b"
+				}
+			]
+		},
+		"StandardConstants": {
+			"patterns": [
+				{
+					"name": "constant.language.gaml",
+					"match": "\\b(true|false|None)\\b"
+				}
+			]
+		},
+		"StandardTypes": {
+			"patterns": [
+				{
+					"name": "entity.name.type.gaml",
+					"match": "\\b(void|class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
+				}
+			]
+		},
+		"PredefinedVariables": {
+			"patterns": [
+				{
+					"name": "variable.other.gaml",
+					"match": "\\b(DEBUG|TARGET_PLATFORM|TARGET_ARCH)\\b"
+				}
+			]
+		},
+		"Asserts": {
+			"patterns": [
+				{
+					"name": "keyword.other.gaml",
+					"match": "\\b(assert|static_assert|static_error|static_warning|static_message)\\b"
+				}
+			]
+		},
+		"Casts": {
+			"patterns": [
+				{
+					"match": "\\b(cast|unsafe_cast)\\b(?:\\s*)(?:\\<\\|)(?:\\s*)((?:[a-zA-Z0-9_.:])*)(?:\\s*)(?:\\s*)(?:\\|\\>)",
+					"captures": {
+						"1": {
+							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#UserTypeDetection"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+
+
+
+		"UserTypeDetection": {
+			"patterns": [
+				{
+					"match": "((?:[a-zA-Z0-9_.])*)(?:\\s*)(?:(?:\\:\\:))(?:\\s*)((?:[a-zA-Z0-9_])*)",
+					"captures": {
+						"1": {
+							"name": "keyword.control.module.gaml"
+						},
+						"2": {
+							"name": "entity.name.type.gaml"
+						}
+					}
+				},
+				{
+					"name": "entity.name.type.gaml",
+					"match": "((?:[a-zA-Z0-9_.])*)"
+				}
+			]
+		},
+		"Numbers": {
+			"patterns": [
+				{
+					"name": "constant.numeric.float.gaml",
+					"match": "(\\b\\d+\\.\\d*(?:[e|E][+|-]?\\d\\d*)?[f|F]\\b)"
+				},
+				{
+					"name": "constant.numeric.double.gaml",
+					"match": "(\\b\\d+\\.\\d*(?:[e|E][+|-]?\\d\\d*)?\\b)"
+				},
+				{
+					"name": "constant.numeric.hex.gaml",
+					"match": "(\\b0[x|X](?:[0-9a-fA-F])*\\b)"
+				},
+				{
+					"name": "constant.numeric.binary.gaml",
+					"match": "(\\b[0-1]*[b|B]\\b)"
+				},
+				{
+					"name": "constant.numeric.integer.gaml",
+					"match": "(\\b\\d+\\b)"
 				}
 			]
 		}

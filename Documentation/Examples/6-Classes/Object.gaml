@@ -100,7 +100,7 @@ object UMySingletonObject
     ***
     public func Get
     {
-        static UMySingletonObject = UMySingletonObject();
+        var static UMySingletonObject = UMySingletonObject();
         return UMySingletonObject;
     }
 }
@@ -110,7 +110,7 @@ object UMySingletonObject
 
 func main
 {
-    UMyObject A; // create local uninitialized variable which can contains any UMyObject child object
+    var UMyObject A; // create local uninitialized variable which can contains any UMyObject child object
     static_assert(A is None); // each object variable is a pointer, we didn't create an instance of an object, so there will be None 
 
     A = UMyObject(5); // instantiate object
@@ -118,7 +118,7 @@ func main
     
     A->bar(); // call virtual method (UMyObject2 version will be call)
 
-    UMyObject B(A); // create new object which is a deep copy of A
+    var UMyObject B(A); // create new object which is a deep copy of A
     B = A; // B points to same object as A
     B = None; // now B is invalid
 

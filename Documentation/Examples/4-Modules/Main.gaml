@@ -16,5 +16,5 @@ func main
     MyModule::foo2();
 
     // use declared in module type alias
-    M::MyUnsignedType LVariable = 7;
+    var M::MyUnsignedType LVariable = 7;
 }

@@ -54,11 +54,11 @@ func FMyStruct::bar { }
 
 func main
 {
-    FMyStruct m; // create local variable with FMyStruct type
+    var FMyStruct m; // create local variable with FMyStruct type
     m.A = 99; // access to struct member
     m.foo(); // call struct method
 
     m = FMyStruct(5); // here will be created invisible variable with type FMyStruct, after will be assign
-    FMyStruct m2(5); // create local wariable with custom constructor
-    FMyStruct m3 = FMyStruct(5); // same to m2 example, invisible variable will not be created
+    var FMyStruct m2(5); // create local wariable with custom constructor
+    var FMyStruct m3 = FMyStruct(5); // same to m2 example, invisible variable will not be created
 }

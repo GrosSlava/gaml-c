@@ -8,7 +8,7 @@ func main
     /*
         switch/case is similar to c/c++ switch/case, but cases don't need break at the end
     */
-    int32 a = 5;
+    var int32 a = 5;
     switch( a )
     {
     case 1: 
@@ -34,7 +34,7 @@ func main
     }
 
     // switch/case works with strings
-    const string s = "Hello";
+    var const string s = "Hello";
     switch( s )
     {
     case "He":

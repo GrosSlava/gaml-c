@@ -33,7 +33,7 @@ enum EMyStringEnum(string) // enum can be inhereted from string
 
 func main
 {
-    EMyEnum m; // create local variable with EMyEnum type
+    var EMyEnum m; // create local variable with EMyEnum type
 
     m = EMyEnum::One; // get access to enum member
     EMyEnum::foo(); // call enum method
@@ -50,8 +50,8 @@ func main
     /*
         we can iterate over enum members
     */
-    foreach( EMyEnum LEnumField in EMyEnum )  { } 
-    foreach( const string LEnumField in EMyStringEnum )  { } // we can use enum real type with this enum, string it is real type of EMyStringEnum
+    foreach( var EMyEnum LEnumField in EMyEnum )  { } 
+    foreach( var const string LEnumField in EMyStringEnum )  { } // we can use enum real type with this enum, string it is real type of EMyStringEnum
 
     /*
         we can check that number has enum member alias

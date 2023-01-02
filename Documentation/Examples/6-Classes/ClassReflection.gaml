@@ -17,10 +17,10 @@ object UMyObject2(UMyObject)
 
 func main
 {
-    class<|UMyObject|> LClass;          // by default here will be None
-    LClass = UMyObject2::StaticClass(); // set local class container with UMyObject2 class
+    var class<|UMyObject|> LClass;          // by default here will be None
+    LClass = UMyObject2::StaticClass();     // set local class container with UMyObject2 class
 
-    UMyObject LObject = CreateObject<|UMyObject|>(LClass);  // instantiate object by class type
-    LObject = CreateObject(UMyObject2::StaticClass());      // alternative version
-    // CreateComponent<|UMyComponent|>(LClass);             // version for components
+    var UMyObject LObject = CreateObject<|UMyObject|>(LClass);  // instantiate object by class type
+    LObject = CreateObject(UMyObject2::StaticClass());          // alternative version
+    // CreateComponent<|UMyComponent|>(LClass);                 // version for components
 }

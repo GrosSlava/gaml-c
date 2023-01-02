@@ -14,7 +14,7 @@ func main
     /*
         Same to "do while" in c/c++, but we don't have version without brackets.
     */
-    int32 a = 999;
+    var int32 a = 999;
     do
     {
         // break - exit do
@@ -30,12 +30,12 @@ func main
 
     do
     {
-        uint8 G;
+        var uint8 G;
     }
     // here G is inaccessible, because it declared in do namespace
 
     // interesting case
-    for( int32 i = 0, int32 j = 0; i < 999; do { i++; j--; } )
+    for( var int32 i = 0, var int32 j = 0; i < 999; do { i++; j--; } )
     {
 
     }

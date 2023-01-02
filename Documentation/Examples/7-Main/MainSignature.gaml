@@ -42,7 +42,7 @@ func main
 
 
 
-import Windows
+import Windows;
 
 ***
     // Minimal main function for Window subsystem.

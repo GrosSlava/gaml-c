@@ -42,33 +42,33 @@ func foo
     /* 
         We can declare local variable with default value, by default variable contains trash.
     */
-    uint8 A = 8;                    // integer in decimal form
-    uint8 B = 0x5a;                 // hexadecimal 0x5A
-    uint8 C = 11101b;               // binary
-    float f = 55.01f;               // f or F - mark this is float
-    double ff = 55.01;              // without f it is double
-    float SmallNumber = 12.e-5f;    // exponent form
-    char c = 'H';                   // gaml is case sensitive language (C != c)
-    char NewLine = '\n';            // complex char like in c/c++
-    string s = "Hello World!\n";    // string of chars
-    bool b = true;                  // boolean can be true/false
+    var uint8 A = 8;                    // integer in decimal form
+    var uint8 B = 0x5a;                 // hexadecimal 0x5A
+    var uint8 C = 11101b;               // binary
+    var float f = 55.01f;               // f or F - mark this is float
+    var double ff = 55.01;              // without f it is double
+    var float SmallNumber = 12.e-5f;    // exponent form
+    var char c = 'H';                   // gaml is case sensitive language (C != c)
+    var char NewLine = '\n';            // complex char like in c/c++
+    var string s = "Hello World!\n";    // string of chars
+    var bool b = true;                  // boolean can be true/false
 
     /*
         We can declare variable with system default value.
     */
-    uint8 IntegerWithDefautValue = default();   // same to ... = default(uint8)
-    string SameDefautValueS = default(s);       // there will be "Hello World!\n"
+    var uint8 IntegerWithDefautValue = default();   // same to ... = default(uint8)
+    var string SameDefautValueS = default(s);       // there will be "Hello World!\n"
 
     /*
         Static local variables are visible only inside function body, but created only once.
     */
-    static uint8 StaticInt = 7;
+    var static uint8 StaticInt = 7;
 
     /*
         We can create local alias for type.
     */
     using MyUnsignedType = uint8;
-    MyUnsignedType LVariable = 1;
+    var MyUnsignedType LVariable = 1;
 
 
 
@@ -76,17 +76,17 @@ func foo
         We can cast one type to other.
         cast<|to_type|>(object)
     */
-    uint16 CastedChar = cast<|uint16|>('H');
+    var uint16 CastedChar = cast<|uint16|>('H');
     /*
         It is unsafe cast because we may lost data.
         Default cast will throw error.
     */
-    uint8 UnsafeCastedChar = unsafe_cast<|uint8|>('H');
+    var uint8 UnsafeCastedChar = unsafe_cast<|uint8|>('H');
     /*
         Compiler can try to convert one type to other. 
         If it is unsafe to cast one type to other, compiler will throw error.
     */
-    uint32 AutoCastedChar = 'H';
+    var uint32 AutoCastedChar = 'H';
 
 
 

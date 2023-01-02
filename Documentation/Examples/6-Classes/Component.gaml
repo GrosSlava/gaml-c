@@ -62,7 +62,7 @@ component UMyComponent2(UMyComponent)
 
 func main
 {
-    UMyComponent A; // create local uninitialized variable which can contains any UMyComponent child object
+    var UMyComponent A; // create local uninitialized variable which can contains any UMyComponent child object
     static_assert(A is None); // each component variable is a pointer, we didn't create an instance of a component, so there will be None 
 
     // A = UMyComponent(); // we can't get instance of UMyComponent, component can be instantiated only as object member

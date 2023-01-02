@@ -25,6 +25,6 @@ interface IMyInterface // interface can be inhereted only from interface(many)
 
 func main
 {
-    IMyInterface A; // create local uninitialized variable which can contains any IMyInterface child object
+    var IMyInterface A; // create local uninitialized variable which can contains any IMyInterface child object
     // A = IMyInterface(); // we can't get instance of interface
 }

@@ -57,13 +57,13 @@ func Goodbar
 
 func main
 {
-    int32 LVar = 99;
+    var int32 LVar = 99;
 
     /*
         We can declare local lambda.
         NOTE: Lambdas can be declared only inside function.
     */
-    MyLambdaSignature LLambda = lambda (int32 A, int32 B) => int32 
+    var MyLambdaSignature LLambda = lambda (int32 A, int32 B) => int32 
     [LVar] // context (enumerate context or use 'this' for class)
     {
         return A + B + LVar;
