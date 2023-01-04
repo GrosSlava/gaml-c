@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "ParserHelperLibrary.h"
 
@@ -80,7 +80,7 @@ std::string FParserHelperLibrary::GetCompileName(const std::string& ContextCompi
 // clang-format off
 std::string FParserHelperLibrary::GetCompileName
 (
-    const std::string& ContextCompileName, const std::string& OriginalName, const std::vector<std::string>& ArgumentNames
+	const std::string& ContextCompileName, const std::string& OriginalName, const std::vector<std::string>& ArgumentNames
 ) noexcept
 // clang-format on
 {
@@ -109,8 +109,8 @@ std::string FParserHelperLibrary::GetCompileName
 // clang-format off
 std::string FParserHelperLibrary::GetFunctionCompileName
 (
-    const std::string& ContextCompileName, const std::string& OriginalName, 
-    bool IsConst, const std::vector<std::string>& ArgumentTypeNames
+	const std::string& ContextCompileName, const std::string& OriginalName, 
+	bool IsConst, const std::vector<std::string>& ArgumentTypeNames
 ) noexcept
 // clang-format on
 {
@@ -132,8 +132,8 @@ std::string FParserHelperLibrary::GetFunctionCompileName
 // clang-format off
 std::string FParserHelperLibrary::GetFunctionCompileName
 (	
-    const std::string& ContextCompileName, const std::string& OriginalName,
-    const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
+	const std::string& ContextCompileName, const std::string& OriginalName,
+	const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
 ) noexcept
 // clang-format on
 {
@@ -194,10 +194,10 @@ int FParserHelperLibrary::GetFunctionSignatureTypeID(const FFunctionSignatureInf
 	for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
 	{
 		// clang-format off
-        if( 
-            ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::FunctionSignature &&
-            ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID 
-            )
+		if( 
+			ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::FunctionSignature &&
+			ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID 
+			)
 		// clang-format on
 		{
 			return i;

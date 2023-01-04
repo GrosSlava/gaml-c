@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #pragma once
 
@@ -14,7 +14,7 @@
 struct FProgramInfo;
 
 /*
-    Interface for all AST nodes.
+	Interface for all AST nodes.
 */
 class IASTNode
 {
@@ -41,7 +41,7 @@ public:
 
 
 /*
-    Base class for unary expression.
+	Base class for unary expression.
 */
 class UnaryNode : public IASTNode
 {
@@ -55,13 +55,13 @@ public:
 public:
 
 	/*
-        AST for operator expression.
-    */
+		AST for operator expression.
+	*/
 	std::shared_ptr<IASTNode> Expr;
 };
 
 /*
-    Base class for binary expression.
+	Base class for binary expression.
 */
 class BinaryNode : public IASTNode
 {
@@ -75,17 +75,17 @@ public:
 public:
 
 	/*
-        AST left from operator.
-    */
+		AST left from operator.
+	*/
 	std::shared_ptr<IASTNode> Left;
 	/*
-        AST right from operator.
-    */
+		AST right from operator.
+	*/
 	std::shared_ptr<IASTNode> Right;
 };
 
 /*
-    Base class for ternary expression.
+	Base class for ternary expression.
 */
 class TernaryNode : public IASTNode
 {
@@ -99,21 +99,21 @@ public:
 public:
 
 	/*
-        AST for operator expression.
-    */
+		AST for operator expression.
+	*/
 	std::shared_ptr<IASTNode> Expr;
 	/*
-        AST left from operator.
-    */
+		AST left from operator.
+	*/
 	std::shared_ptr<IASTNode> Left;
 	/*
-        AST right from operator.
-    */
+		AST right from operator.
+	*/
 	std::shared_ptr<IASTNode> Right;
 };
 
 /*
-    Base class for quaternary expression.
+	Base class for quaternary expression.
 */
 class QuaternaryNode : public IASTNode
 {
@@ -130,25 +130,25 @@ public:
 public:
 
 	/*
-        AST for operator init expression.
-    */
+		AST for operator init expression.
+	*/
 	std::shared_ptr<IASTNode> Init;
 	/*
-        AST for operator expression.
-    */
+		AST for operator expression.
+	*/
 	std::shared_ptr<IASTNode> Expr;
 	/*
-        AST left from operator.
-    */
+		AST left from operator.
+	*/
 	std::shared_ptr<IASTNode> Left;
 	/*
-        AST right from operator.
-    */
+		AST right from operator.
+	*/
 	std::shared_ptr<IASTNode> Right;
 };
 
 /*
-    Base class for AST expressions sequence.
+	Base class for AST expressions sequence.
 */
 class SequenceNode : public IASTNode
 {
@@ -167,7 +167,7 @@ public:
 };
 
 /*
-    Base class for leaf AST node.
+	Base class for leaf AST node.
 */
 class LeafNode : public IASTNode
 {
@@ -188,7 +188,7 @@ public:
 public:
 
 	/*
-        Info about leaf token.
-    */
+		Info about leaf token.
+	*/
 	Token LeafToken;
 };

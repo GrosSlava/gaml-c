@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "../../CoreMinimal.h"
 #if WINDOWS_32 || WINDOWS_64
@@ -13,8 +13,8 @@
 // clang-format off
 FGenericPlatform::int RunMSVC
 (
-    const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
-    const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
+	const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
 )
 // clang-format on
 {
@@ -73,13 +73,13 @@ FGenericPlatform::int RunMSVC
 	}
 
 	// clang-format off
-    if( CompileOptions.IsDebug )                    { ConsoleCommand += ""; }
-    if( CompileOptions.ConvertWarningsToErrors )    { ConsoleCommand += " -WX"; }
-    if( CompileOptions.DumpAssembly )               { ConsoleCommand += " -FAcs -Fa" + OutputDirectoryPath; }
-    if( CompileOptions.NoBuiltin )                  { ConsoleCommand += ""; }
-    if( CompileOptions.Freestanding )               { ConsoleCommand += ""; }
-    if( CompileOptions.NoStackProtection )          { ConsoleCommand += " -GS-"; }
-    if( CompileOptions.NoRedZone )                  { ConsoleCommand += ""; }
+	if( CompileOptions.IsDebug )                    { ConsoleCommand += ""; }
+	if( CompileOptions.ConvertWarningsToErrors )    { ConsoleCommand += " -WX"; }
+	if( CompileOptions.DumpAssembly )               { ConsoleCommand += " -FAcs -Fa" + OutputDirectoryPath; }
+	if( CompileOptions.NoBuiltin )                  { ConsoleCommand += ""; }
+	if( CompileOptions.Freestanding )               { ConsoleCommand += ""; }
+	if( CompileOptions.NoStackProtection )          { ConsoleCommand += " -GS-"; }
+	if( CompileOptions.NoRedZone )                  { ConsoleCommand += ""; }
 	// clang-format on
 
 	ConsoleCommand += " -TC -Gd -c -nologo -Wall -Qspectre- -source-charset:utf-8 -execution-charset:utf-8 -fp:precise";
@@ -92,8 +92,8 @@ FGenericPlatform::int RunMSVC
 // clang-format off
 int FGenericPlatform::RunLLC
 (
-    const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
-    const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
+	const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
 )
 // clang-format on
 {
@@ -108,8 +108,8 @@ int FGenericPlatform::RunLLC
 // clang-format off
 int FGenericPlatform::RunThirdPartyLinker
 (
-    const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
-    const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths
+	const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
+	const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths
 )
 // clang-format on
 {

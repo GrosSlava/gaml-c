@@ -100,7 +100,7 @@
                 
 ## Example options line:
 
-1. ./gaml-c Test/MyTestFile.gaml                    --- compile file and create executable
-2. ./gaml-c -c Test/MyTestFile.gaml                 --- compile, but not create executable
-3. ./gaml-c -c --progress -pTest                    --- compile to object files all gaml files from folder "Test" and show compilation progress
-4. ./gaml-c -O2 --package=Test --name=ProgramName   --- compile all gaml files from folder "Test" with optimization level = 2 and set exceutable file name = "ProgramName"
+1. ./gaml-c Test/MyTestFile.gaml // compile file and create executable
+2. ./gaml-c -c Test/MyTestFile.gaml // compile, but not create executable
+3. ./gaml-c -c --progress -pTest // compile to object files all gaml files from folder "Test" and show compilation progress
+4. ./gaml-c -O2 --package=Test --name=ProgramName // compile all gaml files from folder "Test" with optimization level 2 and set exceutable file name "ProgramName"

@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #pragma once
 
@@ -15,8 +15,8 @@ class IASTNode;
 
 
 /*
-    Interface for node code generator.
-    Inherit and implement for your generator.
+	Interface for node code generator.
+	Inherit and implement for your generator.
 */
 template<class T>
 class INodeCodeGen
@@ -31,16 +31,16 @@ public:
 public:
 
 	/*
-        Produce third-party compiler specific code based on ASTNode.
-    */
+		Produce third-party compiler specific code based on ASTNode.
+	*/
 	virtual std::string GenerateCode(std::shared_ptr<T> ASTNode, const FProgramInfo& OutProgramInfo) = 0;
 };
 
 
 
 /*
-    Factory for AST node code generators.
-    Inherit and implement for making your concrete NodeCodeGen for your generator.
+	Factory for AST node code generators.
+	Inherit and implement for making your concrete NodeCodeGen for your generator.
 */
 class IASTCodeGenFactory
 {

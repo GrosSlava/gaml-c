@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #pragma once
 
@@ -11,7 +11,7 @@
 
 
 /*
-    Helper library to generate ReduceC code.
+	Helper library to generate ReduceC code.
 */
 struct FReduceCHelperLibrary
 {

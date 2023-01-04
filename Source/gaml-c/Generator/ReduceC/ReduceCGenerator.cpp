@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "ReduceCGenerator.h"
 #include "ReduceCHelperLibrary.h"

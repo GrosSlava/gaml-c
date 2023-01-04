@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "ReduceCHelperLibrary.h"
 #include "ReduceCNodeCodeGen.h"
@@ -10,8 +10,8 @@
 // clang-format off
 std::string FReduceCHelperLibrary::GetFunctionSignatureCStr
 (
-    const std::string& FunctionCompileName, const FFunctionSignatureInfo& FunctionInfo, 
-    ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
+	const std::string& FunctionCompileName, const FFunctionSignatureInfo& FunctionInfo, 
+	ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
 )
 // clang-format on
 {
@@ -51,8 +51,8 @@ std::string FReduceCHelperLibrary::GetFunctionSignatureCStr
 // clang-format off
 std::string FReduceCHelperLibrary::GetFunctionPointerCStr
 (
-    const std::string& Name, const FFunctionSignatureInfo& FunctionInfo, bool IncludeConst, 
-    ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
+	const std::string& Name, const FFunctionSignatureInfo& FunctionInfo, bool IncludeConst, 
+	ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
 )
 // clang-format on
 {
@@ -99,8 +99,8 @@ std::string FReduceCHelperLibrary::GetFunctionPointerCStr
 // clang-format off
 std::string FReduceCHelperLibrary::GetFunctionImplementationBodyCStr
 (
-    const std::string& FunctionCompileName, const FCompilingFunctionInfo& FunctionCompileInfo, 
-    const FProgramInfo& ProgramInfo
+	const std::string& FunctionCompileName, const FCompilingFunctionInfo& FunctionCompileInfo, 
+	const FProgramInfo& ProgramInfo
 )
 // clang-format on
 {
@@ -114,8 +114,8 @@ std::string FReduceCHelperLibrary::GetFunctionImplementationBodyCStr
 // clang-format off
 std::string FReduceCHelperLibrary::GetClassDeclarationCStr
 (
-    const std::string& ClassCompileName, const FClassInfo& ClassInfo, 
-    ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
+	const std::string& ClassCompileName, const FClassInfo& ClassInfo, 
+	ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
 )
 // clang-format on
 {
@@ -142,13 +142,13 @@ std::string FReduceCHelperLibrary::GetClassVariablesCStr(const FClassInfo& Class
 	for( const std::pair<std::string, std::string>& LVirtualFunctionRow : ClassInfo.VirtualFunctionsTable )
 	{
 		// clang-format off
-        LResult += "\t" +
-                    GetFunctionPointerCStr
-                    (
-                        LVirtualFunctionRow.first, ProgramInfo.Functions.at(LVirtualFunctionRow.second).SignatureInfo, false, 
-                        TargetPlatform, ProgramInfo
-                    ) +
-                    ";\n";
+		LResult += "\t" +
+					GetFunctionPointerCStr
+					(
+						LVirtualFunctionRow.first, ProgramInfo.Functions.at(LVirtualFunctionRow.second).SignatureInfo, false, 
+						TargetPlatform, ProgramInfo
+					) +
+					";\n";
 		// clang-format on
 	}
 
@@ -162,8 +162,8 @@ std::string FReduceCHelperLibrary::GetClassVariablesCStr(const FClassInfo& Class
 // clang-format off
 std::string FReduceCHelperLibrary::GetVariableDeclarationCStr
 (
-    const FVariableInfo& VariableInfo, bool IncludeConst, bool IncludeName, bool IsFunctionArgument, 
-    ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
+	const FVariableInfo& VariableInfo, bool IncludeConst, bool IncludeName, bool IsFunctionArgument, 
+	ETargetPlatform TargetPlatform, const FProgramInfo& ProgramInfo
 )
 // clang-format on
 {
@@ -180,10 +180,10 @@ std::string FReduceCHelperLibrary::GetVariableDeclarationCStr
 
 		LResult += GetStandardTypeNameCStr(VariableInfo.TypeID);
 		// clang-format off
-        if( 
-            IsFunctionArgument && 
-            ((VariableInfo.Modifiers.IsConst && VariableInfo.TypeID == EStandardTypesID::STRING_ID) || VariableInfo.Modifiers.IsMutable)
-        )
+		if( 
+			IsFunctionArgument && 
+			((VariableInfo.Modifiers.IsConst && VariableInfo.TypeID == EStandardTypesID::STRING_ID) || VariableInfo.Modifiers.IsMutable)
+		)
 		// clang-format on
 		{
 			LResult += "*";

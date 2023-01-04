@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "GeneratorHelperLibrary.h"
 
@@ -19,12 +19,12 @@ std::string FGeneratorHelperLibrary::GetGenerationTime()
 #endif
 
 	// clang-format off
-    const std::string LGenerationDateTime = std::to_string(CurrentTime.tm_year + 1900) + "." + 
-                                            std::to_string(CurrentTime.tm_mon + 1) + "." + 
-                                            std::to_string(CurrentTime.tm_mday) + " " +
-                                            std::to_string(CurrentTime.tm_hour) + ":" + 
-                                            std::to_string(CurrentTime.tm_min) + ":" + 
-                                            std::to_string(CurrentTime.tm_sec);
+	const std::string LGenerationDateTime = std::to_string(CurrentTime.tm_year + 1900) + "." + 
+											std::to_string(CurrentTime.tm_mon + 1) + "." + 
+											std::to_string(CurrentTime.tm_mday) + " " +
+											std::to_string(CurrentTime.tm_hour) + ":" + 
+											std::to_string(CurrentTime.tm_min) + ":" + 
+											std::to_string(CurrentTime.tm_sec);
 	// clang-format on
 
 	return LGenerationDateTime;

@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #pragma once
 
@@ -17,7 +17,7 @@ public:
 	inline FGamlFileInfo() { }
 	inline FGamlFileInfo(const std::string& FilePath)
 	{
-    	SetFromPath(FilePath);
+		SetFromPath(FilePath);
 	}
 	inline FGamlFileInfo(const std::string& InPathToFileOnly, const std::string& InFileNameOnly, const std::string& InExtensionOnly) :
 		PathToFileOnly(InPathToFileOnly), FileNameOnly(InFileNameOnly), ExtensionOnly(InExtensionOnly)

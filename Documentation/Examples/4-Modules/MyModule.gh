@@ -3,9 +3,9 @@
 
 
 ***
-    //@deprecated       // we can add deprecated modifier to mark this module as deprecated
-    //@unimplemented    // we can set this module as unimplemented, it can't be included
-    //@extern_c         // all functions inside this module will be marked as extern_c, this module can't contains classes
+	//@deprecated       // we can add deprecated modifier to mark this module as deprecated
+	//@unimplemented    // we can set this module as unimplemented, it can't be included
+	//@extern_c         // all functions inside this module will be marked as extern_c, this module can't contains classes
 ***
 module MyModule; // set the module name, it must match the file name
 
@@ -17,30 +17,30 @@ module MyModule; // set the module name, it must match the file name
 
 
 /*
-    Create alias for type.
+	Create alias for type.
 */
 using MyUnsignedType = uint8;
 
 /*
-    We can have code checking by static assert.
+	We can have code checking by static assert.
 */
 static_assert(sizeof(MyUnsignedType) == 8);
 /*
-    Give error message.
+	Give error message.
 */
 static_assert(sizeof(MyUnsignedType) == 8, "Assert triggered!");
 
 
 
 ***
-    // Function declared and implementated in this module.
+	// Function declared and implementated in this module.
 ***
 func foo {}
 
 ***
-    /*
-        Only function declaration. Implementation will be in module realization.
-        See MyModule.gaml
-    */
+	/*
+		Only function declaration. Implementation will be in module realization.
+		See MyModule.gaml
+	*/
 ***
 func foo2;

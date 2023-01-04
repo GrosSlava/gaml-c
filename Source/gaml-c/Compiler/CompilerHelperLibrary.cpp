@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "CompilerHelperLibrary.h"
 
@@ -14,10 +14,10 @@ std::string FCompilerHelperLibrary::GetPrettyTimeStr(size_t MillisecondsCount) n
 	const size_t LHours = LMinutes / 60;
 
 	// clang-format off
-    return 	std::to_string(LHours) + ":" + 
-            std::to_string(LMinutes) + ":" + 
-            std::to_string(LSeconds) + "." + 
-            std::to_string(LMilliseconds / 100) + std::to_string(LMilliseconds / 10 % 10);
+	return 	std::to_string(LHours) + ":" + 
+			std::to_string(LMinutes) + ":" + 
+			std::to_string(LSeconds) + "." + 
+			std::to_string(LMilliseconds / 100) + std::to_string(LMilliseconds / 10 % 10);
 	// clang-format on
 }
 
@@ -119,8 +119,8 @@ std::string FCompilerHelperLibrary::MakeUpDirectoryStr(size_t UpCount)
 // clang-format off
 void FCompilerHelperLibrary::GetAllFilesWithExtensionsInFolder
 (
-    const std::string& Path, const std::vector<std::string>& AvailableExtensions, 
-    std::vector<FGamlFileInfo>& OutFilesInfo
+	const std::string& Path, const std::vector<std::string>& AvailableExtensions, 
+	std::vector<FGamlFileInfo>& OutFilesInfo
 )
 // clang-format on
 {

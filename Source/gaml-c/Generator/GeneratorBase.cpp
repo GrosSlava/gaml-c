@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "GeneratorBase.h"
 
@@ -14,8 +14,8 @@
 // clang-format off
 bool BaseGenerator::GenerateCode
 (
-    const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, const FProgramInfo& ProgramInfo, 
-    std::string& OutCompiledObjectFilePath
+	const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, const FProgramInfo& ProgramInfo, 
+	std::string& OutCompiledObjectFilePath
 )
 // clang-format on
 {

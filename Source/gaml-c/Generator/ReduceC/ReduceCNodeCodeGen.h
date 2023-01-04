@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #pragma once
 
@@ -10,9 +10,9 @@
 
 
 /*
-    Concrete factory for nodes code generators.
+	Concrete factory for nodes code generators.
 */
 class ReduceC_ASTCodeGenFactory : public IASTCodeGenFactory
 {
-    //TODO
+	//TODO
 };

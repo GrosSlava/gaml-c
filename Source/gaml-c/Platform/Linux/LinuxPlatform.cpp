@@ -1,4 +1,4 @@
-// Copyright 2022 GrosSlava.
+// Copyright 2022 - 2023 GrosSlava.
 
 #include "../../CoreMinimal.h"
 #if LINUX
@@ -13,8 +13,8 @@
 // clang-format off
 int FGenericPlatform::RunGCC
 (
-    const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
-    const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
+	const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
 )
 // clang-format on
 {
@@ -70,13 +70,13 @@ int FGenericPlatform::RunGCC
 	}
 
 	// clang-format off
-	if( CompileOptions.IsDebug ) 					{ ConsoleCommand += " -g"; }
-	if( CompileOptions.ConvertWarningsToErrors ) 	{ ConsoleCommand += " -Werror"; }
-	if( CompileOptions.DumpAssembly ) 				{ ConsoleCommand += " -S"; }
-	if( CompileOptions.NoBuiltin ) 					{ ConsoleCommand += " -fno-builtin"; }
-	if( CompileOptions.Freestanding ) 				{ ConsoleCommand += " -ffreestanding"; }
-	if( CompileOptions.NoStackProtection ) 			{ ConsoleCommand += " -fno-stack-protector"; }
-	if( CompileOptions.NoRedZone ) 					{ ConsoleCommand += " -mno-red-zone"; }
+	if( CompileOptions.IsDebug )                    { ConsoleCommand += " -g"; }
+	if( CompileOptions.ConvertWarningsToErrors )    { ConsoleCommand += " -Werror"; }
+	if( CompileOptions.DumpAssembly )               { ConsoleCommand += " -S"; }
+	if( CompileOptions.NoBuiltin )                  { ConsoleCommand += " -fno-builtin"; }
+	if( CompileOptions.Freestanding )               { ConsoleCommand += " -ffreestanding"; }
+	if( CompileOptions.NoStackProtection )          { ConsoleCommand += " -fno-stack-protector"; }
+	if( CompileOptions.NoRedZone )                  { ConsoleCommand += " -mno-red-zone"; }
 	// clang-format on
 
 	ConsoleCommand += " -c -Wextra -Wall -fexec-charset=UTF-8 -finput-charset=UTF-8 -masm=intel";
@@ -89,8 +89,8 @@ int FGenericPlatform::RunGCC
 // clang-format off
 int FGenericPlatform::RunLLC
 (
-    const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
-    const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
+	const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
 )
 // clang-format on
 {
@@ -105,8 +105,8 @@ int FGenericPlatform::RunLLC
 // clang-format off
 int FGenericPlatform::RunThirdPartyLinker
 (
-    const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
-    const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths
+	const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
+	const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths
 )
 // clang-format on
 {
@@ -157,10 +157,10 @@ int FGenericPlatform::RunThirdPartyLinker
 	}
 
 	// clang-format off
-	if( CompileOptions.Freestanding ) 			{ ConsoleCommand += " -nostdlib"; }
-	if( !CompileOptions.EntryPoint.empty() ) 	{ ConsoleCommand += " -nostartfiles -e" + CompileOptions.EntryPoint; }
-	if( CompileOptions.IsDebug ) 				{ ConsoleCommand += ""; }
-	if( CompileOptions.IsDLL ) 					{ ConsoleCommand += " -shared -fPIC"; }
+	if( CompileOptions.Freestanding )           { ConsoleCommand += " -nostdlib"; }
+	if( !CompileOptions.EntryPoint.empty() )    { ConsoleCommand += " -nostartfiles -e" + CompileOptions.EntryPoint; }
+	if( CompileOptions.IsDebug )                { ConsoleCommand += ""; }
+	if( CompileOptions.IsDLL )                  { ConsoleCommand += " -shared -fPIC"; }
 	// clang-format on
 
 	ConsoleCommand += " -o" + OutputFilePath;
