@@ -17,7 +17,9 @@
 			"fstream": "cpp",
 			"cstdlib": "cpp",
 			"cstdio": "cpp",
-			"algorithm": "cpp"
+			"algorithm": "cpp",
+			"memory": "cpp",
+			"filesystem": "cpp"
 		}
 	}
 }

@@ -54,14 +54,16 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 
 void FCompileLogger::MessageError(const std::string& Message)
 {
-	if( Message.empty() ) return;
-
-	std::cerr << Message << std::endl;
+	if( !Message.empty() )
+	{
+		std::cerr << Message << std::endl;
+	}
 }
 
 void FCompileLogger::MessageText(const std::string& Message)
 {
-	if( Message.empty() ) return;
-
-	std::cout << Message << std::endl;
+	if( !Message.empty() )
+	{
+		std::cout << Message << std::endl;
+	}
 }

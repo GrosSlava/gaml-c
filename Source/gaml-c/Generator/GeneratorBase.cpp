@@ -2,6 +2,9 @@
 
 #include "GeneratorBase.h"
 
+#include "../Platform/PlatformHelperLibrary.h"
+#include "../Platform/GenericPlatform.h"
+
 #include <fstream>
 
 

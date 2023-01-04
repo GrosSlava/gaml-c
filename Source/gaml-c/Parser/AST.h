@@ -4,12 +4,7 @@
 
 #include "../CoreMinimal.h"
 
-#include "../Token/Token.h"
-
-
-
-
-struct FProgramInfo;
+#include "ASTNodes/ASTRoot.h"
 
 
 
@@ -17,29 +12,4 @@ struct FProgramInfo;
 /*
 	Abstract syntax tree.
 */
-class AST
-{
-public:
-
-	inline AST() { }
-	virtual ~AST() { }
-
-
-
-public:
-
-	void BuildAST(const std::vector<Token>& InTokens);
-	void InterpretAST(const FProgramInfo& OutProgramInfo);
-
-	bool GetInterpretResultAsBool() const;
-	int GetInterpretResultAsInt() const;
-	double GetInterpretResultAsDouble() const;
-	std::string GetInterpretResultAsString() const;
-
-
-
-
-public:
-
-	//TODO
-};
+using AST = ASTRoot;

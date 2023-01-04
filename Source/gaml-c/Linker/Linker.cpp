@@ -13,12 +13,13 @@
 
 void Linker::Process(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths, const FCompileOptions& Options)
 {
-	if( ObjectFilesPaths.empty() ) return;
-
+	if( ObjectFilesPaths.empty() )
+	{
+		return;
+	}
 
 	CurrentCompileOptions = Options;
-	FirstFileInfo = FCompilerHelperLibrary::SplitFilePath(ObjectFilesPaths[0]);
-
+	FirstFileInfo.SetFromPath(ObjectFilesPaths[0]);
 
 	RunThirdPartyLinker(ObjectFilesPaths, LibsFilesPaths);
 }

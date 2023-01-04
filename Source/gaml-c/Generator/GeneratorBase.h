@@ -6,9 +6,6 @@
 
 #include "GeneratorHelperLibrary.h"
 
-#include "../Platform/PlatformHelperLibrary.h"
-#include "../Platform/GenericPlatform.h"
-
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
 #include "../Compiler/CompilerConfig.h"

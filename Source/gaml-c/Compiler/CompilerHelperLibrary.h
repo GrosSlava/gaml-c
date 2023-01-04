@@ -25,7 +25,7 @@ struct FCompilerHelperLibrary
 		@param Lambda - code to check.
 	*/
 	template<class CODE>
-	static size_t ClockCodeMilliseconds(CODE Lambda)
+	static inline size_t ClockCodeMilliseconds(CODE Lambda)
 	{
 		const auto LStartTime = std::chrono::high_resolution_clock::now();
 
@@ -41,20 +41,7 @@ struct FCompilerHelperLibrary
 		@param MillisecondsCount - Time in milliseconds.
 		@return formatted current time.
 	*/
-	static std::string GetPrettyTimeStr(size_t MillisecondsCount) noexcept
-	{
-		const size_t LSeconds = MillisecondsCount / 1000;
-		const size_t LMilliseconds = MillisecondsCount - LSeconds * 1000;
-		const size_t LMinutes = LSeconds / 60;
-		const size_t LHours = LMinutes / 60;
-
-		// clang-format off
-		return 	std::to_string(LHours) + ":" + 
-				std::to_string(LMinutes) + ":" + 
-				std::to_string(LSeconds) + "." + 
-				std::to_string(LMilliseconds / 100) + std::to_string(LMilliseconds / 10 % 10);
-		// clang-format on
-	}
+	static std::string GetPrettyTimeStr(size_t MillisecondsCount) noexcept;
 
 
 
@@ -67,29 +54,8 @@ struct FCompilerHelperLibrary
 		@param OutNameOnly - Result of file name only.
 		@param OutExtensionOnly - Result of file extension only.
 	*/
-	static void SplitFilePath(const std::string& FilePath, std::string& OutPathOnly, std::string& OutNameOnly, std::string& OutExtensionOnly)
-	{
-		const size_t FileExtensionDotPos = FilePath.find_last_of('.');
-		const size_t FileExtensionLastSlashPos = FilePath.find_last_of(std::filesystem::path::preferred_separator);
-		const size_t FileNameStart = FileExtensionLastSlashPos + 1; // if not found there will be 0
+	static void SplitFilePath(const std::string& FilePath, std::string& OutPathOnly, std::string& OutNameOnly, std::string& OutExtensionOnly);
 
-		OutPathOnly = FilePath.substr(0, FileNameStart);
-		OutNameOnly = FilePath.substr(FileNameStart, FileExtensionDotPos - FileNameStart);
-		OutExtensionOnly = FileExtensionDotPos == std::string::npos ? "" : FilePath.substr(FileExtensionDotPos + 1);
-	}
-	/*
-		Split file path into FGamlFileInfo.
-
-		@param FilePath - Path to file for splitting.
-	*/
-	static inline FGamlFileInfo SplitFilePath(const std::string& FilePath)
-	{
-		FGamlFileInfo LResult;
-
-		SplitFilePath(FilePath, LResult.PathToFileOnly, LResult.FileNameOnly, LResult.ExtensionOnly);
-		return LResult;
-	}
-	// clang-format off
 	/*
 		Split file path by separator.
 
@@ -97,25 +63,7 @@ struct FCompilerHelperLibrary
 		@param OutParts - Result of split.
 		@param Separator - Char for separate(not included into split parts).
 	*/
-	static void SplitPathToParts
-	(
-		const std::string& FilePath, std::vector<std::string>& OutParts, 
-		char Separator = std::filesystem::path::preferred_separator
-	)
-	// clang-format on
-	{
-		OutParts.clear();
-
-		size_t LPrevOffset = 0;
-		size_t LOffset = FilePath.find_first_of(Separator, 0);
-		while( LOffset != std::string::npos )
-		{
-			OutParts.push_back(FilePath.substr(LPrevOffset, LOffset - LPrevOffset));
-			LPrevOffset = LOffset + 1;
-			LOffset = FilePath.find_first_of(Separator, LPrevOffset);
-		}
-		OutParts.push_back(FilePath.substr(LPrevOffset, LOffset - LPrevOffset));
-	}
+	static void SplitPathToParts(const std::string& FilePath, std::vector<std::string>& OutParts, char Separator = std::filesystem::path::preferred_separator);
 
 	/*
 		Concatanate paths by platform specific delimiter.
@@ -124,24 +72,7 @@ struct FCompilerHelperLibrary
 		@param Rhs - Right hand string to concatanate.
 		@param Separator - Separetor to concatanate.
 	*/
-	static std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator)
-	{
-		if( Lhs.empty() ) return Rhs;
-		if( Rhs.empty() ) return Lhs;
-
-		std::string LResult = Lhs;
-		if( LResult.back() != Separator && Rhs.at(0) != Separator )
-		{
-			LResult += Separator;
-		}
-		else if( LResult.back() == Separator && Rhs.at(0) == Separator )
-		{
-			LResult.resize(LResult.size() - 1);
-		}
-		LResult += Rhs;
-
-		return LResult;
-	}
+	static std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator);
 
 	// clang-format off
 	/*
@@ -155,43 +86,15 @@ struct FCompilerHelperLibrary
 	(
 		const std::vector<std::string>& Parts, bool IncludeEndSeparator = false, 
 		char Separator = std::filesystem::path::preferred_separator
-	)
+	);
 	// clang-format on
-	{
-		std::string LResult = "";
-
-		for( const std::string& LPart : Parts )
-		{
-			LResult = CatPaths(LResult, LPart, Separator);
-		}
-		if( LResult.size() > 0 && !IncludeEndSeparator && LResult.back() == Separator )
-		{
-			LResult.resize(LResult.size() - 1); // without separator
-		}
-
-		return LResult;
-	}
 
 	/*
 		Make "up" path. It can be see like "../../../"
 
 		@param UpCount - Count of directories to up.
 	*/
-	static std::string MakeUpDirectoryStr(size_t UpCount)
-	{
-		if( UpCount == 0 ) return "";
-
-		std::string LResult = "";
-		const std::string LUp = std::string("..") + static_cast<char>(std::filesystem::path::preferred_separator);
-
-		LResult.reserve(UpCount * LUp.size());
-		for( size_t i = 0; i < UpCount; ++i )
-		{
-			LResult += LUp;
-		}
-
-		return LResult;
-	}
+	static std::string MakeUpDirectoryStr(size_t UpCount);
 
 
 
@@ -208,28 +111,9 @@ struct FCompilerHelperLibrary
 	(
 		const std::string& Path, const std::vector<std::string>& AvailableExtensions, 
 		std::vector<FGamlFileInfo>& OutFilesInfo
-	)
+	);
 	// clang-format on
-	{
-		OutFilesInfo.clear();
-		if( !std::filesystem::exists(Path) ) return;
 
-
-		for( const std::filesystem::directory_entry& LEntry : std::filesystem::recursive_directory_iterator(Path) )
-		{
-			if( !LEntry.is_regular_file() ) continue;
-
-			FGamlFileInfo LGamlFileInfo = SplitFilePath(LEntry.path().string());
-			for( const std::string& LAvailableExtension : AvailableExtensions )
-			{
-				if( LGamlFileInfo.ExtensionOnly == LAvailableExtension )
-				{
-					OutFilesInfo.push_back(LGamlFileInfo);
-					break;
-				}
-			}
-		}
-	}
 	/*
 		Find all files with GAML extension in given folder and it's subfolders (search both of sources and headers).
 	*/
@@ -242,32 +126,13 @@ struct FCompilerHelperLibrary
 		@param Path - Directory to search.
 		@return first folder name from given directory.
 	*/
-	static std::string GetFirstFolderName(const std::string& Path)
-	{
-		if( !std::filesystem::exists(Path) ) return "";
+	static std::string GetFirstFolderName(const std::string& Path);
 
-		for( const std::filesystem::directory_entry& LEntry : std::filesystem::directory_iterator(Path) )
-		{
-			if( !LEntry.is_directory() ) continue;
-
-			return LEntry.path().filename().string();
-		}
-
-		return "";
-	}
 	/*
 		@return first existing folder from FoldersBestOrder.
 	*/
-	static std::string GetBestFolderName(const std::string& Path, const std::vector<std::string>& FoldersBestOrder)
-	{
-		for( const std::string& LFolderName : FoldersBestOrder )
-		{
-			if( !std::filesystem::exists(Path + (char)std::filesystem::path::preferred_separator + LFolderName) ) continue;
-			return LFolderName;
-		}
+	static std::string GetBestFolderName(const std::string& Path, const std::vector<std::string>& FoldersBestOrder);
 
-		return "";
-	}
 
 
 
@@ -277,16 +142,5 @@ struct FCompilerHelperLibrary
 		@param File - opened file to read.
 		@param OutFileSource - Result string.
 	*/
-	static void ReadAllFileToStr(std::ifstream& File, std::string& OutFileSource)
-	{
-		OutFileSource.clear();
-		if( !File.is_open() ) return;
-
-		const size_t LFileSize = File.seekg(0, std::ios::end).tellg();
-		File.seekg(0);
-
-		OutFileSource.resize(LFileSize);
-		File.read(&OutFileSource[0], LFileSize);
-		File.close();
-	}
+	static void ReadAllFileToStr(std::ifstream& File, std::string& OutFileSource);
 };

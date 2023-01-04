@@ -79,7 +79,7 @@ struct FParserHelperLibrary
 	/*
 		Check that pair TokenA matchs pair TokenB.
 	*/
-	static bool DoesPairTokensMatch(const Token& TokenA, const Token& TokenB) noexcept
+	static inline bool DoesPairTokensMatch(const Token& TokenA, const Token& TokenB) noexcept
 	{
 		const ETokenType LAType = TokenA.GetType();
 		const ETokenType LBType = TokenB.GetType();
@@ -135,23 +135,7 @@ struct FParserHelperLibrary
 		@ProgramInfo ProgramInfo - current program info.
 		@return module real compile name.
 	*/
-	static std::string GetModuleRealName(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo)
-	{
-		if( ProgramInfo.ImportedModulesInfo.find(ModuleNameOrAlias) != ProgramInfo.ImportedModulesInfo.end() ) return ModuleNameOrAlias;
-
-		const auto LMainModuleInfo = ProgramInfo.ImportedModulesInfo.find(ProgramInfo.MainModuleName);
-		if( LMainModuleInfo == ProgramInfo.ImportedModulesInfo.end() ) return "";
-
-		for( const auto& LAliasPair : LMainModuleInfo->second.ImportedModuleNameAliases )
-		{
-			if( ModuleNameOrAlias == LAliasPair.first )
-			{
-				return LAliasPair.second;
-			}
-		}
-
-		return "";
-	}
+	static std::string GetModuleRealName(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo);
 	/*
 		Return module real compile name.
 		First part can be module/package alias. 
@@ -160,17 +144,7 @@ struct FParserHelperLibrary
 		@ProgramInfo ProgramInfo - current program info.
 		@return module real compile name.
 	*/
-	static std::string GetModuleRealName(std::vector<std::string> ModulePathParts, const FProgramInfo& ProgramInfo)
-	{
-		if( ModulePathParts.empty() ) return "";
-
-		const std::string LFirstPartRealName = GetModuleRealName(ModulePathParts[0], ProgramInfo);
-
-		if( LFirstPartRealName.empty() ) return GetModuleCompileName(ModulePathParts);
-
-		ModulePathParts[0] = LFirstPartRealName;
-		return GetModuleCompileName(ModulePathParts);
-	}
+	static std::string GetModuleRealName(std::vector<std::string> ModulePathParts, const FProgramInfo& ProgramInfo);
 	/*
 		Return module real compile name.
 		First part can be module/package alias. 
@@ -179,15 +153,7 @@ struct FParserHelperLibrary
 		@ProgramInfo ProgramInfo - current program info.
 		@return module real compile name.
 	*/
-	static std::string GetModuleRealNameWithFirstPartCheck(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo)
-	{
-		if( ModuleNameOrAlias.empty() ) return "";
-
-		std::vector<std::string> SplittedParts;
-		FCompilerHelperLibrary::SplitPathToParts(ModuleNameOrAlias, SplittedParts, '.');
-
-		return GetModuleRealName(SplittedParts, ProgramInfo);
-	}
+	static std::string GetModuleRealNameWithFirstPartCheck(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo);
 
 	/*
 		Construct any compile name.
@@ -196,23 +162,7 @@ struct FParserHelperLibrary
 		@param OriginalName - object original name.
 		@return constructed name.
 	*/
-	static std::string GetCompileName(const std::string& ContextCompileName, const std::string& OriginalName) noexcept
-	{
-		if( OriginalName.empty() ) return "";
-
-
-		std::string LCompileName = "";
-		LCompileName.reserve(OriginalName.size() + ContextCompileName.size() + 1);
-
-		if( !ContextCompileName.empty() )
-		{
-			LCompileName += ContextCompileName + FCompilerConfig::COMPILE_NAME_SEPARATOR;
-		}
-
-		LCompileName += OriginalName;
-
-		return LCompileName;
-	}
+	static std::string GetCompileName(const std::string& ContextCompileName, const std::string& OriginalName) noexcept;
 	// clang-format off
 	/*
 		Construct any compile name.
@@ -225,28 +175,8 @@ struct FParserHelperLibrary
 	static std::string GetCompileName
 	(
 		const std::string& ContextCompileName, const std::string& OriginalName, const std::vector<std::string>& ArgumentNames
-	) noexcept
+	) noexcept;
 	// clang-format on
-	{
-		if( OriginalName.empty() ) return "";
-
-
-		std::string LCompileName = "";
-		LCompileName.reserve(OriginalName.size() + ContextCompileName.size() + ArgumentNames.size() * 2);
-
-		if( !ContextCompileName.empty() )
-		{
-			LCompileName += ContextCompileName + FCompilerConfig::COMPILE_NAME_SEPARATOR;
-		}
-
-		LCompileName += OriginalName;
-		for( const std::string& LArgumentStr : ArgumentNames )
-		{
-			LCompileName += FCompilerConfig::COMPILE_NAME_SEPARATOR + LArgumentStr;
-		}
-
-		return LCompileName;
-	}
 	// clang-format off
 	/*
 		Construct function compile name.
@@ -261,21 +191,8 @@ struct FParserHelperLibrary
 	(
 		const std::string& ContextCompileName, const std::string& OriginalName, 
 		bool IsConst, const std::vector<std::string>& ArgumentTypeNames
-	) noexcept
+	) noexcept;
 	// clang-format on
-	{
-		if( OriginalName.empty() ) return "";
-
-
-		std::string LFunctionCompileName = GetCompileName(ContextCompileName, OriginalName, ArgumentTypeNames);
-
-		if( IsConst )
-		{
-			LFunctionCompileName = "const" + LFunctionCompileName;
-		}
-
-		return LFunctionCompileName;
-	}
 	// clang-format off
 	/*
 		Construct function compile name.
@@ -290,30 +207,16 @@ struct FParserHelperLibrary
 	(	
 		const std::string& ContextCompileName, const std::string& OriginalName,
 		const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
-	) noexcept
+	) noexcept;
 	// clang-format on
-	{
-		std::vector<std::string> LArgumentsNames;
-		LArgumentsNames.reserve(FunctionSignatureInfo.Inputs.size());
 
-		for( const FVariableInfo& LVariableInfo : FunctionSignatureInfo.Inputs )
-		{
-			// it is finite recursion with function signature as argument
-			const std::string LTypeName = GetTypeName(LVariableInfo.TypeID, ProgramInfo);
-			if( LTypeName.empty() ) return "";
-
-			LArgumentsNames.push_back(LTypeName);
-		}
-
-		return GetFunctionCompileName(ContextCompileName, OriginalName, FunctionSignatureInfo.Modifiers.IsConst, LArgumentsNames);
-	}
 	/*
 		Construct standard type compile name.
 
 		@param StandardTypeID - ID of standard type.
 		@return constructed type name.
 	*/
-	static std::string GetStandardTypeCompileName(EStandardTypesID StandardTypeID)
+	static inline std::string GetStandardTypeCompileName(EStandardTypesID StandardTypeID)
 	{
 		// clang-format off
 		switch( StandardTypeID )
@@ -348,13 +251,11 @@ struct FParserHelperLibrary
 		@param ProgramInfo - current program info.
 		@return constructed type name.
 	*/
-	static std::string GetTypeName(int TypeID, const FProgramInfo& ProgramInfo) noexcept
+	static inline std::string GetTypeName(int TypeID, const FProgramInfo& ProgramInfo) noexcept
 	{
 		if( TypeID < 0 || TypeID >= ProgramInfo.TypesMap.size() ) return "";
 
-
 		const FUserTypePath& LTypePath = ProgramInfo.TypesMap[TypeID];
-
 		switch( LTypePath.PathSwitch )
 		{
 		case ETypePathSwitch::Standard:
@@ -488,93 +389,27 @@ struct FParserHelperLibrary
 	/*
 		Try to get function signature ID.
 	*/
-	static int GetFunctionSignatureID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
-	{
-		for( int i = 0; i < ProgramInfo.FunctionSignaturesTypesMap.size(); ++i )
-		{
-			if( AreFunctionSignaturesSame(FunctionSignatureInfo, ProgramInfo.FunctionSignaturesTypesMap[i]) )
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
+	static int GetFunctionSignatureID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept;
 	/*
 		Try to get function signature ID.
 	*/
-	static inline int GetFunctionSignatureID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept
-	{
-		auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
-		if( LFunctionInfoIterator == ProgramInfo.Functions.end() ) return -1;
-
-		return GetFunctionSignatureID(LFunctionInfoIterator->second.SignatureInfo, ProgramInfo);
-	}
+	static int GetFunctionSignatureID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept;
 	/*
 		Try to get function signature as type ID.
 	*/
-	static int GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
-	{
-		const int LFunctionSignatureID = GetFunctionSignatureID(FunctionSignatureInfo, ProgramInfo);
-		if( LFunctionSignatureID < 0 ) return -1;
-
-		for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
-		{
-			// clang-format off
-			if( 
-				ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::FunctionSignature &&
-				ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID 
-			   )
-			// clang-format on
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
+	static int GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept;
 	/*
 		Try to get function signature as type ID.
 	*/
-	static inline int GetFunctionSignatureTypeID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept
-	{
-		auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
-		if( LFunctionInfoIterator == ProgramInfo.Functions.end() ) return -1;
-
-		return GetFunctionSignatureTypeID(LFunctionInfoIterator->second.SignatureInfo, ProgramInfo);
-	}
+	static int GetFunctionSignatureTypeID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept;
 	/*
 		Try to get class as type ID.
 	*/
-	static int GetClassTypeID(const std::string& ClassCompileName, const FProgramInfo& ProgramInfo) noexcept
-	{
-		for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
-		{
-			if( ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::Class && ProgramInfo.TypesMap[i].ClassPath.ClassCompileName == ClassCompileName )
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	}
+	static int GetClassTypeID(const std::string& ClassCompileName, const FProgramInfo& ProgramInfo) noexcept;
 	/*
 		Try to get user type ID by compile name.
 	*/
-	static inline int GetUserTypeID(const std::string& CompileName, const FProgramInfo& ProgramInfo) noexcept
-	{
-		int LTypeID = GetClassTypeID(CompileName, ProgramInfo);
-		if( LTypeID == -1 )
-		{
-			auto LAliasIter = ProgramInfo.TypeAliases.find(CompileName);
-			if( LAliasIter != ProgramInfo.TypeAliases.end() )
-			{
-				LTypeID = LAliasIter->second;
-			}
-		}
-
-		return LTypeID;
-	}
+	static int GetUserTypeID(const std::string& CompileName, const FProgramInfo& ProgramInfo) noexcept;
 
 
 
@@ -582,71 +417,10 @@ struct FParserHelperLibrary
 	/*
 		Check that given function signatures are same.
 	*/
-	static bool AreFunctionSignaturesSame(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept
-	{
-		if( FS1.Inputs.size() != FS2.Inputs.size() ) return false;
-
-		auto LFS1Iter = FS1.Inputs.begin();
-		auto LFS2Iter = FS2.Inputs.begin();
-
-		while( LFS1Iter != FS1.Inputs.end() )
-		{
-			if( LFS1Iter->TypeID != LFS2Iter->TypeID ) return false;
-
-			++LFS1Iter;
-			++LFS2Iter;
-		}
-
-		if( FS1.Modifiers.IsConst != FS2.Modifiers.IsConst ) return false;
-
-		return true;
-	}
+	static bool AreFunctionSignaturesSame(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept;
 
 	/*
 		Find first module name declaration in tokens array.
 	*/
-	static std::string GetFirstModuleName(const std::vector<Token>& Tokens) noexcept
-	{
-		if( Tokens.empty() ) return "";
-
-		int ModuleNameSearchIndex = 0;
-
-		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::DESCRIPTION_BLOCK )
-		{
-			do
-			{
-				++ModuleNameSearchIndex;
-				if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-			} while( Tokens[ModuleNameSearchIndex].GetType() != ETokenType::DESCRIPTION_BLOCK );
-
-			++ModuleNameSearchIndex;
-			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-		}
-
-		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::PUBLIC || Tokens[ModuleNameSearchIndex].GetType() == ETokenType::PRIVATE )
-		{
-			++ModuleNameSearchIndex;
-			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-		}
-
-		if( Tokens[ModuleNameSearchIndex].GetType() == ETokenType::MODULE )
-		{
-			++ModuleNameSearchIndex;
-			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-		}
-		else
-		{
-			return "";
-		}
-
-		std::string LModuleName = "";
-		while( Tokens[ModuleNameSearchIndex].GetType() != ETokenType::SEMICOLON )
-		{
-			LModuleName += Tokens[ModuleNameSearchIndex].GetLexeme();
-			++ModuleNameSearchIndex;
-			if( Tokens.size() <= ModuleNameSearchIndex ) return "";
-		}
-
-		return GetModuleCompileName(LModuleName);
-	}
+	static std::string GetFirstModuleName(const std::vector<Token>& Tokens) noexcept;
 };

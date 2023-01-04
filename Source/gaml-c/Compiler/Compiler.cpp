@@ -10,8 +10,8 @@
 #include "../SemanticAnalyzer/SemanticAnalyser.h"
 
 #include "../Generator/GeneratorBase.h"
-#include "../Generator/ReduceCGenerator.h"
-#include "../Generator/LLVMGenerator.h"
+#include "../Generator/ReduceC/ReduceCGenerator.h"
+#include "../Generator/LLVM/LLVMGenerator.h"
 
 #include <fstream>
 
@@ -21,7 +21,7 @@
 
 std::string Compiler::Process(const std::string& FilePath, const FCompileOptions& Options)
 {
-	return Process(FCompilerHelperLibrary::SplitFilePath(FilePath), Options);
+	return Process(FGamlFileInfo(FilePath), Options);
 }
 
 std::string Compiler::Process(const FGamlFileInfo& InFileInfo, const FCompileOptions& Options)

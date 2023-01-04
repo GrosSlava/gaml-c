@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "../CoreMinimal.h"
+#include "../../CoreMinimal.h"
 
-#include "GeneratorBase.h"
+#include "../GeneratorBase.h"
 
 
 

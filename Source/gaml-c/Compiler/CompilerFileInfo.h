@@ -15,6 +15,10 @@ struct FGamlFileInfo
 public:
 
 	inline FGamlFileInfo() { }
+	inline FGamlFileInfo(const std::string& FilePath)
+	{
+    	SetFromPath(FilePath);
+	}
 	inline FGamlFileInfo(const std::string& InPathToFileOnly, const std::string& InFileNameOnly, const std::string& InExtensionOnly) :
 		PathToFileOnly(InPathToFileOnly), FileNameOnly(InFileNameOnly), ExtensionOnly(InExtensionOnly)
 	{
@@ -23,6 +27,20 @@ public:
 
 
 public:
+
+	/*
+		Set all parts from full file path.
+	*/
+	void SetFromPath(const std::string& FilePath);
+	/*
+		Clear content.
+	*/
+	inline void Clear() noexcept
+	{
+		PathToFileOnly.clear();
+		FileNameOnly.clear();
+		ExtensionOnly.clear();
+	}
 
 	/*
 		@return original concatanated path.
@@ -36,16 +54,7 @@ public:
 		@return true if path to file is empty. 
 	*/
 	inline bool IsEmpty() const noexcept { return PathToFileOnly.empty() && FileNameOnly.empty(); }
-	/*
-		Clear content.
-	*/
-	inline void Clear() noexcept
-	{
-		PathToFileOnly.clear();
-		FileNameOnly.clear();
-		ExtensionOnly.clear();
-	}
-
+	
 
 
 

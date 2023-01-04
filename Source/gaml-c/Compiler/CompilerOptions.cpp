@@ -493,7 +493,7 @@ void ParseInputOptions
 	{
 		if( argv[i][0] != '-' )
 		{
-			const FGamlFileInfo LFileInfo = FCompilerHelperLibrary::SplitFilePath(argv[i]);
+			const FGamlFileInfo LFileInfo(argv[i]);
 
 			if( FPlatformHelperLibrary::IsObjectFileExtension(LFileInfo.ExtensionOnly) )
 			{

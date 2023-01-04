@@ -24,9 +24,8 @@ See ISO C standard before.
 
 - const
 - extern
-- switch, case
 - if, else
-- for, do while, while
+- while, do while
 - break, continue, return
 - struct
 - __cdecl, __stdcall, __fastcall, __thiscall

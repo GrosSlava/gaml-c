@@ -15,6 +15,16 @@
 struct FPlatformHelperLibrary
 {
 	/*
+		Execute console command on platform.
+		
+		@return command exit code.
+	*/
+	static int RunConsoleCommand(const std::string& Command);
+
+
+
+
+	/*
 		Check that extension is any type of object file extension.
 	*/
 	static inline bool IsObjectFileExtension(const std::string& Extension) noexcept { return Extension == "obj" || Extension == "o"; }
@@ -41,7 +51,6 @@ struct FPlatformHelperLibrary
 		@return array of all supported object file extensions.
 	*/
 	static inline std::vector<std::string> GetAllObjectFileExtensions() noexcept { return {"obj", "o"}; }
-
 
 
 	/*
@@ -71,7 +80,6 @@ struct FPlatformHelperLibrary
 		@return array of all supported executable file extensions.
 	*/
 	static inline std::vector<std::string> GetAllExecutableFileExtensions() noexcept { return {"exe", "out"}; }
-
 
 
 	/*

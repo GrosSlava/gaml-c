@@ -1,7 +1,7 @@
 // Copyright 2022 GrosSlava.
 
 #include "ParserStates.h"
-#include "../ParserHelperLibray.h"
+#include "../ParserHelperLibrary.h"
 
 #include "../../Compiler/CompilerConfig.h"
 #include "../../Compiler/CompilerHelperLibrary.h"
@@ -10,7 +10,6 @@
 #include "../../Parser/Parser.h"
 
 #include <fstream>
-#include <algorithm>
 
 
 
@@ -2200,7 +2199,7 @@ bool FParserStates::ImportModule
 	}
 
 
-	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
+	const std::string LCompilerPathOnly = FGamlFileInfo(CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
 	FParserHelperLibrary::SplitModuleCompileNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
@@ -2213,7 +2212,7 @@ bool FParserStates::ImportModule
 	if( !LFile.is_open() )
 	{
 		// clang-format off
-		LModuleFileInfo = FCompilerHelperLibrary::SplitFilePath
+		LModuleFileInfo.SetFromPath
 		(
 			FileInfo.PathToFileOnly + LUpDirectory + ImportModuleRelativePath + "." + FCompilerConfig::HEADER_FILE_EXTENSION
 		);
@@ -2223,7 +2222,7 @@ bool FParserStates::ImportModule
 	if( !LFile.is_open() )
 	{
 		// clang-format off
-		LModuleFileInfo = FCompilerHelperLibrary::SplitFilePath
+		LModuleFileInfo.SetFromPath
 		(
 			FileInfo.PathToFileOnly + LUpDirectory + ImportModuleRelativePath + "." + FCompilerConfig::COMPILE_FILE_EXTENSION
 		);
@@ -2233,7 +2232,7 @@ bool FParserStates::ImportModule
 	if( !LFile.is_open() )
 	{
 		// clang-format off
-		LModuleFileInfo = FCompilerHelperLibrary::SplitFilePath
+		LModuleFileInfo.SetFromPath
 		(
 			LCompilerPathOnly + ImportModuleRelativePath + "." + FCompilerConfig::HEADER_FILE_EXTENSION
 		);
@@ -2243,7 +2242,7 @@ bool FParserStates::ImportModule
 	if( !LFile.is_open() )
 	{
 		// clang-format off
-		LModuleFileInfo = FCompilerHelperLibrary::SplitFilePath
+		LModuleFileInfo.SetFromPath
 		(
 			LCompilerPathOnly + ImportModuleRelativePath + "." + FCompilerConfig::COMPILE_FILE_EXTENSION
 		);
@@ -2304,7 +2303,7 @@ bool FParserStates::ImportModule
 
 bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::string& ImportPackageRelativePath, const Token& TokenCTX)
 {
-	const std::string LCompilerPathOnly = FCompilerHelperLibrary::SplitFilePath(CompileOptions.PathToCompiler).PathToFileOnly;
+	const std::string LCompilerPathOnly = FGamlFileInfo(CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
 	FParserHelperLibrary::SplitModuleCompileNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
