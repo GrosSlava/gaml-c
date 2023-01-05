@@ -19,6 +19,7 @@
 		isinstance(a, B)    --- check that object a is instance of type B
 		isiterable(a)       --- check that object/type is isiterable
 		isabstract(a)       --- check that object/type has abstract method
+		isalias(A, B)       --- check that type A is alias for type B
 		addr(a)             --- get addres of object (return type is addr_t)
 		default(a)          --- get default value for object, if function has default value for argument return it(e.g for integer it is 0)
 

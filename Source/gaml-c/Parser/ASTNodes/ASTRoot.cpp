@@ -11,15 +11,16 @@ void ASTRoot::BuildAST(const std::vector<Token>& InTokens, size_t Index)
 	//TODO
 }
 
-void ASTRoot::InterpretAST(const FProgramInfo& OutProgramInfo)
+void ASTRoot::InterpretAST(const FProgramInfo& ProgramInfo)
 {
 	//TODO
 }
 
-std::string ASTRoot::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& OutProgramInfo) const
+std::string ASTRoot::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const
 {
-	//TODO
-	return "";
+	std::shared_ptr<INodeCodeGen<ASTRoot>> LGen = ASTCodeGenFactory->MakeRootGen();
+	if( LGen == nullptr ) return ""; 
+	return LGen->GenerateCode(this, ProgramInfo);
 }
 
 

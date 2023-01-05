@@ -14,5 +14,7 @@
 */
 class ReduceC_ASTCodeGenFactory : public IASTCodeGenFactory
 {
-	//TODO
+public:
+
+	virtual std::shared_ptr<INodeCodeGen<class ASTRoot>> MakeRootGen() const override;
 };

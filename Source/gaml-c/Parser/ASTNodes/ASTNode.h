@@ -13,6 +13,7 @@
 
 struct FProgramInfo;
 
+
 /*
 	Interface for all AST nodes.
 */
@@ -28,8 +29,8 @@ public:
 public:
 
 	virtual void BuildAST(const std::vector<Token>& InTokens, size_t Index) = 0;
-	virtual void InterpretAST(const FProgramInfo& OutProgramInfo) = 0;
-	virtual std::string GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& OutProgramInfo) const = 0;
+	virtual void InterpretAST(const FProgramInfo& ProgramInfo) = 0;
+	virtual std::string GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const = 0;
 
 	virtual bool GetInterpretResultAsBool() const = 0;
 	virtual int GetInterpretResultAsInt() const = 0;

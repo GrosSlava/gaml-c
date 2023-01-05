@@ -9,14 +9,11 @@
 
 struct FProgramInfo;
 
-class IASTNode;
-
 
 
 
 /*
 	Interface for node code generator.
-	Inherit and implement for your generator.
 */
 template<class T>
 class INodeCodeGen
@@ -33,14 +30,14 @@ public:
 	/*
 		Produce third-party compiler specific code based on ASTNode.
 	*/
-	virtual std::string GenerateCode(std::shared_ptr<T> ASTNode, const FProgramInfo& OutProgramInfo) = 0;
+	virtual std::string GenerateCode(const T* ASTNode, const FProgramInfo& ProgramInfo) = 0;
 };
 
 
 
 /*
 	Factory for AST node code generators.
-	Inherit and implement for making your concrete NodeCodeGen for your generator.
+	Inherit it and implement for making your concrete NodeCodeGen for your generator.
 */
 class IASTCodeGenFactory
 {
@@ -51,6 +48,5 @@ public:
 
 public:
 
-	//TODO
-	//virtual std::shared_ptr<INodeCodeGen<IASTNode>> MakeA() const = 0;
+	virtual std::shared_ptr<INodeCodeGen<class ASTRoot>> MakeRootGen() const = 0;
 };
