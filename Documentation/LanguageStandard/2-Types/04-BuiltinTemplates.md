@@ -5,5 +5,5 @@ These types will not be available if the platform does not support them or if th
 
 
 
-[`array`](9-Array.md)`<|T|>` - built-in template array for any type \
+[`array`](09-Array.md)`<|T|>` - built-in template array for any type \
 [`class`](10-Class.md)`<|T|>` - built-in template container of any class type 

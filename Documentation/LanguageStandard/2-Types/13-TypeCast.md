@@ -46,7 +46,7 @@ var double A = int32(33.3); // A = 33
 
 ## Cast
 
-See [operators overloading](TODO) for casts in user types.
+See [operators overloading](../6-Classes/07-OperatorsOverloading.md) for casts in user types.
 
 `cast<|T|>(WHAT)` - safe cast object WHAT to T. \
 Safe cast can convert WHAT to T if WHAT have method to convert to T.

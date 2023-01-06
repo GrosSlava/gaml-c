@@ -6,4 +6,4 @@ These types always rely on and depend on the types built into the compiler.
 
 
 - See [type alias](12-TypeAlias.md)
-- See [class declaration](TODO)
+- See [class declaration](../6-Classes/01-ClassSystem.md)

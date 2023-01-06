@@ -1,6 +1,6 @@
 # Predefined variables
 
-Compiler provides a number of predefined static const variables.
+Compiler provides a number of predefined `static const` variables.
 
 
 

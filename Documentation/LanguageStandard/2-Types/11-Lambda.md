@@ -3,9 +3,9 @@
 Lambda - it is anonim function with context. \
 Common function can be used as lambda without context.
 
-1. Lambda can be declared as type
-2. Lambda can be declared and stored in variable
-3. Lambda can be created as RValue and passed into function
+1. Lambda can be declared as type in **module**, **class**, **function** scope
+2. Lambda can be declared and stored in variable in **class**, **function** scope
+3. Lambda can be created as RValue and passed into function in **function** scope
 
 
 
@@ -19,7 +19,7 @@ lambda ([1-INPUTS]) => [2-RETURN_TYPE]
 }
 ```
 1. Arguments separated by ',' in the order they are passing to lambda
-2. Type of lambda result
+2. [Type](01-Types.md) of lambda result
 3. List of variables to capture in context for using in lambda
 4. Lambda code
 
@@ -43,7 +43,7 @@ var MyLambdaSignature LLambda = lambda (int32 A, int32 B) => int32
 [LVar] // context (enumerate context or use 'this' for class)
 {
 	return A + B + LVar;
-}
+};
 
 // call lambda
 LLambda(5, 6);

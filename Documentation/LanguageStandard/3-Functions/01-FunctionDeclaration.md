@@ -4,6 +4,8 @@ All executable code is described in functions. \
 Unlike С, we can declare a function only once. \
 **GAML** doesn't have forward declaration.
 
+Function can be declared in **module**, **class** scope.
+
 
 
 ## Function declaration formula
@@ -14,10 +16,10 @@ Unlike С, we can declare a function only once. \
 ***
 [2-ACCESS_MODIFIER] func [3-FUNCTION_NAME] [[4-Compile-time code]];
 ```
-1. [MODIFIERS](3-FunctionModifiers.md) are a list of keywords to give a function a special behaviour (can be empty or not exist)
+1. [MODIFIERS](03-FunctionModifiers.md) are a list of keywords to give a function a special behaviour (can be empty or not exist)
 2. ACCESS_MODIFIER is keyword to set function visibility (optional)
 3. FUNCTION_NAME is unique identifier which can contains only english alphabet letters, '_' and digits after first letter
-4. [Compile-time code](4-CompileTimeCode.md) is the code that must be executed every time this function is mentioned during compilation (optional)
+4. [Compile-time code](04-CompileTimeCode.md) is the code that must be executed every time this function is mentioned during compilation (optional)
 
 ### Function access modifiers
 

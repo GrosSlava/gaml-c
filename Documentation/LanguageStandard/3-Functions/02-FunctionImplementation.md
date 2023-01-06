@@ -48,7 +48,7 @@ So we can't redefine default values or arguments names or compile-time code.
 ## Function was not declared
 
 If namespace is not used then function will be declared in current namespace. \
-See [function declaration](1-FunctionDeclaration.md).
+See [function declaration](01-FunctionDeclaration.md).
 
 
 

@@ -1,6 +1,6 @@
 # Comments
 
-To comment(set text not visible for compiler) use special constructions.
+To comment (set text not visible for compiler) use special constructions.
 
 
 

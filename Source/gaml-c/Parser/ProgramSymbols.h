@@ -73,7 +73,7 @@ enum class EClassType : unsigned char
 enum EStandardTypesID
 {
 	VOID_ID = 0,
-	//CLASS_ID - it is build in template
+	//CLASS_ID - it is built-in template
 	UINT8_ID,
 	UINT16_ID,
 	UINT32_ID,
@@ -88,7 +88,7 @@ enum EStandardTypesID
 	BOOL_ID,
 	CHAR_ID,
 	STRING_ID,
-	//ARRAY_ID - it is build in template
+	//ARRAY_ID - it is built-in template
 	VECTOR4D_ID,
 	VECTOR3D_ID,
 	VECTOR2D_ID,
