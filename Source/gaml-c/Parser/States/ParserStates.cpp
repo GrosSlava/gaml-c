@@ -145,6 +145,15 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GGlobalAccessModifier_ParserState;
 	}
+	case ETokenType::PROTECTED:
+	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.StatesContext.AccessModifierContextType = EAccessModifier::Protected;
+
+		InParserStates.PushState(InParserStates.GDefault_ParserState);
+		return InParserStates.GGlobalAccessModifier_ParserState;
+	}
 	case ETokenType::PRIVATE:
 	{
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
@@ -873,6 +882,21 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
 		InParserStates.StatesContext.AccessModifierContextType = EAccessModifier::Public;
+
+		if( InParserStates.StatesContext.StateContextType == EStateContextType::Global )
+		{
+			return InParserStates.GGlobalAccessModifier_ParserState;
+		}
+		else
+		{
+			return InParserStates.GLocalAccessModifier_ParserState;
+		}
+	}
+	case ETokenType::PROTECTED:
+	{
+		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
+
+		InParserStates.StatesContext.AccessModifierContextType = EAccessModifier::Protected;
 
 		if( InParserStates.StatesContext.StateContextType == EStateContextType::Global )
 		{

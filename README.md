@@ -27,5 +27,5 @@ Or you can use [GitBook](https://grosslava.gitbook.io/gaml-c/)
 
 - Compiler --- documentation on installing and using the compiler
 - LanguageStandard --- gaml standard with examples and comments
-- Examples --- basic gaml course on general language features
+- Examples --- demostration of language features
 - Developer --- documentation for compiler and language developers
