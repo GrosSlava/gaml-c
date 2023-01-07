@@ -7,14 +7,14 @@ After optimizations enum can disappear from generated code.
 
 ## Enum features
 
-- Enum can be inhereted only from 1 [type](../2-Types/01-Types.md) to enumerate it (by default int32)
-- Enum is located in the same place as the parent type
-- Each field has the same type
-- Each field is `static const` and has default value
-- Enum can have only `static` methods
-- All enum members are `public`
-- Enum can't have [constructor](10-Constructor.md)
-- Enum is iterable type
+1. Enum can be inhereted only from 1 [type](../2-Types/01-Types.md) to enumerate it (by default int32)
+2. Enum is located in the same place as the parent type
+3. Each field has the same type
+4. Each field is `static const` and has default value
+5. Enum can have only `static` methods
+6. All enum members are `public`
+7. Enum can't have [constructor](10-Constructor.md)
+8. Enum is iterable type
 
 
 
@@ -52,7 +52,7 @@ enum EMyEnum(uint8)
 {
 	// all enum members are public
 
-	var Zero;		// for int start is 0
+	var Zero;       // for int start is 0
 	var One;        // each field is number
 	var Two = 3;    // we can give custom number for field
 	var Three;      // there will be 4
@@ -93,31 +93,25 @@ EMyEnum::foo(); // call enum method
 
 ## Enum auto-generated methods
 
+1. Get enum max value member (work with comparable types).
 ```
-// get enum max value member
-// work with comparable types
-
 EMyEnum::max(); // EMyEnum::Three
 // EMyStringEnum::max(); // will not work with strtings
 ```
 
+2. Get enum min value member (work with comparable types).
 ```
-// get enum min value member
-// work with comparable types
-
 EMyEnum::min(); // EMyEnum::Zero
 // EMyStringEnum::min(); // will not work with strtings
 ```
 
+3. Get count of enum fields.
 ```
-// get count of enum fields
-
 EMyEnum::count(); // 4
 ```
 
+4. Get name of enum field.
 ```
-// get name of enum field
-
 var EMyEnum m = EMyEnum::One;
 EMyEnum::str(m); // "One"
 ```

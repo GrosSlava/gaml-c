@@ -1,0 +1,11 @@
+# Module system
+
+For multifile projects **GAML** provide module system.
+
+
+
+## System structure
+
+- Each file is [module](02-Module.md)
+- Each folder is [package](03-Package.md)
+- Package contains modules and subpackages

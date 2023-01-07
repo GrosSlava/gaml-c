@@ -14,10 +14,10 @@ To comment (set text not visible for compiler) use special constructions.
 
 ```
 /*
-    It is
-    multiline
-    comment.
-    /* - and it is too
+	It is
+	multiline
+	comment.
+	/* - and it is too
 */
 ```
 

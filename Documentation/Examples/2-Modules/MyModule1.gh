@@ -1,13 +1,7 @@
 
 // We describe module in .gh file, which can't be compiled, but can be imported to .gaml file.
 
-
-***
-	//@deprecated       // we can add deprecated modifier to mark this module as deprecated
-	//@unimplemented    // we can set this module as unimplemented, it can't be included
-	//@extern_c         // all functions inside this module will be marked as extern_c, this module can't contains classes
-***
-module MyModule; // set the module name, it must match the file name
+module MyModule1; // set the module name, it must match the file name
 
 // can import other modules if module depends on them
 

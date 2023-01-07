@@ -6,9 +6,6 @@ So, if your system (for example, a 32-bit machine) does not support 64-bit types
 
 
 
-`void` - keyword for non-containable datas \
-`bool`- 8-bit logic type (true/false; 0 = false; other numbers = true) 
-
 `uint8` - 8-bit unsigned integer [0 - 255] \
 `uint16` - 16-bit unsigned integer [0 - 65 535] \
 `uint32`- 32-bit unsigned integer [0 - 4 294 967 295] \
@@ -18,6 +15,7 @@ So, if your system (for example, a 32-bit machine) does not support 64-bit types
 `int32` - 32-bit integer [-2 147 483 648 - 2 147 483 647] \
 `int64` - 64-bit integer [-9 223 372 036 854 775 808 - 9 223 372 036 854 775 807]
 
-`addr_t` - with system pointer size \
+`bool`- 8-bit logic type (true/false; 0 = false; other numbers = true) \
+`addr_t` - unsigned int with system pointer size \
 `float` - 32-bit floating number \
 `double` - 64-bit floating number

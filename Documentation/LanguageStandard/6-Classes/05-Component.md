@@ -6,10 +6,10 @@ Component - it is same to [Object](03-Object.md) but with additional limitation.
 
 ## Component features
 
-- Component can be inhereted only from 1 other component and/or many [interfaces](04-Interface.md)
-- Component located on the heap
-- Can use `super` keyword to get access to parent component type
-- Can be instantiated only as object member with default value or in object method with assigning into object field
+1. Component can be inhereted only from 1 other component and/or many [interfaces](04-Interface.md)
+2. Component located on the heap
+3. Can use `super` keyword to get access to parent component type
+4. Can be instantiated only as object member with default value or in object method with assigning into object field
 
 
 

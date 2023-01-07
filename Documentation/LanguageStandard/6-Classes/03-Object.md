@@ -6,9 +6,9 @@ Object - it is nearest type to c++ classes.
 
 ## Object features
 
-- Object can be inhereted only from 1 other object and/or many [interfaces](04-Interface.md)
-- Object located on the heap
-- Can use `super` keyword to get access to parent object type
+1. Object can be inhereted only from 1 other object and/or many [interfaces](04-Interface.md)
+2. Object located on the heap
+3. Can use `super` keyword to get access to parent object type
 
 
 

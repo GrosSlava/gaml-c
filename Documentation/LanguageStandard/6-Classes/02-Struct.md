@@ -6,9 +6,10 @@ Struct - it is wrapper over data with bound methods.
 
 ## Structure features
 
-- Structure can't be inhereted from any class
-- Structure located on the stack
-- Passing structure to function as `const` can be optimized by passing by pointer
+1. Structure can't be inhereted from any class
+2. Structure located on the stack
+3. Passing structure to function as `const` can be optimized by passing by pointer
+4. Structure methods can't have modifiers: virtual, override, abstract, final
 
 
 

@@ -10,4 +10,4 @@ These types will not be available if the platform does not support them or if th
 
 [`vector4d`](08-Vector.md) - built-in type for easy operations with 4d-vectors \
 [`vector3d`](08-Vector.md) - built-in type for easy operations with 3d-vectors \
-[`vector4d`](08-Vector.md) - built-in type for easy operations with 2d-vectors
+[`vector2d`](08-Vector.md) - built-in type for easy operations with 2d-vectors

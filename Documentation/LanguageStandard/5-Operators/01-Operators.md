@@ -62,7 +62,9 @@ iscomponent(a)      --- check that object/type is component
 issubclass(a, b)    --- check that object/type a is subclass of object/type b
 isinstance(a, B)    --- check that object a is instance of type B
 isiterable(a)       --- check that object/type is isiterable
+isenumerable(a)      
 isabstract(a)       --- check that object/type has abstract method
 isalias(A, B)       --- check that type A is alias for type B
+islambda(a, B) 
 addr(a)             --- get addres of object (return type is addr_t)
 default(a)          --- get default value for object, if function has default value for argument return it(e.g for integer it is 0)

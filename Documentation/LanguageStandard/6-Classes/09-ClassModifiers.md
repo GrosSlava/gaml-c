@@ -1,22 +1,35 @@
+# Class modifiers
+
+All modifiers must be listed in description block `*** .... ***` \
+All class modifiers must start with '@'. \
+Modifiers are not inherited.
+
+
+
+> `@deprecated` \
+> Mark class as deprecated. \
+> When user try to use it in the code, it will cause a warning. \
+> Can be used once. \
+> Order is not important.
+
+> `@unimplemented` \
+> Mark class as unimplemented. \
+> This class can't have any realization (field or method) and can't be used in code. \
+> This class not appear in generated code. \
+> Can be used once. \
+> Order is not important.
+
+> `@static` \
+> Mark class as static. \
+> This class can be instantiated only once. \
+> Each new instance will be pointing to one copy. \
+> Can be used once. \
+> Order is not important.
+
+```
+// Singleton example like in c++.
 
 ***
-	/*
-		static modifiers marks that this object can be instantiated only once,
-		each new instance will be pointing to one object
-
-		static modifier works only with object
-	*/
-	@static
-***
-object UMyStaticObject
-{
-
-}
-
-***
-	/*
-		same to UMyStaticObject, but you need to call UMySingletonObject::Get() method to get instance
-	*/
 	@static
 ***
 object UMySingletonObject
@@ -30,7 +43,20 @@ object UMySingletonObject
 	***
 	public func Get
 	{
-		var static UMySingletonObject = UMySingletonObject();
-		return UMySingletonObject;
+		return UMySingletonObject();
 	}
 }
+```
+
+> `@final` \
+> Mark class as final. \
+> This class can't be inhereted. \
+> Can be used once. \
+> Order is not important.
+
+> `@align([SIZE])` \
+> Set class data memory align in bytes. \
+> SIZE <= 0 means by default. \
+> SIZE can be expression for compile-time calculation. \
+> Can be used once. \
+> Order is not important.

@@ -52,3 +52,13 @@ When some class A inherit other one B:
 - A not change inherited data's access modifiers
 - A can contains methods with same names as in B
 - A can **not** contains fields with same names as in B 
+
+Keyword `this` can be used in class methods to get access to current class instance. \
+`this` always have the same type as current class type.
+
+
+
+## Class bahaviour
+
+- Compiler can optimize class data order for best size or performanse. So, compiled code will depence on compiler version.
+- Virtual methods work through a table of virtual functions. This feature (RTTI) can't be disabled.

@@ -6,10 +6,10 @@ Interface - it is abstract class only with methods to implement.
 
 ## Interface features
 
-- Interface can be inhereted only from other interfaces(many)
-- Interface can't be instantiated
-- Interface can contains only abstract methods
-- Interface can't have a constructor
+1. Interface can be inhereted only from other interfaces(many)
+2. Interface can't be instantiated
+3. Interface can contains only abstract methods
+4. Interface can't have a constructor
 
 
 

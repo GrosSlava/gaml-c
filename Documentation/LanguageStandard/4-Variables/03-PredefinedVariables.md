@@ -1,6 +1,6 @@
 # Predefined variables
 
-Compiler provides a number of predefined `static const` variables.
+Compiler provides a number of global predefined `static const` variables.
 
 
 
@@ -12,3 +12,6 @@ Compiler provides a number of predefined `static const` variables.
 
 3. Flag debug build \
 `static const bool DEBUG`
+
+4. Current translating module name \
+`static const string MODULE_NAME`

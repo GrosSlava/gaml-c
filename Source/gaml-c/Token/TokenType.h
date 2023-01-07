@@ -179,7 +179,7 @@ enum class ETokenType
 
 
 
-	// specifiers
+	// modifiers
 	CONST,                      // const
 	MUTABLE,					// mut
 	STATIC,                     // static

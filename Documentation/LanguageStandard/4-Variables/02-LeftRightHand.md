@@ -2,7 +2,7 @@
 
 Values and objects can be left or right hand operands.
 
-Left hand operand - it is named variable. \
+Left hand operand - it is named variable with address in memory. \
 Right hand operand - anything that is not left hand.
 
 

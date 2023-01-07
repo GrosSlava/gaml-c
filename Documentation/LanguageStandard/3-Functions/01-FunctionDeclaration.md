@@ -1,10 +1,14 @@
 # Function declaration
 
-All executable code is described in functions. \
-Unlike С, we can declare a function only once. \
-**GAML** doesn't have forward declaration.
+All executable code is described in functions.
 
-Function can be declared in **module**, **class** scope.
+
+
+## Function features
+
+1. Function can be declared in **module**, **class** scope
+2. **GAML** doesn't have forward declaration
+3. Unlike С, function can be declared only once
 
 
 

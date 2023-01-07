@@ -1,5 +1,5 @@
 
-implement MyModule; // set that we are implementing a module, the name of this file must match the name of the implementing module
+implement MyModule1; // set that we are implementing a module, the name of this file must match the name of the implementing module
 
 // can import other modules if module depends on them
 

@@ -1,6 +1,14 @@
 # Type alias
 
-Alias can be declared in **moddule**, **class**, **function** scope.
+Alias can be declared in **module**, **class**, **function** scope.
+
+
+
+## Alias features
+
+1. Alias declared in **class**, **function** is visible only in this scope (for **class** in **class** body and it's methods)
+2. Alias can't be alias for itself
+3. Alias can't redefine existed name (variable, field, method, class, module ...)
 
 
 
