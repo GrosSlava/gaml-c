@@ -1,6 +1,6 @@
 # Module
 
-Module it is unit of code.
+Module - it is unit of code.
 
 
 

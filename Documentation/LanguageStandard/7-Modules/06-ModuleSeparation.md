@@ -27,12 +27,12 @@ Module can be separated to 2 parts: "header" and "source".
 ".gaml" file can implement module.
 
 - Implementation file must start with declaration about implementation
-- Implement file can't be imported
+- Implementation file can't be imported
 - Name of the implementation file must match the name of the "header" file
 - Implementation file can be located anywhere, it not participate in including
 - Code in implementation "thinks" that it is in module file with declaration (technically it imports header module and sets it as current)
 
-### Module implementation fornula
+### Module implementation formula
 
 ```
 implement [1-MODULE_NAME];

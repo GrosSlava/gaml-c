@@ -140,6 +140,6 @@ Select function:
 		2. No.
 			Error.
 
-Best match: \
+Best match:
 - Find signature with minimum count of safe-casted types to reach complete match
 - Compile-time code of function allow call with given values

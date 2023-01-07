@@ -353,7 +353,7 @@ func end {}
 
 ## Operators for `struct`, `object`, `component`
 
-1. Get Itarator (struct with begin, next, end methods) \
+1. Get iterator (struct with begin, next, end methods) \
 `No default`
 ```
 ***

@@ -1,7 +1,7 @@
 # Module modifiers
 
 All modifiers must be listed in description block `*** .... ***` \
-All module modifiers must start with '@'. \
+All module modifiers must start with '@'.
 
 
 

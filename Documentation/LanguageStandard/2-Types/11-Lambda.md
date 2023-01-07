@@ -1,4 +1,4 @@
-# lambda
+# Lambda
 
 Lambda - it is anonim function with context. 
 

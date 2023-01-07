@@ -1,6 +1,6 @@
 # Module system
 
-For multifile projects **GAML** provide module system.
+For multi-file projects **GAML** provides module system.
 
 
 

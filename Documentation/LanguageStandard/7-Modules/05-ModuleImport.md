@@ -23,6 +23,11 @@ import [1-MODULE_NAME] as [2-ALIAS_NAME];
 1. Name of importing module includes path from the root of importing module package, separated by '.'
 2. Module local alias, which is visible only in current file (optional)
 
+### Alias name
+
+1. Alias can contains only english alphabet letters, '_' and digits after first letter
+2. Alias name can't match any other imported module or other module aliases
+
 ### Example
 
 ```

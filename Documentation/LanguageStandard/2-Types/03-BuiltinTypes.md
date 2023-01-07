@@ -1,4 +1,4 @@
-# Build-in types
+# Built-in types
 
 Built-in types are types that implement additional functionality for working with them. \
 These types will not be available if the platform does not support them or if their use is disabled in the compiler settings.
