@@ -20,7 +20,6 @@ struct FReduceCHelperLibrary
 		// clang-format off
 		switch( static_cast<EStandardTypesID>(TypeID) )
 		{
-		case EStandardTypesID::VOID_ID: 	return "void";
 		case EStandardTypesID::UINT8_ID: 	return "unsigned char";
 		case EStandardTypesID::UINT16_ID: 	return "unsigned short int";
 		case EStandardTypesID::UINT32_ID: 	return "unsigned int";

@@ -84,7 +84,7 @@ public:
 	{
 		Modfiers = FModfiers();
 		Inputs.clear();
-		Return = FVariableInfo();
+		Returns.clear();
 		DescriptionContext = EDescriptionContext::UNDEFINED;
 		OpenBracketLayer = 0;
 		CodeTokens.clear();
@@ -102,7 +102,7 @@ public:
 
 	FModfiers Modfiers;
 	std::vector<FVariableInfo> Inputs;
-	FVariableInfo Return;
+	std::vector<FVariableInfo> Returns;
 
 	EDescriptionContext DescriptionContext = EDescriptionContext::UNDEFINED;
 	int OpenBracketLayer = 0;

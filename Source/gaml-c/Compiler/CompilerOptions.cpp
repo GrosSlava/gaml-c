@@ -112,6 +112,7 @@ OPTION_FUNCTION(DebugOption);
 OPTION_FUNCTION(DLLOption);
 OPTION_FUNCTION(WarningToErrorsOption);
 OPTION_FUNCTION(NoBuiltinOption);
+OPTION_FUNCTION(NoReflectionOption);
 OPTION_FUNCTION(FreestandingOption);
 OPTION_FUNCTION(NoStackProtectionOption);
 OPTION_FUNCTION(NoRedZonesOption);
@@ -150,6 +151,7 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("",		"--DLL",					"output result will be in dll",							false,	DLLOption),
 	FOptionInfo("",		"--w2e",					"convert warnings to errors",							false,	WarningToErrorsOption),
 	FOptionInfo("",		"--no_builtin",				"no builtin content",									false,	NoBuiltinOption), 
+	FOptionInfo("",		"--no_reflection",			"disable reflection code generation",					false,	NoReflectionOption),
 	FOptionInfo("",		"--freestanding",			"generate freestanding code",							false,	FreestandingOption),
 	FOptionInfo("",		"--no_stack_protector",		"disable stack protection",								false,	NoStackProtectionOption),
 	FOptionInfo("",		"--no_red_zone",			"disable red zones",									false,	NoRedZonesOption),
@@ -403,6 +405,11 @@ OPTION_FUNCTION(WarningToErrorsOption)
 OPTION_FUNCTION(NoBuiltinOption)
 {
 	OutCompileOptions.NoBuiltin = true;
+}
+
+OPTION_FUNCTION(NoReflectionOption)
+{
+	OutCompileOptions.NoReflection = true;
 }
 
 OPTION_FUNCTION(FreestandingOption)

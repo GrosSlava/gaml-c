@@ -58,8 +58,11 @@ enum class ETokenType
 	IS_COMPONENT,				// iscomponent
 	IS_SUBCLASS,                // issubclass
 	IS_INSTANCE,                // isinstance
+	IS_LAMBDA,					// islambda
 	IS_ITERABLE,				// isiterable
+	IS_ENUMERABLE,				// isenumerable
 	IS_ABSTRACT,				// isabstract
+	IS_ALIAS,					// isalias
 	IN,                         // in
 	IS,                         // is
 	AS,							// as
@@ -127,7 +130,6 @@ enum class ETokenType
 	FALSE_CONST,                // false
 
 	// types
-	VOID,                       // void
 	CLASS,						// class
 	UINT8,                      // uint8
 	UINT16,                     // uint16
@@ -182,8 +184,7 @@ enum class ETokenType
 	// modifiers
 	CONST,                      // const
 	MUTABLE,					// mut
-	STATIC,                     // static
-	INLINE,                     // inline         
+	STATIC,                     // static       
 	VIRTUAL,                    // virtual
 	OVERRIDE,                   // override
 	ABSTRACT,					// abstract

@@ -221,7 +221,6 @@ struct FParserHelperLibrary
 		// clang-format off
 		switch( StandardTypeID )
 		{
-		case EStandardTypesID::VOID_ID:		return "vv";
 		case EStandardTypesID::UINT8_ID:	return "u8";
 		case EStandardTypesID::UINT16_ID:	return "u16";
 		case EStandardTypesID::UINT32_ID:	return "u32";
@@ -285,8 +284,7 @@ struct FParserHelperLibrary
 	static inline bool IsStandardType(ETokenType TokenType) noexcept
 	{
 		// clang-format off
-		return	TokenType == ETokenType::VOID		|| 
-				TokenType == ETokenType::UINT8		|| TokenType == ETokenType::UINT16		|| TokenType == ETokenType::UINT32	|| TokenType == ETokenType::UINT64	||
+		return	TokenType == ETokenType::UINT8		|| TokenType == ETokenType::UINT16		|| TokenType == ETokenType::UINT32	|| TokenType == ETokenType::UINT64	||
 				TokenType == ETokenType::INT8		|| TokenType == ETokenType::INT16		|| TokenType == ETokenType::INT32	|| TokenType == ETokenType::INT64	|| 
 				TokenType == ETokenType::ADDR_T		|| TokenType == ETokenType::FLOAT		|| TokenType == ETokenType::DOUBLE	|| TokenType == ETokenType::BOOL	|| 
 				TokenType == ETokenType::CHAR		|| TokenType == ETokenType::STRING		||
@@ -301,30 +299,6 @@ struct FParserHelperLibrary
 		Check that given type ID is standard type.
 	*/
 	static inline bool IsStandardType(int TypeID) noexcept { return TypeID >= 0 && TypeID < EStandardTypesID::StandardTypesID_MAX; }
-	/*
-		Check that given token is standard type and can be used as variable type.
-	*/
-	static inline bool IsVariableStandardType(ETokenType TokenType) noexcept { return IsStandardType(TokenType) && TokenType != ETokenType::VOID; }
-	/*
-		Check that given token is standard type and can be used as variable type.
-	*/
-	static inline bool IsVariableStandardType(const Token& InToken) noexcept { return IsVariableStandardType(InToken.GetType()); }
-	/*
-		Check that given type ID is standard type and can be used as variable type.
-	*/
-	static inline bool IsVariableStandardType(int TypeID) noexcept { return IsStandardType(TypeID) && TypeID != EStandardTypesID::VOID_ID; }
-	/*
-		Check that given token is standard type and can be used as function return type.
-	*/
-	static inline bool IsFunctionReturnStandardType(ETokenType TokenType) noexcept { return IsStandardType(TokenType); }
-	/*
-		Check that given token is standard type and can be used as function return type.
-	*/
-	static inline bool IsFunctionReturnStandardType(const Token& InToken) noexcept { return IsFunctionReturnStandardType(InToken.GetType()); }
-	/*
-		Check that given type ID is standard type and can be used as function return type.
-	*/
-	static inline bool IsFunctionReturnStandardType(int TypeID) noexcept { return IsStandardType(TypeID); }
 	/*
 		Check that given token is builtin template type.
 	*/
@@ -342,7 +316,7 @@ struct FParserHelperLibrary
 		return	TokenType == ETokenType::EXTERN_C 	|| 
 				TokenType == ETokenType::CDECL 		|| TokenType == ETokenType::STDCALL 		|| TokenType == ETokenType::FASTCALL 	|| 
 				TokenType == ETokenType::CONST 		|| TokenType == ETokenType::MUTABLE 		|| TokenType == ETokenType::STATIC 		||  
-				TokenType == ETokenType::INLINE 	|| TokenType == ETokenType::VIRTUAL 		|| TokenType == ETokenType::OVERRIDE 	|| 
+				TokenType == ETokenType::VIRTUAL 	|| TokenType == ETokenType::OVERRIDE 		|| 
 				TokenType == ETokenType::ABSTRACT 	|| TokenType == ETokenType::FINAL			|| 
 				TokenType == ETokenType::DEPRECATED || TokenType == ETokenType::UNIMPLEMENTED;
 		// clang-format on
@@ -363,7 +337,6 @@ struct FParserHelperLibrary
 		// clang-format off
 		switch( InToken.GetType() )
 		{
-		case ETokenType::VOID:		return EStandardTypesID::VOID_ID;
 		case ETokenType::UINT8:		return EStandardTypesID::UINT8_ID;
 		case ETokenType::UINT16:	return EStandardTypesID::UINT16_ID;
 		case ETokenType::UINT32:	return EStandardTypesID::UINT32_ID;
@@ -418,6 +391,10 @@ struct FParserHelperLibrary
 		Check that given function signatures are same.
 	*/
 	static bool AreFunctionSignaturesSame(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept;
+	/*
+		Check that given function signatures are completely equal.
+	*/
+	static bool AreFunctionsDeepEqual(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept;
 
 	/*
 		Find first module name declaration in tokens array.

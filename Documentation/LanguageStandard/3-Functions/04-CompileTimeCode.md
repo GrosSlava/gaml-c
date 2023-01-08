@@ -7,11 +7,13 @@ This code can be written as common code. It will be interpreted by compiler.
 
 
 
-## Compile-time
+## Compile-time code features
 
-- Compile-time code can access only to current function arguments
-- Compile time code can use other functions
-- Errors during interpretation will break compilation
+1. Compile-time code can access only to current function arguments
+2. Compile-time code can use other functions
+3. Errors during interpretation will break compilation
+4. Compile-time code may return bool (true/false) to indicate that this function is currently unavailable (can affect on function overloading)
+5. By default compile-time code return true
 
 ### Example
 
@@ -19,5 +21,6 @@ This code can be written as common code. It will be interpreted by compiler.
 func foo
 [
 	static_message("Hello World!");
+	return true;
 ];
 ```

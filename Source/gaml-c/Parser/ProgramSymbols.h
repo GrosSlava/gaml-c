@@ -12,13 +12,6 @@
 
 
 /*
-	Structures of language objects prototypes from modules.
-	Each object(methods/functions...) realization will be in AST.
-*/
-
-
-
-/*
 	Meta information about extracted program symbol for logging, etc.
 */
 struct FSymbolMetaInfo
@@ -72,9 +65,8 @@ enum class EClassType : unsigned char
 */
 enum EStandardTypesID
 {
-	VOID_ID = 0,
 	//CLASS_ID - it is built-in template
-	UINT8_ID,
+	UINT8_ID = 0,
 	UINT16_ID,
 	UINT32_ID,
 	UINT64_ID,
@@ -102,6 +94,8 @@ enum EStandardTypesID
 */
 struct FModfiers
 {
+public:
+
 	EAccessModifier AccessModifier = EAccessModifier::Public;
 
 	bool IsExternC = false;
@@ -109,7 +103,6 @@ struct FModfiers
 	bool IsConst = false;
 	bool IsMutable = false;
 	bool IsStatic = false;
-	bool IsInline = false;
 	bool IsVirtual = false;
 	bool IsOverride = false;
 	bool IsAbstract = false;
@@ -118,6 +111,33 @@ struct FModfiers
 	bool IsUnimplemented = false;
 
 	int Align = -1;
+
+public:
+
+	friend bool operator==(const FModfiers& A, const FModfiers& B)
+	{
+		// clang-format off
+		return 
+			A.AccessModifier == B.AccessModifier 		&& 
+			A.IsExternC == B.IsExternC 					&&
+			A.CallingConvention == B.CallingConvention 	&&
+			A.IsConst == B.IsConst 						&&
+			A.IsMutable == B.IsMutable 					&&
+			A.IsStatic == B.IsStatic 					&&
+			A.IsVirtual == B.IsVirtual 					&&
+			A.IsOverride == B.IsOverride 				&&
+			A.IsAbstract == B.IsAbstract 				&&
+			A.IsFinal == B.IsFinal 						&&
+			A.IsDeprecated == B.IsDeprecated 			&&
+			A.IsUnimplemented == B.IsUnimplemented 		&&
+			A.Align == B.Align;
+		// clang-format on
+	}
+
+	friend bool operator!=(const FModfiers& A, const FModfiers& B)
+	{
+		return !(A == B);
+	}
 };
 
 
@@ -218,16 +238,19 @@ struct FCompilingVariableInfo
 struct FFunctionSignatureInfo
 {
 	/*
-		Info about function return.
-	*/
-	FVariableInfo Return;
-	/*
 		Info about function inputs.
 
 		Key - variable name(same to in FVariableInfo).
 		Value - Variable info.
 	*/
 	std::vector<FVariableInfo> Inputs;
+	/*
+		Info about function returns.
+
+		Key - variable name(same to in FVariableInfo).
+		Value - Variable info.
+	*/
+	std::vector<FVariableInfo> Returns;
 
 	/*
 		Context modifiers.

@@ -9,7 +9,7 @@ Modifiers are not inherited.
 > `@param` NAME : TYPE(DEFAULT_VALUE) \
 > Add input argument to function. \
 > NAME - Name of argument. \
-> TYPE - Type of argument(can have `const` and `mut` modifiers). \
+> TYPE - Type of argument (can be `const`, `mut` modifiers). \
 > DEFAULT_VALUE - Expression for argument default value (optional). \
 > Can be used multiple. \
 > Order is important.
@@ -35,7 +35,7 @@ func foo2 {}
 > `@return` NAME : TYPE(DEFAULT_VALUE) \
 > Set function return. \
 > NAME - Name of return. \
-> TYPE - Type of return(can have `const` modifier). \
+> TYPE - Type of return (can be `const` modifier). \
 > DEFAULT_VALUE - Expression for return default value (optional). \
 > Can be used multiple. \
 > Order is important.

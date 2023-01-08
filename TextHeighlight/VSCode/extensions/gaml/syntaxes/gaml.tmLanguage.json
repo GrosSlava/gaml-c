@@ -94,6 +94,9 @@
 					"include": "#Casts"
 				},
 				{
+					"include": "#BuiltinTemplateFunc"
+				},
+				{
 					"include": "#StandardTypes"
 				},
 				{
@@ -157,6 +160,9 @@
 							"include": "#Casts"
 						},
 						{
+							"include": "#BuiltinTemplateFunc"
+						},
+						{
 							"include": "#StandardTypes"
 						},
 						{
@@ -172,7 +178,7 @@
 		"DescriptionModifiers": {
 			"patterns": [
 				{
-					"match": "(\\@)(?:\\s*)\\b(extern_c|cdecl|stdcall|fastcall|const|static|inline|virtual|override|abstract|final|deprecated|unimplemented|align)\\b",
+					"match": "(\\@)(?:\\s*)\\b(extern_c|cdecl|stdcall|fastcall|const|static|virtual|override|abstract|final|deprecated|unimplemented|align)\\b",
 					"captures": {
 						"1": {
 							"name": "keyword.other.gaml"
@@ -398,7 +404,7 @@
 			"patterns": [
 				{
 					"name": "keyword.other.gaml",
-					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|isiterable|isabstract|in|is|addr)\\b"
+					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|islambda|isiterable|isenumerable|isabstract|isalias|in|is|addr)\\b"
 				}
 			]
 		},
@@ -422,7 +428,7 @@
 			"patterns": [
 				{
 					"name": "entity.name.type.gaml",
-					"match": "\\b(void|class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
+					"match": "\\b(class|uint8|uint16|uint32|uint64|int8|int16|int32|int64|addr_t|float|double|bool|char|string|array|vector2d|vector3d|vector4d)\\b"
 				}
 			]
 		},
@@ -430,7 +436,7 @@
 			"patterns": [
 				{
 					"name": "variable.other.gaml",
-					"match": "\\b(DEBUG|TARGET_PLATFORM|TARGET_ARCH)\\b"
+					"match": "\\b(DEBUG|TARGET_PLATFORM|TARGET_ARCH|MODULE_NAME)\\b"
 				}
 			]
 		},
@@ -449,6 +455,25 @@
 					"captures": {
 						"1": {
 							"name": "keyword.other.gaml"
+						},
+						"2": {
+							"patterns": [
+								{
+									"include": "#UserTypeDetection"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		"BuiltinTemplateFunc": {
+			"patterns": [
+				{
+					"match": "\\b(CreateObject|CreateComponent)\\b(?:\\s*)(?:\\<\\|)(?:\\s*)((?:[a-zA-Z0-9_.:])*)(?:\\s*)(?:\\s*)(?:\\|\\>)",
+					"captures": {
+						"1": {
+							"name": "entity.name.function.gaml"
 						},
 						"2": {
 							"patterns": [

@@ -3,6 +3,8 @@
 Module import it is reading declarations from other module and using it in current module. \
 It is not inserting text like c/c++.
 
+**NOTE**: By default **GAML** does not import any module or package or library.
+
 
 
 ## Module import features

@@ -279,6 +279,60 @@ bool FParserHelperLibrary::AreFunctionSignaturesSame(const FFunctionSignatureInf
 	return true;
 }
 
+bool FParserHelperLibrary::AreFunctionsDeepEqual(const FFunctionSignatureInfo& FS1, const FFunctionSignatureInfo& FS2) noexcept
+{
+	if( FS1.Modifiers != FS2.Modifiers )
+	{
+		return false;
+	}
+	if( FS1.Inputs.size() != FS2.Inputs.size() || FS1.Returns.size() != FS2.Returns.size() )
+	{
+		return false;
+	}
+
+	auto LFS1InputsIter = FS1.Inputs.begin();
+	auto LFS2InputsIter = FS2.Inputs.begin();
+	while( LFS1InputsIter != FS1.Inputs.end() )
+	{
+		// clang-format off
+		if( 
+			LFS1InputsIter->TypeID != LFS2InputsIter->TypeID || 
+			LFS1InputsIter->VariableName != LFS2InputsIter->VariableName || 
+			LFS1InputsIter->Modifiers != LFS2InputsIter->Modifiers
+		  )
+		// clang-format on
+		{
+			return false;
+		}
+
+		++LFS1InputsIter;
+		++LFS2InputsIter;
+	}
+
+	auto LFS1ReturnsIter = FS1.Returns.begin();
+	auto LFS2ReturnsIter = FS2.Returns.begin();
+	while( LFS1ReturnsIter != FS1.Returns.end() )
+	{
+		// clang-format off
+		if( 
+			LFS1ReturnsIter->TypeID != LFS2ReturnsIter->TypeID || 
+			LFS1ReturnsIter->VariableName != LFS2ReturnsIter->VariableName || 
+			LFS1ReturnsIter->Modifiers != LFS2ReturnsIter->Modifiers
+		  )
+		// clang-format on
+		{
+			return false;
+		}
+
+		++LFS1ReturnsIter;
+		++LFS2ReturnsIter;
+	}
+
+	return true;
+}
+
+
+
 std::string FParserHelperLibrary::GetFirstModuleName(const std::vector<Token>& Tokens) noexcept
 {
 	if( Tokens.empty() )

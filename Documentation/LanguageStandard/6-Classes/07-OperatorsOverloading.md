@@ -7,6 +7,14 @@ Some operators do not have a default implementation. So, its use may cause a com
 
 
 
+## Operators overloading features
+
+1. Operator must have special reserved name
+2. Operator must have the necessary inputs and returns in a certain order (names of arguments do not matter)
+3. Operator can have additional modifiers
+
+
+
 ## Operators for `struct`
 
 Let AType - type of current struct. \

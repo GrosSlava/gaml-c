@@ -280,16 +280,6 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 		LDescriptionContext.Modfiers.IsStatic = true;
 		return InParserStates.GStartDescription_ParserState;
 	}
-	case ETokenType::INLINE:
-	{
-		if( LDescriptionContext.Modfiers.IsInline )
-		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
-			return nullptr;
-		}
-		LDescriptionContext.Modfiers.IsInline = true;
-		return InParserStates.GStartDescription_ParserState;
-	}
 	case ETokenType::VIRTUAL:
 	{
 		if( LDescriptionContext.Modfiers.IsVirtual )
@@ -458,28 +448,21 @@ std::shared_ptr<IParserState> DescriptionParam1_ParserState::Process(FParserStat
 		return nullptr;
 	}
 
+	FVariableInfo LNewVariable;
+	LNewVariable.VariableName = InToken.GetLexeme();
+	LNewVariable.MetaInfo.DeclaredAtLine = InToken.GetLine();
+	LNewVariable.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+
 	switch( LDescriptionContext.DescriptionContext )
 	{
 	case EDescriptionContext::Param:
 	{
-		FVariableInfo LNewVariable;
-		LNewVariable.VariableName = InToken.GetLexeme();
-		LNewVariable.MetaInfo.DeclaredAtLine = InToken.GetLine();
-		LNewVariable.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
 		LDescriptionContext.Inputs.push_back(LNewVariable);
 		break;
 	}
 	case EDescriptionContext::Return:
 	{
-		if( !LDescriptionContext.Return.VariableName.empty() )
-		{
-			InParserStates.RaiseError(EErrorMessageType::ARGUMENT_NAME_REDEFINITION, InToken);
-			return nullptr;
-		}
-
-		LDescriptionContext.Return.VariableName = InToken.GetLexeme();
-		LDescriptionContext.Return.MetaInfo.DeclaredAtLine = InToken.GetLine();
-		LDescriptionContext.Return.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+		LDescriptionContext.Returns.push_back(LNewVariable);
 		break;
 	}
 	default:
@@ -528,13 +511,13 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			}
 			case EDescriptionContext::Return:
 			{
-				if( LDescriptionContext.Return.Modifiers.IsConst )
+				if( LDescriptionContext.Returns.back().Modifiers.IsConst )
 				{
 					InParserStates.RaiseError(EErrorMessageType::RETURN_TYPE_DOUBLE_MODIFIER, InToken);
 					return nullptr;
 				}
 
-				LDescriptionContext.Return.Modifiers.IsConst = true;
+				LDescriptionContext.Returns.back().Modifiers.IsConst = true;
 				break;
 			}
 			default:
@@ -563,13 +546,13 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			}
 			case EDescriptionContext::Return:
 			{
-				if( LDescriptionContext.Return.Modifiers.IsMutable )
+				if( LDescriptionContext.Returns.back().Modifiers.IsMutable )
 				{
 					InParserStates.RaiseError(EErrorMessageType::RETURN_TYPE_DOUBLE_MODIFIER, InToken);
 					return nullptr;
 				}
 
-				LDescriptionContext.Return.Modifiers.IsMutable = true;
+				LDescriptionContext.Returns.back().Modifiers.IsMutable = true;
 				break;
 			}
 			default:
@@ -594,7 +577,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 		}
 		case EDescriptionContext::Return:
 		{
-			LDescriptionContext.Return.TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+			LDescriptionContext.Returns.back().TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
 			break;
 		}
 		default:
@@ -712,7 +695,7 @@ std::shared_ptr<IParserState> DescriptionParam6_ParserState::Process(FParserStat
 	}
 	case EDescriptionContext::Return:
 	{
-		LDescriptionContext.Return.DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens);
+		LDescriptionContext.Returns.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens);
 		break;
 	}
 	default:
@@ -771,7 +754,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		}
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers = LDescriptionContext.Modfiers;
 		LFunctionContext.FunctionInfo.SignatureInfo.Inputs = LDescriptionContext.Inputs;
-		LFunctionContext.FunctionInfo.SignatureInfo.Return = LDescriptionContext.Return;
+		LFunctionContext.FunctionInfo.SignatureInfo.Returns = LDescriptionContext.Returns;
 		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
 		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
@@ -942,7 +925,7 @@ std::shared_ptr<IParserState> DescriptionParamType_ParserState::Process(FParserS
 	}
 	case EDescriptionContext::Return:
 	{
-		LDescriptionContext.Return.TypeID = LTypeDetectionCntext.TypeID;
+		LDescriptionContext.Returns.back().TypeID = LTypeDetectionCntext.TypeID;
 		break;
 	}
 	default:
@@ -971,7 +954,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
 		LFunctionContext.FunctionInfo.SignatureInfo.Inputs = InParserStates.StatesContext.DescriptionContext.Inputs;
-		LFunctionContext.FunctionInfo.SignatureInfo.Return = InParserStates.StatesContext.DescriptionContext.Return;
+		LFunctionContext.FunctionInfo.SignatureInfo.Returns = InParserStates.StatesContext.DescriptionContext.Returns;
 		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
 		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
@@ -1064,7 +1047,7 @@ std::shared_ptr<IParserState> LocalAccessModifier_ParserState::Process(FParserSt
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
 		LFunctionContext.FunctionInfo.SignatureInfo.Inputs = InParserStates.StatesContext.DescriptionContext.Inputs;
-		LFunctionContext.FunctionInfo.SignatureInfo.Return = InParserStates.StatesContext.DescriptionContext.Return;
+		LFunctionContext.FunctionInfo.SignatureInfo.Returns = InParserStates.StatesContext.DescriptionContext.Returns;
 		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
 		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
 
@@ -2429,23 +2412,14 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 	{
 		if( SkipIfExist )
 		{
-			for( int i = 0; i < LFunctionContext.FunctionInfo.SignatureInfo.Inputs.size(); ++i )
-			{
-				// clang-format off
-				if( 
-					LFunctionContext.FunctionInfo.SignatureInfo.Inputs[i].VariableName != 
-					(*LProgramFunctionIterator).second.SignatureInfo.Inputs[i].VariableName 
-				  )
-				// clang-format on
-				{
-					RaiseError(EErrorMessageType::FUNCTION_ARGUMENT_NAME_MISMATCH, TokenCTX);
-					return false;
-				}
-			}
-
 			if( !StatesContext.FunctionDeclarationContext.StaticCodeTokens.empty() )
 			{
 				RaiseError(EErrorMessageType::FUNCTION_STATIC_CODE_OVERRIDE, TokenCTX);
+				return false;
+			}
+			if( !FParserHelperLibrary::AreFunctionsDeepEqual(LFunctionContext.FunctionInfo.SignatureInfo, LProgramFunctionIterator->second.SignatureInfo) )
+			{
+				RaiseError(EErrorMessageType::FUNCTION_ARGUMENT_NAME_MISMATCH, TokenCTX);
 				return false;
 			}
 
@@ -2454,6 +2428,14 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 
 		RaiseError(EErrorMessageType::FUNCTION_NAME_REDEFINITION, TokenCTX);
 		return false;
+	}
+	else
+	{
+		if( !LFunctionContext.FunctionInfo.ClassDeclarationNamespace.empty() )
+		{
+			RaiseError(EErrorMessageType::FUNCTION_DECLARATION_NOT_FOUND, TokenCTX);
+			return false;
+		}
 	}
 
 

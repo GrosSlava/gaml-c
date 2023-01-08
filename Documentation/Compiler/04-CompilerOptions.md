@@ -57,6 +57,9 @@
 > `--no_builtin` \
 > No builtin content
 
+> `--no_reflection` \
+> Disable reflection code generation
+
 > `--freestanding` \
 > Generate freestanding code
 

@@ -123,6 +123,10 @@ struct FCompileOptions
 	*/
 	bool NoBuiltin = false;
 	/*
+		Disable reflection code generation.
+	*/
+	bool NoReflection = false;
+	/*
 		Generate freestanding code without platform libraries, etc.
 	*/
 	bool Freestanding = false;

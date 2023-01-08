@@ -21,7 +21,7 @@ func [2-NAMESPACE]::[3-FUNCTION_NAME]
 }
 ```
 1. In implementation new modifiers can't be added. Developer should list only function inputs and returns from function declaration
-2. NAMESPACE is name of namespace from which this function is implemented. (optional)
+2. NAMESPACE is name of namespace from which this function is implemented (optional)
 3. Name of function for implementation
 4. Function code
 

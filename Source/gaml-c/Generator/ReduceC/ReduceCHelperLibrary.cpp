@@ -18,9 +18,16 @@ std::string FReduceCHelperLibrary::GetFunctionSignatureCStr
 	std::string LResult = "";
 	LResult.reserve(128);
 
-	// We can't return pointer to function from function, only lambda. So, recursion will stop.
-	LResult += GetVariableDeclarationCStr(FunctionInfo.Return, true, false, false, TargetPlatform, ProgramInfo) + " ";
-
+	if( FunctionInfo.Returns.empty() )
+	{
+		LResult += "void ";
+	}
+	else
+	{
+		// We can't return pointer to function from function, only lambda. So, recursion will stop.
+		LResult += GetVariableDeclarationCStr(FunctionInfo.Returns[0], true, false, false, TargetPlatform, ProgramInfo) + " ";
+	}
+	
 	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 	{
 		LResult += GetCallingConventionCStr(FunctionInfo.Modifiers.CallingConvention, TargetPlatform) + " ";
@@ -31,7 +38,7 @@ std::string FReduceCHelperLibrary::GetFunctionSignatureCStr
 	LResult += "(";
 	if( FunctionInfo.Inputs.empty() )
 	{
-		LResult += GetStandardTypeNameCStr(EStandardTypesID::VOID_ID);
+		LResult += "void";
 	}
 	else
 	{
@@ -59,8 +66,16 @@ std::string FReduceCHelperLibrary::GetFunctionPointerCStr
 	std::string LResult = "";
 	LResult.reserve(128);
 
-	// We can't return pointer to function from function, only lambda. So, recursion will stop.
-	LResult += GetVariableDeclarationCStr(FunctionInfo.Return, true, false, false, TargetPlatform, ProgramInfo);
+	if( FunctionInfo.Returns.empty() )
+	{
+		LResult += "void ";
+	}
+	else
+	{
+		// We can't return pointer to function from function, only lambda. So, recursion will stop.
+		LResult += GetVariableDeclarationCStr(FunctionInfo.Returns[0], true, false, false, TargetPlatform, ProgramInfo);
+	}
+
 	LResult += "(";
 	if( FunctionInfo.Modifiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 	{
@@ -79,7 +94,7 @@ std::string FReduceCHelperLibrary::GetFunctionPointerCStr
 	LResult += ") (";
 	if( FunctionInfo.Inputs.empty() )
 	{
-		LResult += GetStandardTypeNameCStr(EStandardTypesID::VOID_ID);
+		LResult += "void";
 	}
 	else
 	{
