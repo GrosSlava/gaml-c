@@ -6,6 +6,7 @@
 #include "../../Compiler/CompilerConfig.h"
 #include "../../Compiler/CompilerHelperLibrary.h"
 
+#include "../../Token/Token.h"
 #include "../../Lexer/Lexer.h"
 #include "../../Parser/Parser.h"
 
@@ -30,8 +31,7 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 	case ETokenType::MODULE:
 	{
 		FModuleDeclarationContext& LModuleContext = InParserStates.StatesContext.ModuleDeclarationContext;
-		LModuleContext.ModuleInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LModuleContext.ModuleInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LModuleContext.ModuleInfo.MetaInfo.SetMetaInfo(InToken.GetFileInfo(), InToken.GetLine());
 
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GStartDeclareModule_ParserState;
@@ -53,8 +53,7 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 		InParserStates.RegisterMainModule(OutProgramInfo, InToken);
 
 		FFunctionDeclarationContext& LFunctionContext = InParserStates.StatesContext.FunctionDeclarationContext;
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LFunctionContext.FunctionInfo.MetaInfo.SetMetaInfo(InToken);
 
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GStartDeclareFunction_ParserState;
@@ -67,8 +66,7 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Struct;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GStartDeclareClass_ParserState;
@@ -81,8 +79,7 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Interface;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GStartDeclareClass_ParserState;
@@ -95,8 +92,8 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Object;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
+		;
 
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GStartDeclareClass_ParserState;
@@ -109,8 +106,7 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Component;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GStartDeclareClass_ParserState;
@@ -123,8 +119,7 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Enum;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		InParserStates.PushState(InParserStates.GDefault_ParserState);
 		return InParserStates.GStartDeclareClass_ParserState;
@@ -430,7 +425,7 @@ std::shared_ptr<IParserState> DescriptionAlign3_ParserState::Process(FParserStat
 	}
 
 	AST LAST;
-	LAST.BuildAST(LDescriptionContext.CodeTokens);
+	LAST.BuildAST(LDescriptionContext.CodeTokens, InParserStates.GetCompileOptions());
 	LAST.InterpretAST(OutProgramInfo);
 	LDescriptionContext.Modfiers.Align = LAST.GetInterpretResultAsInt();
 
@@ -450,8 +445,7 @@ std::shared_ptr<IParserState> DescriptionParam1_ParserState::Process(FParserStat
 
 	FVariableInfo LNewVariable;
 	LNewVariable.VariableName = InToken.GetLexeme();
-	LNewVariable.MetaInfo.DeclaredAtLine = InToken.GetLine();
-	LNewVariable.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
+	LNewVariable.MetaInfo.SetMetaInfo(InToken);
 
 	switch( LDescriptionContext.DescriptionContext )
 	{
@@ -690,12 +684,12 @@ std::shared_ptr<IParserState> DescriptionParam6_ParserState::Process(FParserStat
 	{
 	case EDescriptionContext::Param:
 	{
-		LDescriptionContext.Inputs.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens);
+		LDescriptionContext.Inputs.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens, InParserStates.GetCompileOptions());
 		break;
 	}
 	case EDescriptionContext::Return:
 	{
-		LDescriptionContext.Returns.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens);
+		LDescriptionContext.Returns.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens, InParserStates.GetCompileOptions());
 		break;
 	}
 	default:
@@ -738,8 +732,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 
 		FModuleDeclarationContext& LModuleContext = InParserStates.StatesContext.ModuleDeclarationContext;
 		LModuleContext.ModuleInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
-		LModuleContext.ModuleInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LModuleContext.ModuleInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LModuleContext.ModuleInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareModule_ParserState;
 	}
@@ -755,8 +748,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers = LDescriptionContext.Modfiers;
 		LFunctionContext.FunctionInfo.SignatureInfo.Inputs = LDescriptionContext.Inputs;
 		LFunctionContext.FunctionInfo.SignatureInfo.Returns = LDescriptionContext.Returns;
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LFunctionContext.FunctionInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
@@ -775,8 +767,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Struct;
 		LClassContext.ClassInfo.Modifiers = LDescriptionContext.Modfiers;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -795,8 +786,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Interface;
 		LClassContext.ClassInfo.Modifiers = LDescriptionContext.Modfiers;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -815,8 +805,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Object;
 		LClassContext.ClassInfo.Modifiers = LDescriptionContext.Modfiers;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -835,8 +824,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Component;
 		LClassContext.ClassInfo.Modifiers = LDescriptionContext.Modfiers;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -855,8 +843,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 		FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 		LClassContext.ClassInfo.ClassType = EClassType::Enum;
 		LClassContext.ClassInfo.Modifiers = LDescriptionContext.Modfiers;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -955,8 +942,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
 		LFunctionContext.FunctionInfo.SignatureInfo.Inputs = InParserStates.StatesContext.DescriptionContext.Inputs;
 		LFunctionContext.FunctionInfo.SignatureInfo.Returns = InParserStates.StatesContext.DescriptionContext.Returns;
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LFunctionContext.FunctionInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
@@ -968,8 +954,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 		LClassContext.ClassInfo.ClassType = EClassType::Struct;
 		LClassContext.ClassInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
 		LClassContext.ClassInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -981,8 +966,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 		LClassContext.ClassInfo.ClassType = EClassType::Interface;
 		LClassContext.ClassInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
 		LClassContext.ClassInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -994,8 +978,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 		LClassContext.ClassInfo.ClassType = EClassType::Object;
 		LClassContext.ClassInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
 		LClassContext.ClassInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -1007,8 +990,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 		LClassContext.ClassInfo.ClassType = EClassType::Component;
 		LClassContext.ClassInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
 		LClassContext.ClassInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -1020,8 +1002,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 		LClassContext.ClassInfo.ClassType = EClassType::Enum;
 		LClassContext.ClassInfo.Modifiers = InParserStates.StatesContext.DescriptionContext.Modfiers;
 		LClassContext.ClassInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
-		LClassContext.ClassInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LClassContext.ClassInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LClassContext.ClassInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareClass_ParserState;
 	}
@@ -1048,8 +1029,7 @@ std::shared_ptr<IParserState> LocalAccessModifier_ParserState::Process(FParserSt
 		LFunctionContext.FunctionInfo.SignatureInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
 		LFunctionContext.FunctionInfo.SignatureInfo.Inputs = InParserStates.StatesContext.DescriptionContext.Inputs;
 		LFunctionContext.FunctionInfo.SignatureInfo.Returns = InParserStates.StatesContext.DescriptionContext.Returns;
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LFunctionContext.FunctionInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareFunction_ParserState;
 	}
@@ -1057,8 +1037,7 @@ std::shared_ptr<IParserState> LocalAccessModifier_ParserState::Process(FParserSt
 	{
 		FVariableDeclarationContext& LVariableContext = InParserStates.StatesContext.VariableDeclarationContext;
 		LVariableContext.VariableInfo.Modifiers.AccessModifier = InParserStates.StatesContext.AccessModifierContextType;
-		LVariableContext.VariableInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LVariableContext.VariableInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LVariableContext.VariableInfo.MetaInfo.SetMetaInfo(InToken);
 
 		return InParserStates.GStartDeclareField_ParserState;
 	}
@@ -1532,8 +1511,7 @@ std::shared_ptr<IParserState> DeclareClassInternal_ParserState::Process(FParserS
 	{
 		FFunctionDeclarationContext& LFunctionContext = InParserStates.StatesContext.FunctionDeclarationContext;
 		LFunctionContext.FunctionInfo.ClassDeclarationNamespace = InParserStates.StatesContext.ClassDeclarationContext.ClassName;
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LFunctionContext.FunctionInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LFunctionContext.FunctionInfo.MetaInfo.SetMetaInfo(InToken);
 
 		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
 		return InParserStates.GStartDeclareFunction_ParserState;
@@ -1541,8 +1519,7 @@ std::shared_ptr<IParserState> DeclareClassInternal_ParserState::Process(FParserS
 	case ETokenType::VAR:
 	{
 		FVariableDeclarationContext& LVariableContext = InParserStates.StatesContext.VariableDeclarationContext;
-		LVariableContext.VariableInfo.MetaInfo.DeclaredInFile = InToken.GetFileInfo();
-		LVariableContext.VariableInfo.MetaInfo.DeclaredAtLine = InToken.GetLine();
+		LVariableContext.VariableInfo.MetaInfo.SetMetaInfo(InToken);
 
 		InParserStates.PushState(InParserStates.GDeclareClassInternal_ParserState);
 		return InParserStates.GStartDeclareField_ParserState;
@@ -1780,6 +1757,12 @@ std::shared_ptr<IParserState> DefineAlias2_ParserState::Process(FParserStates& I
 	}
 	else if( InToken.GetType() == ETokenType::IDENTIFIER )
 	{
+		if( InToken.GetLexeme() == LAliasContext.AliasName )
+		{
+			InParserStates.RaiseError(EErrorMessageType::ALIAS_NAME_REDEFINITION, InToken);
+			return nullptr;
+		}
+
 		InParserStates.StatesContext.ClearTypeContexts();
 		InParserStates.StatesContext.TypeDetectionContext.TypeName = InToken.GetLexeme();
 
@@ -1930,7 +1913,7 @@ std::shared_ptr<IParserState> StartUserType_ParserState::Process(FParserStates& 
 		if( LUserTypeId == -1 )
 		{
 			FUserTypePath LTypePath;
-			LTypePath.PathSwitch = ETypePathSwitch::Class;
+			LTypePath.PathSwitch = ETypePathSwitch::Class; // if it is not class (alias) analyzer will fix it
 			LTypePath.ClassPath.ClassCompileName = LGlobalCompileName;
 			OutProgramInfo.TypesMap.push_back(LTypePath);
 			LUserTypeId = OutProgramInfo.TypesMap.size() - 1;
@@ -2000,11 +1983,8 @@ std::shared_ptr<IParserState> UserType3_ParserState::Process(FParserStates& InPa
 	int LUserTypeId = FParserHelperLibrary::GetUserTypeID(LCompileName, OutProgramInfo);
 	if( LUserTypeId == -1 )
 	{
-		FUserTypePath LTypePath;
-		LTypePath.PathSwitch = ETypePathSwitch::Class;
-		LTypePath.ClassPath.ClassCompileName = LCompileName;
-		OutProgramInfo.TypesMap.push_back(LTypePath);
-		LUserTypeId = OutProgramInfo.TypesMap.size() - 1;
+		InParserStates.RaiseError(EErrorMessageType::CLASS_NAME_NOT_FOUND, InToken);
+		return nullptr;
 	}
 
 	LTypeDetectionContext.TypeID = LUserTypeId;
@@ -2030,9 +2010,7 @@ void FParserStates::RegisterMainModule(FProgramInfo& OutProgramInfo, const Token
 
 
 	FModuleInfo LModuleInfo;
-	LModuleInfo.MetaInfo.DeclaredInFile = TokenCTX.GetFileInfo();
-	LModuleInfo.MetaInfo.DeclaredAtLine = TokenCTX.GetLine();
-
+	LModuleInfo.MetaInfo.SetMetaInfo(TokenCTX);
 
 	OutProgramInfo.ImportedModulesInfo.insert(std::pair(FCompilerConfig::RESERVED_MAIN_MODULE_NAME, LModuleInfo));
 	OutProgramInfo.MainModuleName = FCompilerConfig::RESERVED_MAIN_MODULE_NAME;
@@ -2419,7 +2397,7 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 			}
 			if( !FParserHelperLibrary::AreFunctionsDeepEqual(LFunctionContext.FunctionInfo.SignatureInfo, LProgramFunctionIterator->second.SignatureInfo) )
 			{
-				RaiseError(EErrorMessageType::FUNCTION_ARGUMENT_NAME_MISMATCH, TokenCTX);
+				RaiseError(EErrorMessageType::FUNCTION_DESCRIPTION_MISMATCH, TokenCTX);
 				return false;
 			}
 
@@ -2440,7 +2418,7 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 
 
 	LFunctionContext.FunctionInfo.ClassDeclarationNamespace = GetCTXClassCompileName(OutProgramInfo);
-	LFunctionContext.FunctionInfo.SignatureInfo.StaticCodeTree.BuildAST(LFunctionContext.StaticCodeTokens);
+	LFunctionContext.FunctionInfo.SignatureInfo.StaticCodeTree.BuildAST(LFunctionContext.StaticCodeTokens, CompileOptions);
 
 	const bool ThisSignatureExists = FParserHelperLibrary::GetFunctionSignatureID(LFunctionContext.FunctionInfo.SignatureInfo, OutProgramInfo) != -1;
 	if( !ThisSignatureExists )
@@ -2492,7 +2470,7 @@ bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutP
 
 
 
-	LFunctionImplContext.CompilingFunctionInfo.FunctionCodeTree.BuildAST(LFunctionImplContext.FunctionCodeTokens);
+	LFunctionImplContext.CompilingFunctionInfo.FunctionCodeTree.BuildAST(LFunctionImplContext.FunctionCodeTokens, CompileOptions);
 
 	OutProgramInfo.CompilingFunctionsAST.insert(std::pair(LFunctionCompileName, LFunctionImplContext.CompilingFunctionInfo));
 	return true;
@@ -2524,7 +2502,7 @@ bool FParserStates::RegisterVariableFromContext(FProgramInfo& OutProgramInfo, co
 
 
 	LVariableContext.VariableInfo.VariableName = LVariableContext.VariableName;
-	LVariableContext.VariableInfo.DefaultValueTree.BuildAST(LVariableContext.DefaultValueTokens);
+	LVariableContext.VariableInfo.DefaultValueTree.BuildAST(LVariableContext.DefaultValueTokens, CompileOptions);
 
 	LClassContext.ClassInfo.Variables.insert(std::pair(LVariableContext.VariableName, LVariableContext.VariableInfo));
 	return true;
@@ -2632,7 +2610,7 @@ bool FParserStates::RegisterStaticAssertFromContext(FProgramInfo& OutProgramInfo
 {
 	FStaticAssertContext& LStaticAssertContext = StatesContext.StaticAssertContext;
 
-	LStaticAssertContext.StaticAssertInfo.CodeTree.BuildAST(LStaticAssertContext.Expression);
+	LStaticAssertContext.StaticAssertInfo.CodeTree.BuildAST(LStaticAssertContext.Expression, CompileOptions);
 	LStaticAssertContext.StaticAssertInfo.ModuleContextName = OutProgramInfo.MainModuleName;
 	LStaticAssertContext.StaticAssertInfo.ClassContextName = GetCTXClassCompileName(OutProgramInfo);
 

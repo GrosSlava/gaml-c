@@ -2,13 +2,11 @@
 
 #include "ReduceCNodeCodeGen.h"
 
-#include "ASTCodeGen/RootNodeGen.h"
 
 
 
 
-
-std::shared_ptr<INodeCodeGen<ASTRoot>> ReduceC_ASTCodeGenFactory::MakeRootGen() const
+std::shared_ptr<INodeCodeGen<ScopeNode>> ReduceC_ASTCodeGenFactory::MakeScopeGen() const
 {
-	return std::make_shared<RootNodeGen>();
+	return std::make_shared<ScopeNodeGen>();
 }

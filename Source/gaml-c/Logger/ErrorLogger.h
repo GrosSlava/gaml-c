@@ -10,6 +10,10 @@
 
 
 
+class Token;
+
+
+
 /*
 	Error/Warning message identifier.
 */
@@ -94,6 +98,7 @@ enum class EErrorMessageType
 	MEMBER_DOUBLE_MODIFIER,
 	FUNCTION_DECLARATION_NOT_FOUND,
 	FUNCTION_ARGUMENT_NAME_MISMATCH,
+	FUNCTION_DESCRIPTION_MISMATCH,
 	FUNCTION_STATIC_CODE_OVERRIDE,
 
 	CLASS_NAME_NOT_FOUND,
@@ -175,6 +180,13 @@ public:
 		const FCompileOptions& CompileOptions
 	);
 	// clang-format on
+
+	/*
+		@param MessageType - Type of error.
+		@param CTXToken - Context token.
+		@param CompileOptions - Current compilation options.
+	*/
+	static void Raise(EErrorMessageType MessageType, const Token& CTXToken, const FCompileOptions& CompileOptions);
 
 private:
 

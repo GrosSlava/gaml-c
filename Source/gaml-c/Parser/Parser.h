@@ -5,13 +5,16 @@
 #include "../CoreMinimal.h"
 
 #include "ProgramSymbols.h"
-#include "../Token/Token.h"
 
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
 
 #include "../Logger/ErrorLogger.h"
 
+
+
+
+class Token;
 
 
 
@@ -33,11 +36,11 @@ public:
 	/*
 		Start parse.
 
-		@param Tokens - array of tokens to parse.
-		@param FileInfo - original file info.
+		@param Tokens - Array of tokens to parse.
+		@param FileInfo - Original file info.
 		@param CompileOptions - Current compiling options.
 		@param InIsMainModule - Indicate that we parsing main module or importing.
-		@param OutProgramInfo - result of parsing.
+		@param OutProgramInfo - Result of parsing.
 	*/
 	void Process
 	(
@@ -51,15 +54,7 @@ public:
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const
 	{
-		// clang-format off
-		FErrorLogger::Raise
-		(
-			ErrorMessageType, 
-			CurrentFileInfo.GetFileFullPath(), 
-			Token.GetLine(), Token.GetPos(), Token.GetLexeme().size() - 1, 
-			CurrentCompileOptions
-		);
-		// clang-format on
+		FErrorLogger::Raise(ErrorMessageType, Token, CurrentCompileOptions);
 	}
 
 private:

@@ -1,6 +1,7 @@
 // Copyright 2022 - 2023 GrosSlava.
 
 #include "GeneratorHelperLibrary.h"
+#include "../Compiler/CompilerConfig.h"
 
 #include <ctime>
 

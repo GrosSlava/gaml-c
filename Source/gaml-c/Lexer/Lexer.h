@@ -4,13 +4,15 @@
 
 #include "../CoreMinimal.h"
 
-#include "../Token/Token.h"
-
 #include "../Compiler/CompilerFileInfo.h"
 #include "../Compiler/CompilerOptions.h"
 
 #include "../Logger/ErrorLogger.h"
 
+
+
+
+class Token;
 
 
 
@@ -32,7 +34,7 @@ public:
 		Start transform source code into lexemes.
 
 		@param Code - Source code str.
-		@param FileInfo - original file info.
+		@param FileInfo - Original file info.
 		@param CompileOptions - Current compiling options.
 		@param OutTokens - Extracted tokens result.
 	*/

@@ -2,6 +2,8 @@
 
 #include "ErrorLogger.h"
 
+#include "../Token/Token.h"
+
 #include <fstream>
 
 
@@ -77,6 +79,11 @@ void FErrorLogger::Raise
 	{
 		exit(1);
 	}
+}
+
+void FErrorLogger::Raise(EErrorMessageType MessageType, const Token& CTXToken, const FCompileOptions& CompileOptions)
+{
+	Raise(MessageType, CTXToken.GetFileInfo().GetFileFullPath(), CTXToken.GetLine(), CTXToken.GetPos(), CTXToken.GetLexeme().size() - 1, CompileOptions);
 }
 
 FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
@@ -156,6 +163,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(MEMBER_DOUBLE_MODIFIER):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Member double modifier.");
 	CASE_ERROR(FUNCTION_DECLARATION_NOT_FOUND):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function declaration not found.");
 	CASE_ERROR(FUNCTION_ARGUMENT_NAME_MISMATCH):			return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Mismatch of the function declaration argument name.");
+	CASE_ERROR(FUNCTION_DESCRIPTION_MISMATCH):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Mismatch of the function description.");
 	CASE_ERROR(FUNCTION_STATIC_CODE_OVERRIDE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function static code override.");
 	CASE_ERROR(CLASS_NAME_NOT_FOUND):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Class name was not found.");
 	

@@ -7,13 +7,16 @@
 #include "StatesContext.h"
 
 #include "../ProgramSymbols.h"
-#include "../../Token/Token.h"
 
 #include "../../Compiler/CompilerFileInfo.h"
 #include "../../Compiler/CompilerOptions.h"
 
 #include "../../Logger/ErrorLogger.h"
 
+
+
+
+class Token;
 
 
 
@@ -143,6 +146,9 @@ DECLARE_STATE_CLASS(UserType1)	   // [IDENTIFIER] -> . -> [IDENTIFIER]
 DECLARE_STATE_CLASS(UserType2)	   // . -> [IDENTIFIER] -> .|::
 DECLARE_STATE_CLASS(UserType3)	   // [IDENTIFIER] -> :: -> [IDENTIFIER]
 
+
+#undef DECLARE_STATE_CLASS
+
 //.........................................................................................................................//
 
 
@@ -157,7 +163,7 @@ struct FParserStates
 public:
 
 	FParserStates() = delete;
-	FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOptions& InCompileOptions, bool InIsMainModule) :
+	inline FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOptions& InCompileOptions, bool InIsMainModule) :
 		FileInfo(InFileInfo), CompileOptions(InCompileOptions), IsMainModule(InIsMainModule)
 	{
 	}
@@ -243,6 +249,8 @@ public:
 	DECLARE_STATE(UserType2)
 	DECLARE_STATE(UserType3)
 
+#undef DECLARE_STATE
+
 public:
 
 	/*
@@ -264,7 +272,7 @@ public:
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const
 	{
-		FErrorLogger::Raise(ErrorMessageType, FileInfo.GetFileFullPath(), Token.GetLine(), Token.GetPos(), Token.GetLexeme().size() - 1, CompileOptions);
+		FErrorLogger::Raise(ErrorMessageType, Token, CompileOptions);
 	}
 
 

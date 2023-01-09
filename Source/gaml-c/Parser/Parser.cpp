@@ -4,6 +4,8 @@
 #include "States/ParserStates.h"
 #include "ParserHelperLibrary.h"
 
+#include "../Token/Token.h"
+
 
 
 

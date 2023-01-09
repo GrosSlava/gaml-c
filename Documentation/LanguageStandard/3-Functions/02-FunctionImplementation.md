@@ -20,7 +20,7 @@ func [2-NAMESPACE]::[3-FUNCTION_NAME]
 	[4-Code]
 }
 ```
-1. In implementation new modifiers can't be added. Developer should list only function inputs and returns from function declaration
+1. Implementation description must list all modifiers from the function declaration and no new ones can be added
 2. NAMESPACE is name of namespace from which this function is implemented (optional)
 3. Name of function for implementation
 4. Function code
@@ -56,6 +56,8 @@ See [function declaration](01-FunctionDeclaration.md).
 
 - nested namespaces `{ {} }` can't be used unlike c++
 - all operations must end with ';'
+- local variable declared in the scope of the operator is invisible to the top-level scope
+- when accessing a variable, the one closest to the current scope is selected
 
 ### Function calling formual
 

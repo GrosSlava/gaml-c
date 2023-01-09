@@ -22,7 +22,7 @@ struct FCompilerHelperLibrary
 	/*
 		Time code performance.
 
-		@param Lambda - code to check.
+		@param Lambda - Code to check.
 	*/
 	template<class CODE>
 	static inline size_t ClockCodeMilliseconds(CODE Lambda)
@@ -139,7 +139,7 @@ struct FCompilerHelperLibrary
 	/*
 		Read file into string.
 
-		@param File - opened file to read.
+		@param File - Opened file to read.
 		@param OutFileSource - Result string.
 	*/
 	static void ReadAllFileToStr(std::ifstream& File, std::string& OutFileSource);

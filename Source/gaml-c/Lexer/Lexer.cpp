@@ -2,6 +2,7 @@
 
 #include "Lexer.h"
 
+#include "../Token/Token.h"
 #include "../Token/TokenHelperLibrary.h"
 
 

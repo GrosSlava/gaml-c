@@ -39,7 +39,7 @@ public:
 	/*
 		Translate code to object file.
 
-		@param FileInfo - original file info.
+		@param FileInfo - Original file info.
 		@param CompileOptions - Current compile options.
 		@param ProgramInfo - Program abstract view.
 		@param OutCompiledObjectFilePath - Result path to generated object file.
