@@ -206,74 +206,61 @@ struct FParserHelperLibrary
 	static std::string GetFunctionCompileName
 	(	
 		const std::string& ContextCompileName, const std::string& OriginalName,
-		const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
+		const FFunctionSignatureInfo& FunctionSignatureInfo
 	) noexcept;
 	// clang-format on
+	/*
+		Construct any compile name.
 
+		@param ContextCompileName - compile name of context(module, class, function) where declared name.
+		@param OriginalName - object original name.
+		@param ArgumentNames - array of any argument names.
+		@return constructed name.
+	*/
+	static inline std::string GetFunctionPointerCompileName(const FFunctionSignatureInfo& FunctionSignatureInfo) noexcept
+	{
+		return GetFunctionCompileName("", "fsign", FunctionSignatureInfo);
+	}
 	/*
 		Construct standard type compile name.
 
 		@param StandardTypeID - ID of standard type.
 		@return constructed type name.
 	*/
-	static inline std::string GetStandardTypeCompileName(EStandardTypesID StandardTypeID)
+	static inline std::string GetStandardTypeCompileName(const Token& InToken) noexcept
 	{
 		// clang-format off
-		switch( StandardTypeID )
+		switch( InToken.GetType() )
 		{
-		case EStandardTypesID::UINT8_ID:	return "u8";
-		case EStandardTypesID::UINT16_ID:	return "u16";
-		case EStandardTypesID::UINT32_ID:	return "u32";
-		case EStandardTypesID::UINT64_ID:	return "u64";
-		case EStandardTypesID::INT8_ID:		return "i8";
-		case EStandardTypesID::INT16_ID:	return "i16";
-		case EStandardTypesID::INT32_ID:	return "i32";
-		case EStandardTypesID::INT64_ID:	return "i64";
-		case EStandardTypesID::ADDR_T_ID:	return "addr";
-		case EStandardTypesID::FLOAT_ID:	return "f";
-		case EStandardTypesID::DOUBLE_ID:	return "d";
-		case EStandardTypesID::BOOL_ID:		return "b";
-		case EStandardTypesID::CHAR_ID:		return "c";
-		case EStandardTypesID::STRING_ID:	return "s";
-		case EStandardTypesID::VECTOR4D_ID: return "v4";
-		case EStandardTypesID::VECTOR3D_ID: return "v3";
-		case EStandardTypesID::VECTOR2D_ID: return "v2";
+		case ETokenType::UINT8:		return EStandardTypesName::UINT8_Name;
+		case ETokenType::UINT16:	return EStandardTypesName::UINT16_Name;
+		case ETokenType::UINT32:	return EStandardTypesName::UINT32_Name;
+		case ETokenType::UINT64:	return EStandardTypesName::UINT64_Name;
+		case ETokenType::INT8:		return EStandardTypesName::INT8_Name;
+		case ETokenType::INT16:		return EStandardTypesName::INT16_Name;
+		case ETokenType::INT32:		return EStandardTypesName::INT32_Name;
+		case ETokenType::INT64:		return EStandardTypesName::INT64_Name;
+		case ETokenType::ADDR_T:	return EStandardTypesName::ADDR_T_Name;
+		case ETokenType::FLOAT:		return EStandardTypesName::FLOAT_Name;
+		case ETokenType::DOUBLE:	return EStandardTypesName::DOUBLE_Name;
+		case ETokenType::BOOL:		return EStandardTypesName::BOOL_Name;
+		case ETokenType::CHAR:		return EStandardTypesName::CHAR_Name;
+		case ETokenType::STRING:	return EStandardTypesName::STRING_Name;
+		case ETokenType::VECTOR4D:	return EStandardTypesName::VECTOR4D_Name;
+		case ETokenType::VECTOR3D:	return EStandardTypesName::VECTOR3D_Name;
+		case ETokenType::VECTOR2D:	return EStandardTypesName::VECTOR2D_Name;
 		}
 		// clang-format on
 
 		return "";
 	}
+
 	/*
-		Try to get type as string.
+		Try to find type by compile name and return its kind.
 
-		@param TypeID - ID of type.
-		@param ProgramInfo - current program info.
-		@return constructed type name.
+		@return kind of type.
 	*/
-	static inline std::string GetTypeName(int TypeID, const FProgramInfo& ProgramInfo) noexcept
-	{
-		if( TypeID < 0 || TypeID >= ProgramInfo.TypesMap.size() ) return "";
-
-		const FUserTypePath& LTypePath = ProgramInfo.TypesMap[TypeID];
-		switch( LTypePath.PathSwitch )
-		{
-		case ETypePathSwitch::Standard:
-		{
-			return GetStandardTypeCompileName(static_cast<EStandardTypesID>(TypeID));
-		}
-		case ETypePathSwitch::Class:
-		{
-			return LTypePath.ClassPath.ClassCompileName;
-		}
-		case ETypePathSwitch::FunctionSignature:
-		{
-			const FFunctionSignatureInfo& LFunctionSignature = ProgramInfo.FunctionSignaturesTypesMap[LTypePath.FunctionSignaturePath.FunctionSignatureID];
-			return GetFunctionCompileName("", "fsign", LFunctionSignature, ProgramInfo);
-		}
-		}
-
-		return "";
-	}
+	static ETypeKind GetUserTypeKind(const std::string& CompileName, const FProgramInfo& ProgramInfo) noexcept;
 
 
 
@@ -295,10 +282,6 @@ struct FParserHelperLibrary
 		Check that given token is standard type.
 	*/
 	static inline bool IsStandardType(const Token& InToken) noexcept { return IsStandardType(InToken.GetType()); }
-	/*
-		Check that given type ID is standard type.
-	*/
-	static inline bool IsStandardType(int TypeID) noexcept { return TypeID >= 0 && TypeID < EStandardTypesID::StandardTypesID_MAX; }
 	/*
 		Check that given token is builtin template type.
 	*/
@@ -325,64 +308,6 @@ struct FParserHelperLibrary
 		Check that given token is modifier.
 	*/
 	static inline bool IsModifierToken(const Token& InToken) noexcept { return IsModifierToken(InToken.GetType()); }
-
-
-
-
-	/*
-		Try to convert token into standard type ID.
-	*/
-	static inline int GetStandardTypeID(const Token& InToken) noexcept
-	{
-		// clang-format off
-		switch( InToken.GetType() )
-		{
-		case ETokenType::UINT8:		return EStandardTypesID::UINT8_ID;
-		case ETokenType::UINT16:	return EStandardTypesID::UINT16_ID;
-		case ETokenType::UINT32:	return EStandardTypesID::UINT32_ID;
-		case ETokenType::UINT64:	return EStandardTypesID::UINT64_ID;
-		case ETokenType::INT8:		return EStandardTypesID::INT8_ID;
-		case ETokenType::INT16:		return EStandardTypesID::INT16_ID;
-		case ETokenType::INT32:		return EStandardTypesID::INT32_ID;
-		case ETokenType::INT64:		return EStandardTypesID::INT64_ID;
-		case ETokenType::ADDR_T:	return EStandardTypesID::ADDR_T_ID;
-		case ETokenType::FLOAT:		return EStandardTypesID::FLOAT_ID;
-		case ETokenType::DOUBLE:	return EStandardTypesID::DOUBLE_ID;
-		case ETokenType::BOOL:		return EStandardTypesID::BOOL_ID;
-		case ETokenType::CHAR:		return EStandardTypesID::CHAR_ID;
-		case ETokenType::STRING:	return EStandardTypesID::STRING_ID;
-		case ETokenType::VECTOR4D:	return EStandardTypesID::VECTOR4D_ID;
-		case ETokenType::VECTOR3D:	return EStandardTypesID::VECTOR3D_ID;
-		case ETokenType::VECTOR2D:	return EStandardTypesID::VECTOR2D_ID;
-		}
-		// clang-format on
-
-		return -1;
-	}
-	/*
-		Try to get function signature ID.
-	*/
-	static int GetFunctionSignatureID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept;
-	/*
-		Try to get function signature ID.
-	*/
-	static int GetFunctionSignatureID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept;
-	/*
-		Try to get function signature as type ID.
-	*/
-	static int GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept;
-	/*
-		Try to get function signature as type ID.
-	*/
-	static int GetFunctionSignatureTypeID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept;
-	/*
-		Try to get class as type ID.
-	*/
-	static int GetClassTypeID(const std::string& ClassCompileName, const FProgramInfo& ProgramInfo) noexcept;
-	/*
-		Try to get user type ID by compile name.
-	*/
-	static int GetUserTypeID(const std::string& CompileName, const FProgramInfo& ProgramInfo) noexcept;
 
 
 

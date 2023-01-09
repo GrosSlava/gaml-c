@@ -133,6 +133,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(EXPECTED_ARGUMENT_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected argument name.");
 	CASE_ERROR(EXPECTED_ALIAS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected alias name.");
 	CASE_ERROR(EXPECTED_CLASS_NAME):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected class name.");
+	CASE_ERROR(EXPECTED_CONTROL_OPERATOR):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Expected control operator.");
 	CASE_ERROR(INVALID_CLOSE_PAIR):							return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Invalid close pair.");
 	CASE_ERROR(OPEN_PAIR_SHOULD_HAVE_CLOSE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Open pair should have close.");
 	CASE_ERROR(MODULE_NAME_REDEFINITION):					return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Module name redefinition.");

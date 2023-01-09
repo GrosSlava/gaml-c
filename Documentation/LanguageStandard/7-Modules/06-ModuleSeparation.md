@@ -31,6 +31,7 @@ Module can be separated to 2 parts: "header" and "source".
 - Name of the implementation file must match the name of the "header" file
 - Implementation file can be located anywhere, it not participate in including
 - Code in implementation "thinks" that it is in module file with declaration (technically it imports header module and sets it as current)
+- Each ".gh" file can have only one ".gaml" implementation file
 
 ### Module implementation formula
 

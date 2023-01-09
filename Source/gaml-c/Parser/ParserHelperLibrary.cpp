@@ -133,7 +133,7 @@ std::string FParserHelperLibrary::GetFunctionCompileName
 std::string FParserHelperLibrary::GetFunctionCompileName
 (	
 	const std::string& ContextCompileName, const std::string& OriginalName,
-	const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo
+	const FFunctionSignatureInfo& FunctionSignatureInfo
 ) noexcept
 // clang-format on
 {
@@ -142,108 +142,43 @@ std::string FParserHelperLibrary::GetFunctionCompileName
 
 	for( const FVariableInfo& LVariableInfo : FunctionSignatureInfo.Inputs )
 	{
-		// it is finite recursion with function signature as argument
-		const std::string LTypeName = GetTypeName(LVariableInfo.TypeID, ProgramInfo);
-		if( LTypeName.empty() )
+		if( LVariableInfo.TypeInfo.TypeCompileName.empty() )
 		{
 			return "";
 		}
 
-		LArgumentsNames.push_back(LTypeName);
+		LArgumentsNames.push_back(LVariableInfo.TypeInfo.TypeCompileName);
 	}
 
 	return GetFunctionCompileName(ContextCompileName, OriginalName, FunctionSignatureInfo.Modifiers.IsConst, LArgumentsNames);
 }
 
-
-
-
-
-int FParserHelperLibrary::GetFunctionSignatureID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
+ETypeKind FParserHelperLibrary::GetUserTypeKind(const std::string& CompileName, const FProgramInfo& ProgramInfo) noexcept
 {
-	for( int i = 0; i < ProgramInfo.FunctionSignaturesTypesMap.size(); ++i )
+	if( CompileName.empty() )
 	{
-		if( AreFunctionSignaturesSame(FunctionSignatureInfo, ProgramInfo.FunctionSignaturesTypesMap[i]) )
-		{
-			return i;
-		}
+		return ETypeKind::UNDEFINED;
 	}
 
-	return -1;
-}
-
-int FParserHelperLibrary::GetFunctionSignatureID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept
-{
-	auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
-	if( LFunctionInfoIterator == ProgramInfo.Functions.end() )
+	auto LClassIter = ProgramInfo.Classes.find(CompileName);
+	if( LClassIter != ProgramInfo.Classes.end() )
 	{
-		return -1;
+		return ETypeKind::Class;
 	}
 
-	return GetFunctionSignatureID(LFunctionInfoIterator->second.SignatureInfo, ProgramInfo);
-}
-
-int FParserHelperLibrary::GetFunctionSignatureTypeID(const FFunctionSignatureInfo& FunctionSignatureInfo, const FProgramInfo& ProgramInfo) noexcept
-{
-	const int LFunctionSignatureID = GetFunctionSignatureID(FunctionSignatureInfo, ProgramInfo);
-	if( LFunctionSignatureID < 0 )
+	auto LAliasIter = ProgramInfo.TypeAliases.find(CompileName);
+	if( LAliasIter != ProgramInfo.TypeAliases.end() )
 	{
-		return -1;
+		return LAliasIter->second.TypeKind;
 	}
 
-	for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
+	auto LFunctionIter = ProgramInfo.Functions.find(CompileName);
+	if( LFunctionIter != ProgramInfo.Functions.end() )
 	{
-		// clang-format off
-		if( 
-			ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::FunctionSignature &&
-			ProgramInfo.TypesMap[i].FunctionSignaturePath.FunctionSignatureID == LFunctionSignatureID 
-			)
-		// clang-format on
-		{
-			return i;
-		}
+		return ETypeKind::FunctionPointer;
 	}
 
-	return -1;
-}
-
-int FParserHelperLibrary::GetFunctionSignatureTypeID(const std::string& FunctionCompileName, const FProgramInfo& ProgramInfo) noexcept
-{
-	auto LFunctionInfoIterator = ProgramInfo.Functions.find(FunctionCompileName);
-	if( LFunctionInfoIterator == ProgramInfo.Functions.end() )
-	{
-		return -1;
-	}
-
-	return GetFunctionSignatureTypeID(LFunctionInfoIterator->second.SignatureInfo, ProgramInfo);
-}
-
-int FParserHelperLibrary::GetClassTypeID(const std::string& ClassCompileName, const FProgramInfo& ProgramInfo) noexcept
-{
-	for( int i = 0; i < ProgramInfo.TypesMap.size(); ++i )
-	{
-		if( ProgramInfo.TypesMap[i].PathSwitch == ETypePathSwitch::Class && ProgramInfo.TypesMap[i].ClassPath.ClassCompileName == ClassCompileName )
-		{
-			return i;
-		}
-	}
-
-	return -1;
-}
-
-int FParserHelperLibrary::GetUserTypeID(const std::string& CompileName, const FProgramInfo& ProgramInfo) noexcept
-{
-	int LTypeID = GetClassTypeID(CompileName, ProgramInfo);
-	if( LTypeID == -1 )
-	{
-		auto LAliasIter = ProgramInfo.TypeAliases.find(CompileName);
-		if( LAliasIter != ProgramInfo.TypeAliases.end() )
-		{
-			LTypeID = LAliasIter->second;
-		}
-	}
-
-	return LTypeID;
+	return ETypeKind::UNDEFINED;
 }
 
 
@@ -262,7 +197,7 @@ bool FParserHelperLibrary::AreFunctionSignaturesSame(const FFunctionSignatureInf
 
 	while( LFS1Iter != FS1.Inputs.end() )
 	{
-		if( LFS1Iter->TypeID != LFS2Iter->TypeID )
+		if( LFS1Iter->TypeInfo != LFS2Iter->TypeInfo )
 		{
 			return false;
 		}
@@ -296,7 +231,7 @@ bool FParserHelperLibrary::AreFunctionsDeepEqual(const FFunctionSignatureInfo& F
 	{
 		// clang-format off
 		if( 
-			LFS1InputsIter->TypeID != LFS2InputsIter->TypeID || 
+			LFS1InputsIter->TypeInfo != LFS2InputsIter->TypeInfo || 
 			LFS1InputsIter->VariableName != LFS2InputsIter->VariableName || 
 			LFS1InputsIter->Modifiers != LFS2InputsIter->Modifiers
 		  )
@@ -315,7 +250,7 @@ bool FParserHelperLibrary::AreFunctionsDeepEqual(const FFunctionSignatureInfo& F
 	{
 		// clang-format off
 		if( 
-			LFS1ReturnsIter->TypeID != LFS2ReturnsIter->TypeID || 
+			LFS1ReturnsIter->TypeInfo != LFS2ReturnsIter->TypeInfo || 
 			LFS1ReturnsIter->VariableName != LFS2ReturnsIter->VariableName || 
 			LFS1ReturnsIter->Modifiers != LFS2ReturnsIter->Modifiers
 		  )

@@ -40,7 +40,7 @@ public:
 	class Name : public INodeCodeGen<ASTNodeType>                                                               \
 	{                                                                                                           \
 	public:                                                                                                     \
-																												\
+                                                                                                                \
 		virtual std::string GenerateCode(const ASTNodeType* ASTNode, const FProgramInfo& ProgramInfo) override; \
 	};
 

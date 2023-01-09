@@ -11,63 +11,22 @@
 
 
 /*
-	Symbol types.
-*/
-enum class ETypePathSwitch
-{
-	UNDEFINED,
-	Standard,
-	Class,
-	FunctionSignature
-};
-/*
-	Path to information about class.
-*/
-struct FClassTypePath
-{
-	/*
-		Class compile name.
-	*/
-	std::string ClassCompileName = "";
-};
-/*
-	Path to information about function signature.
-*/
-struct FFunctionSignaturePath
-{
-	/*
-		Build-time ID of function signature.
-	*/
-	int FunctionSignatureID = -1;
-};
-/*
-	Main struct to find path to type.
-*/
-struct FUserTypePath
-{
-	ETypePathSwitch PathSwitch = ETypePathSwitch::UNDEFINED;
-
-	FClassTypePath ClassPath;
-	FFunctionSignaturePath FunctionSignaturePath;
-};
-
-
-
-
-
-/*
 	Information about variable.
 */
 struct FVariableInfo
 {
 	/*
-		Build-time type id.
+		Info about type.
 	*/
-	int TypeID = 0;
+	FTypeInfo TypeInfo;
 	/*
 		Variable name.
 	*/
 	std::string VariableName = "";
+	/*
+		AST for default value.
+	*/
+	AST DefaultValueTree;
 
 	/*
 		Context modifiers.
@@ -77,10 +36,6 @@ struct FVariableInfo
 		Meta info.
 	*/
 	FSymbolMetaInfo MetaInfo;
-	/*
-		AST for default value.
-	*/
-	AST DefaultValueTree;
 };
 
 /*
@@ -97,6 +52,7 @@ struct FCompilingVariableInfo
 	*/
 	bool IsInThisModule = false;
 };
+
 
 
 /*
@@ -164,6 +120,7 @@ struct FCompilingFunctionInfo
 };
 
 
+
 /*
 	Information about class.
 */
@@ -174,18 +131,9 @@ struct FClassInfo
 	*/
 	EClassType ClassType = EClassType::UNDEFINED;
 	/*
-		Array of parent build-time type IDs.
+		Array of parent type.
 	*/
-	std::vector<int> ParentTypesID;
-
-	/*
-		Context modifiers.
-	*/
-	FModfiers Modifiers;
-	/*
-		Meta info.
-	*/
-	FSymbolMetaInfo MetaInfo;
+	std::vector<FTypeInfo> ParentTypesInfo;
 
 	/*
 		After semantic analis there will be all variables from all parent classes.
@@ -195,15 +143,17 @@ struct FClassInfo
 		Value - Variable info.
 	*/
 	std::map<std::string, FVariableInfo> Variables;
-	/*
-		After semantic analis there will be full map of virtual functions.
-		All functions have in first argument hidden "this".
 
-		Key - function name.
-		Value - compile function name.
+	/*
+		Context modifiers.
 	*/
-	std::unordered_map<std::string, std::string> VirtualFunctionsTable;
+	FModfiers Modifiers;
+	/*
+		Meta info.
+	*/
+	FSymbolMetaInfo MetaInfo;
 };
+
 
 
 /*
@@ -230,6 +180,7 @@ struct FModuleInfo
 	*/
 	FSymbolMetaInfo MetaInfo;
 };
+
 
 
 /*
@@ -263,15 +214,7 @@ struct FProgramInfo
 {
 public:
 
-	inline FProgramInfo()
-	{
-		for( int i = 0; i < EStandardTypesID::StandardTypesID_MAX; ++i )
-		{
-			FUserTypePath LUserTypePath;
-			LUserTypePath.PathSwitch = ETypePathSwitch::Standard;
-			TypesMap.push_back(LUserTypePath);
-		}
-	}
+	inline FProgramInfo() { }
 
 
 
@@ -297,6 +240,7 @@ public:
 		Value - class info.
 	*/
 	std::unordered_map<std::string, FClassInfo> Classes;
+
 	/*
 		All used functions in program.
 		Class methods are functions too.
@@ -307,25 +251,11 @@ public:
 	std::unordered_map<std::string, FFunctionInfo> Functions;
 
 	/*
-		Unique function signatures. Each new signature is new type with unique id.
-
-		Key - signature id.
-		Value - function signature.
-	*/
-	std::vector<FFunctionSignatureInfo> FunctionSignaturesTypesMap;
-	/*
 		Key - alias compile name.
-		Value - type real id.
+		Value - real type info.
 	*/
-	std::unordered_map<std::string, size_t> TypeAliases;
-	/*
-		All types in compiling process will be cached here.
-		Function signatures id too.
+	std::unordered_map<std::string, FTypeInfo> TypeAliases;
 
-		Key - type id.
-		Value - path to type.
-	*/
-	std::vector<FUserTypePath> TypesMap;
 
 	//............................................................................................//
 

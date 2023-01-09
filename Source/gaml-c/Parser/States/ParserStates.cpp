@@ -566,12 +566,12 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 		{
 		case EDescriptionContext::Param:
 		{
-			LDescriptionContext.Inputs.back().TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+			LDescriptionContext.Inputs.back().TypeInfo = FTypeInfo(ETypeKind::Standard, FParserHelperLibrary::GetStandardTypeCompileName(InToken));
 			break;
 		}
 		case EDescriptionContext::Return:
 		{
-			LDescriptionContext.Returns.back().TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+			LDescriptionContext.Returns.back().TypeInfo = FTypeInfo(ETypeKind::Standard, FParserHelperLibrary::GetStandardTypeCompileName(InToken));
 			break;
 		}
 		default:
@@ -907,12 +907,12 @@ std::shared_ptr<IParserState> DescriptionParamType_ParserState::Process(FParserS
 	{
 	case EDescriptionContext::Param:
 	{
-		LDescriptionContext.Inputs.back().TypeID = LTypeDetectionCntext.TypeID;
+		LDescriptionContext.Inputs.back().TypeInfo = LTypeDetectionCntext.TypeInfo;
 		break;
 	}
 	case EDescriptionContext::Return:
 	{
-		LDescriptionContext.Returns.back().TypeID = LTypeDetectionCntext.TypeID;
+		LDescriptionContext.Returns.back().TypeInfo = LTypeDetectionCntext.TypeInfo;
 		break;
 	}
 	default:
@@ -1414,7 +1414,8 @@ std::shared_ptr<IParserState> DeclareClass2_ParserState::Process(FParserStates& 
 
 	if( FParserHelperLibrary::IsStandardType(InToken) )
 	{
-		LClassContext.ClassInfo.ParentTypesID.push_back(FParserHelperLibrary::GetStandardTypeID(InToken));
+		FTypeInfo LParentTypeInfo(ETypeKind::Standard, FParserHelperLibrary::GetStandardTypeCompileName(InToken));
+		LClassContext.ClassInfo.ParentTypesInfo.push_back(LParentTypeInfo);
 		return InParserStates.GDeclareClass3_ParserState;
 	}
 	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
@@ -1552,7 +1553,7 @@ std::shared_ptr<IParserState> DeclareClassParentType_ParserState::Process(FParse
 {
 	FClassDeclarationContext& LClassContext = InParserStates.StatesContext.ClassDeclarationContext;
 
-	LClassContext.ClassInfo.ParentTypesID.push_back(InParserStates.StatesContext.TypeDetectionContext.TypeID);
+	LClassContext.ClassInfo.ParentTypesInfo.push_back(InParserStates.StatesContext.TypeDetectionContext.TypeInfo);
 	return InParserStates.PopStateChecked(InToken);
 }
 
@@ -1566,7 +1567,7 @@ std::shared_ptr<IParserState> StartDeclareField_ParserState::Process(FParserStat
 	{
 		if( InParserStates.StatesContext.ClassDeclarationContext.ClassInfo.ClassType == EClassType::Enum )
 		{
-			LVariableContext.VariableInfo.TypeID = -1; // analyzer will set type by enum parent
+			LVariableContext.VariableInfo.TypeInfo = FTypeInfo(); // analyzer will set type by enum parent
 			LVariableContext.VariableName = InToken.GetLexeme();
 			return InParserStates.GDeclareField2_ParserState;
 		}
@@ -1574,7 +1575,7 @@ std::shared_ptr<IParserState> StartDeclareField_ParserState::Process(FParserStat
 
 	if( FParserHelperLibrary::IsStandardType(InToken) )
 	{
-		LVariableContext.VariableInfo.TypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+		LVariableContext.VariableInfo.TypeInfo = FTypeInfo(ETypeKind::Standard, FParserHelperLibrary::GetStandardTypeCompileName(InToken));
 		return InParserStates.GDeclareField1_ParserState;
 	}
 	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
@@ -1696,7 +1697,7 @@ std::shared_ptr<IParserState> DeclareFieldType_ParserState::Process(FParserState
 {
 	FVariableDeclarationContext& LVariableContext = InParserStates.StatesContext.VariableDeclarationContext;
 
-	LVariableContext.VariableInfo.TypeID = InParserStates.StatesContext.TypeDetectionContext.TypeID;
+	LVariableContext.VariableInfo.TypeInfo = InParserStates.StatesContext.TypeDetectionContext.TypeInfo;
 	return InParserStates.PopStateChecked(InToken);
 }
 
@@ -1735,7 +1736,7 @@ std::shared_ptr<IParserState> DefineAlias2_ParserState::Process(FParserStates& I
 
 	if( FParserHelperLibrary::IsStandardType(InToken) )
 	{
-		LAliasContext.OriginalTypeID = FParserHelperLibrary::GetStandardTypeID(InToken);
+		LAliasContext.OriginalTypeInfo = FTypeInfo(ETypeKind::Standard, FParserHelperLibrary::GetStandardTypeCompileName(InToken));
 		return InParserStates.GDefineAlias3_ParserState;
 	}
 	else if( FParserHelperLibrary::IsBuiltinTemplateType(InToken) )
@@ -1794,7 +1795,7 @@ std::shared_ptr<IParserState> DefineAliasType_ParserState::Process(FParserStates
 {
 	FAliasDeclarationContext& LAliasContext = InParserStates.StatesContext.AliasDeclarationContext;
 
-	LAliasContext.OriginalTypeID = InParserStates.StatesContext.TypeDetectionContext.TypeID;
+	LAliasContext.OriginalTypeInfo = InParserStates.StatesContext.TypeDetectionContext.TypeInfo;
 	return InParserStates.PopStateChecked(InToken);
 }
 
@@ -1905,21 +1906,26 @@ std::shared_ptr<IParserState> StartUserType_ParserState::Process(FParserStates& 
 		const std::string LInContextCompileName = FParserHelperLibrary::GetCompileName(LContextCompileName, LTypeDetectionContext.TypeName);
 		const std::string LGlobalCompileName = FParserHelperLibrary::GetCompileName(OutProgramInfo.MainModuleName, LTypeDetectionContext.TypeName);
 
-		int LUserTypeId = FParserHelperLibrary::GetUserTypeID(LInContextCompileName, OutProgramInfo);
-		if( LUserTypeId == -1 )
+		ETypeKind LTypeKind = FParserHelperLibrary::GetUserTypeKind(LInContextCompileName, OutProgramInfo);
+		if( LTypeKind != ETypeKind::UNDEFINED )
 		{
-			int LUserTypeId = FParserHelperLibrary::GetUserTypeID(LGlobalCompileName, OutProgramInfo);
+			LTypeDetectionContext.TypeInfo = FTypeInfo(LTypeKind, LInContextCompileName);
 		}
-		if( LUserTypeId == -1 )
+		else
 		{
-			FUserTypePath LTypePath;
-			LTypePath.PathSwitch = ETypePathSwitch::Class; // if it is not class (alias) analyzer will fix it
-			LTypePath.ClassPath.ClassCompileName = LGlobalCompileName;
-			OutProgramInfo.TypesMap.push_back(LTypePath);
-			LUserTypeId = OutProgramInfo.TypesMap.size() - 1;
+			LTypeKind = FParserHelperLibrary::GetUserTypeKind(LGlobalCompileName, OutProgramInfo);
 		}
 
-		LTypeDetectionContext.TypeID = LUserTypeId;
+		if( LTypeKind != ETypeKind::UNDEFINED )
+		{
+			LTypeDetectionContext.TypeInfo = FTypeInfo(LTypeKind, LGlobalCompileName);
+		}
+		else
+		{
+			LTypeDetectionContext.TypeInfo = FTypeInfo(ETypeKind::Class, "");
+			LTypeDetectionContext.TypeInfo.PotentialNames.push_back(LInContextCompileName);
+			LTypeDetectionContext.TypeInfo.PotentialNames.push_back(LGlobalCompileName);
+		}
 
 		std::shared_ptr<IParserState> LResultOperatingState = InParserStates.PopStateChecked(InToken);
 		std::shared_ptr<IParserState> LPrevState = LResultOperatingState->Process(InParserStates, InToken, OutProgramInfo);
@@ -1980,14 +1986,14 @@ std::shared_ptr<IParserState> UserType3_ParserState::Process(FParserStates& InPa
 	const std::string LModuleName = FParserHelperLibrary::GetModuleRealNameWithFirstPartCheck(LTypeDetectionContext.ModuleName, OutProgramInfo);
 	const std::string LCompileName = FParserHelperLibrary::GetCompileName(LModuleName, LTypeDetectionContext.TypeName);
 
-	int LUserTypeId = FParserHelperLibrary::GetUserTypeID(LCompileName, OutProgramInfo);
-	if( LUserTypeId == -1 )
+	ETypeKind LTypeKind = FParserHelperLibrary::GetUserTypeKind(LCompileName, OutProgramInfo);
+	if( LTypeKind == ETypeKind::UNDEFINED )
 	{
 		InParserStates.RaiseError(EErrorMessageType::CLASS_NAME_NOT_FOUND, InToken);
 		return nullptr;
 	}
 
-	LTypeDetectionContext.TypeID = LUserTypeId;
+	LTypeDetectionContext.TypeInfo = FTypeInfo(LTypeKind, LCompileName);
 
 	std::shared_ptr<IParserState> LResultOperatingState = InParserStates.PopStateChecked(InToken);
 	return LResultOperatingState->Process(InParserStates, InToken, OutProgramInfo);
@@ -2420,17 +2426,6 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 	LFunctionContext.FunctionInfo.ClassDeclarationNamespace = GetCTXClassCompileName(OutProgramInfo);
 	LFunctionContext.FunctionInfo.SignatureInfo.StaticCodeTree.BuildAST(LFunctionContext.StaticCodeTokens, CompileOptions);
 
-	const bool ThisSignatureExists = FParserHelperLibrary::GetFunctionSignatureID(LFunctionContext.FunctionInfo.SignatureInfo, OutProgramInfo) != -1;
-	if( !ThisSignatureExists )
-	{
-		OutProgramInfo.FunctionSignaturesTypesMap.push_back(LFunctionContext.FunctionInfo.SignatureInfo);
-
-		FUserTypePath LTypePath;
-		LTypePath.PathSwitch = ETypePathSwitch::FunctionSignature;
-		LTypePath.FunctionSignaturePath.FunctionSignatureID = OutProgramInfo.FunctionSignaturesTypesMap.size() - 1; // size > 0
-		OutProgramInfo.TypesMap.push_back(LTypePath);
-	}
-
 	OutProgramInfo.Functions.insert(std::pair(LFunctionCompileName, LFunctionContext.FunctionInfo));
 	return true;
 }
@@ -2531,15 +2526,6 @@ bool FParserStates::RegisterClassFromContext(FProgramInfo& OutProgramInfo, const
 
 
 
-	const bool ThisClassTypeExists = FParserHelperLibrary::GetClassTypeID(LClassCompileName, OutProgramInfo) != -1;
-	if( !ThisClassTypeExists )
-	{
-		FUserTypePath LTypePath;
-		LTypePath.PathSwitch = ETypePathSwitch::Class;
-		LTypePath.ClassPath.ClassCompileName = LClassCompileName;
-		OutProgramInfo.TypesMap.push_back(LTypePath);
-	}
-
 	OutProgramInfo.Classes.insert(std::pair(LClassCompileName, StatesContext.ClassDeclarationContext.ClassInfo));
 	return true;
 }
@@ -2571,7 +2557,6 @@ bool FParserStates::FinishClassRegistrationFromContext(FProgramInfo& OutProgramI
 
 
 	LClassInfoIter->second.Variables = LClassContext.ClassInfo.Variables;
-	LClassInfoIter->second.VirtualFunctionsTable = LClassContext.ClassInfo.VirtualFunctionsTable;
 
 	return true;
 }
@@ -2602,7 +2587,7 @@ bool FParserStates::RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const
 
 
 
-	OutProgramInfo.TypeAliases.insert(std::pair(LAliasCompileName, LAliasContext.OriginalTypeID));
+	OutProgramInfo.TypeAliases.insert(std::pair(LAliasCompileName, LAliasContext.OriginalTypeInfo));
 	return true;
 }
 
@@ -2633,8 +2618,7 @@ std::string FParserStates::GetCTXFunctionCompileName(const FProgramInfo& OutProg
 		(
 			"", 
 			LFunctionContext.FunctionName,
-			LFunctionContext.FunctionInfo.SignatureInfo, 
-			OutProgramInfo
+			LFunctionContext.FunctionInfo.SignatureInfo
 		);
 		// clang-format on
 	}
@@ -2648,7 +2632,7 @@ std::string FParserStates::GetCTXFunctionCompileName(const FProgramInfo& OutProg
 	// clang-format off
 	return FParserHelperLibrary::GetFunctionCompileName
 	(
-		LContextCompileName, LFunctionContext.FunctionName, LFunctionContext.FunctionInfo.SignatureInfo, OutProgramInfo
+		LContextCompileName, LFunctionContext.FunctionName, LFunctionContext.FunctionInfo.SignatureInfo
 	);
 	// clang-format on
 }

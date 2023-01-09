@@ -15,33 +15,7 @@
 */
 struct FReduceCHelperLibrary
 {
-	static inline std::string GetStandardTypeNameCStr(int TypeID)
-	{
-		// clang-format off
-		switch( static_cast<EStandardTypesID>(TypeID) )
-		{
-		case EStandardTypesID::UINT8_ID: 	return "unsigned char";
-		case EStandardTypesID::UINT16_ID: 	return "unsigned short int";
-		case EStandardTypesID::UINT32_ID: 	return "unsigned int";
-		case EStandardTypesID::UINT64_ID: 	return "unsigned long long int";
-		case EStandardTypesID::INT8_ID: 	return "signed char";
-		case EStandardTypesID::INT16_ID: 	return "signed short int";
-		case EStandardTypesID::INT32_ID: 	return "signed int";
-		case EStandardTypesID::INT64_ID: 	return "signed long long int";
-		case EStandardTypesID::ADDR_T_ID: 	return "signed long long int";
-		case EStandardTypesID::FLOAT_ID: 	return "float";
-		case EStandardTypesID::DOUBLE_ID: 	return "double";
-		case EStandardTypesID::BOOL_ID: 	return "signed char";
-		case EStandardTypesID::CHAR_ID: 	return "unsigned short int";
-		case EStandardTypesID::STRING_ID: 	return "string";
-		case EStandardTypesID::VECTOR4D_ID: return "vector4d";
-		case EStandardTypesID::VECTOR3D_ID: return "vector3d";
-		case EStandardTypesID::VECTOR2D_ID: return "vector2d";
-		}
-		// clang-format on
-
-		return "";
-	}
+	static std::string GetStandardTypeNameCStr(const std::string& TypeName);
 
 	static inline std::string GetCallingConventionCStr(EFunctionCallingConvention CallingConvention, ETargetPlatform TargetPlatform)
 	{

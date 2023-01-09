@@ -202,15 +202,15 @@ public:
 
 	inline void Clear() noexcept
 	{
-		OriginalTypeID = -1;
 		AliasName.clear();
+		OriginalTypeInfo = FTypeInfo();
 	}
 
 
 public:
 
-	int OriginalTypeID = -1;
 	std::string AliasName = "";
+	FTypeInfo OriginalTypeInfo;
 };
 
 
@@ -245,7 +245,7 @@ public:
 	{
 		ModuleName.clear();
 		TypeName.clear();
-		TypeID = -1;
+		TypeInfo = FTypeInfo();
 	}
 
 
@@ -253,7 +253,7 @@ public:
 
 	std::string ModuleName = "";
 	std::string TypeName = "";
-	int TypeID = -1;
+	FTypeInfo TypeInfo;
 };
 
 

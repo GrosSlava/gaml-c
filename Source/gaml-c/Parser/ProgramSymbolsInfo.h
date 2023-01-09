@@ -55,6 +55,98 @@ public:
 
 
 
+
+/*
+	Compile names of standard types.
+*/
+struct EStandardTypesName
+{
+	const static std::string UINT8_Name;
+	const static std::string UINT16_Name;
+	const static std::string UINT32_Name;
+	const static std::string UINT64_Name;
+	const static std::string INT8_Name;
+	const static std::string INT16_Name;
+	const static std::string INT32_Name;
+	const static std::string INT64_Name;
+	const static std::string ADDR_T_Name;
+	const static std::string FLOAT_Name;
+	const static std::string DOUBLE_Name;
+	const static std::string BOOL_Name;
+	const static std::string CHAR_Name;
+	const static std::string STRING_Name;
+	const static std::string VECTOR4D_Name;
+	const static std::string VECTOR3D_Name;
+	const static std::string VECTOR2D_Name;
+};
+
+/*
+	Kind of type for switch.
+*/
+enum class ETypeKind
+{
+	UNDEFINED = 0,
+	Standard,
+	Class,
+	FunctionPointer,
+	AnyPointer
+};
+struct FTypeInfo
+{
+public:
+
+	inline FTypeInfo() { }
+	inline FTypeInfo(ETypeKind InTypeKind, const std::string& InTypeCompileName) : TypeKind(InTypeKind), TypeCompileName(InTypeCompileName) { }
+
+public:
+
+	/*
+		Kind of type for switch.
+	*/
+	ETypeKind TypeKind = ETypeKind::UNDEFINED;
+
+	/*
+		Compile name of type.
+		Empty for AnyPointer or Class with undefined name.
+	*/
+	std::string TypeCompileName = "";
+	/*
+		Potential names if name can't be exactly detected.
+	*/
+	std::vector<std::string> PotentialNames;
+
+
+
+public:
+
+	friend bool operator==(const FTypeInfo& A, const FTypeInfo& B)
+	{
+		if( A.PotentialNames.size() != A.PotentialNames.size() ) return false;
+
+		auto AIter = A.PotentialNames.begin();
+		auto BIter = B.PotentialNames.begin();
+
+		while( AIter != A.PotentialNames.end() )
+		{
+			if( *AIter != *BIter )
+			{
+				return false;
+			}
+
+			++AIter;
+			++BIter;
+		}
+
+		return A.TypeKind == B.TypeKind && A.TypeCompileName == B.TypeCompileName;
+	}
+
+	friend bool operator!=(const FTypeInfo& A, const FTypeInfo& B) { return !(A == B); }
+};
+
+
+
+
+
 /*
 	Standard access modifiers.
 */
@@ -87,34 +179,6 @@ enum class EClassType : unsigned char
 	Object,
 	Component,
 	Enum
-};
-
-/*
-	ID for standard types.
-*/
-enum EStandardTypesID
-{
-	//CLASS_ID - it is built-in template
-	UINT8_ID = 0,
-	UINT16_ID,
-	UINT32_ID,
-	UINT64_ID,
-	INT8_ID,
-	INT16_ID,
-	INT32_ID,
-	INT64_ID,
-	ADDR_T_ID,
-	FLOAT_ID,
-	DOUBLE_ID,
-	BOOL_ID,
-	CHAR_ID,
-	STRING_ID,
-	//ARRAY_ID - it is built-in template
-	VECTOR4D_ID,
-	VECTOR3D_ID,
-	VECTOR2D_ID,
-
-	StandardTypesID_MAX
 };
 
 /*
