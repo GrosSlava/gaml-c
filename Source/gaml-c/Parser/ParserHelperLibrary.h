@@ -19,37 +19,41 @@
 struct FParserHelperLibrary
 {
 	/*
+		Check that given token type is open pair.
+	*/
+	static inline bool IsOpenPairToken(ETokenType TokenType) noexcept
+	{
+		// clang-format off
+		return	TokenType == ETokenType::LBRA || TokenType == ETokenType::LPAR || 
+				TokenType == ETokenType::LSQR || TokenType == ETokenType::LTRI;
+		// clang-format on
+	}
+	/*
 		Check that given token is open pair.
 	*/
-	static inline bool IsOpenPairToken(const Token& InToken) noexcept
-	{
-		const ETokenType LTokenType = InToken.GetType();
+	static inline bool IsOpenPairToken(const Token& InToken) noexcept { return IsOpenPairToken(InToken.GetType()); }
 
+	/*
+		Check that given token type is close pair.
+	*/
+	static inline bool IsClosePairToken(ETokenType TokenType) noexcept
+	{
 		// clang-format off
-		return	LTokenType == ETokenType::LBRA || LTokenType == ETokenType::LPAR || 
-				LTokenType == ETokenType::LSQR || LTokenType == ETokenType::LTRI;
+		return	TokenType == ETokenType::RBRA || TokenType == ETokenType::RPAR ||
+				TokenType == ETokenType::RSQR || TokenType == ETokenType::RTRI;
 		// clang-format on
 	}
 	/*
 		Check that given token is close pair.
 	*/
-	static inline bool IsClosePairToken(const Token& InToken) noexcept
-	{
-		const ETokenType LTokenType = InToken.GetType();
+	static inline bool IsClosePairToken(const Token& InToken) noexcept { return IsClosePairToken(InToken.GetType()); }
 
-		// clang-format off
-		return	LTokenType == ETokenType::RBRA || LTokenType == ETokenType::RPAR ||
-				LTokenType == ETokenType::RSQR || LTokenType == ETokenType::RTRI;
-		// clang-format on
-	}
 	/*
 		@return close pair based on given open pair.
 	*/
-	static inline ETokenType GetMatchClosePairType(const Token& InToken) noexcept
+	static inline ETokenType GetMatchClosePairType(ETokenType TokenType) noexcept
 	{
-		const ETokenType LTokenType = InToken.GetType();
-
-		switch( LTokenType )
+		switch( TokenType )
 		{
 		case ETokenType::LBRA: return ETokenType::RBRA;
 		case ETokenType::LPAR: return ETokenType::RPAR;
@@ -60,13 +64,16 @@ struct FParserHelperLibrary
 		return ETokenType::IDENTIFIER; // undefined
 	}
 	/*
+		@return close pair based on given open pair.
+	*/
+	static inline ETokenType GetMatchClosePairType(const Token& InToken) noexcept { return GetMatchClosePairType(InToken.GetType()); }
+
+	/*
 		@return open pair based on given close pair.
 	*/
-	static inline ETokenType GetMatchOpenPairType(const Token& InToken) noexcept
+	static inline ETokenType GetMatchOpenPairType(ETokenType TokenType) noexcept
 	{
-		const ETokenType LTokenType = InToken.GetType();
-
-		switch( LTokenType )
+		switch( TokenType )
 		{
 		case ETokenType::RBRA: return ETokenType::LBRA;
 		case ETokenType::RPAR: return ETokenType::LPAR;
@@ -77,20 +84,44 @@ struct FParserHelperLibrary
 		return ETokenType::IDENTIFIER; // undefined
 	}
 	/*
+		@return open pair based on given close pair.
+	*/
+	static inline ETokenType GetMatchOpenPairType(const Token& InToken) noexcept { return GetMatchOpenPairType(InToken.GetType()); }
+
+	/*
+		Check that pair TokenA matchs pair TokenB.
+	*/
+	static inline bool DoesPairTokensMatch(ETokenType TokenTypeA, ETokenType TokenTypeB) noexcept
+	{
+		// clang-format off
+		return	(TokenTypeA == ETokenType::LBRA && TokenTypeB == ETokenType::RBRA) || (TokenTypeA == ETokenType::RBRA && TokenTypeB == ETokenType::LBRA) || 
+				(TokenTypeA == ETokenType::LPAR && TokenTypeB == ETokenType::RPAR) || (TokenTypeA == ETokenType::RPAR && TokenTypeB == ETokenType::LPAR) ||
+				(TokenTypeA == ETokenType::LSQR && TokenTypeB == ETokenType::RSQR) || (TokenTypeA == ETokenType::RSQR && TokenTypeB == ETokenType::LSQR) ||
+				(TokenTypeA == ETokenType::LTRI && TokenTypeB == ETokenType::RTRI) || (TokenTypeA == ETokenType::RTRI && TokenTypeB == ETokenType::LTRI);
+		// clang-format on
+	}
+	/*
 		Check that pair TokenA matchs pair TokenB.
 	*/
 	static inline bool DoesPairTokensMatch(const Token& TokenA, const Token& TokenB) noexcept
 	{
-		const ETokenType LAType = TokenA.GetType();
-		const ETokenType LBType = TokenB.GetType();
-
-		// clang-format off
-		return	(LAType == ETokenType::LBRA && LBType == ETokenType::RBRA) || (LAType == ETokenType::RBRA && LBType == ETokenType::LBRA) || 
-				(LAType == ETokenType::LPAR && LBType == ETokenType::RPAR) || (LAType == ETokenType::RPAR && LBType == ETokenType::LPAR) ||
-				(LAType == ETokenType::LSQR && LBType == ETokenType::RSQR) || (LAType == ETokenType::RSQR && LBType == ETokenType::LSQR) ||
-				(LAType == ETokenType::LTRI && LBType == ETokenType::RTRI) || (LAType == ETokenType::RTRI && LBType == ETokenType::LTRI);
-		// clang-format on
+		return DoesPairTokensMatch(TokenA.GetType(), TokenB.GetType());
 	}
+
+	/*
+		Find close pair for given open with nested pairs.
+
+		S - function expected start
+		F - function return index
+		"{.{.....}.}"
+		".^........^"
+		".S........F"
+
+		@param OpenPair - Open pair for search.
+		@param StartIndex - Index in Tokens after open pair to start.
+		@return index of close pair, if can't find return index = Tokens.size().
+	*/
+	static size_t GetLastClosePairIndex(ETokenType OpenPair, size_t StartIndex, const std::vector<Token>& Tokens) noexcept;
 
 
 
@@ -282,6 +313,7 @@ struct FParserHelperLibrary
 		Check that given token is standard type.
 	*/
 	static inline bool IsStandardType(const Token& InToken) noexcept { return IsStandardType(InToken.GetType()); }
+
 	/*
 		Check that given token is builtin template type.
 	*/
@@ -290,6 +322,7 @@ struct FParserHelperLibrary
 		Check that given token is builtin template type.
 	*/
 	static inline bool IsBuiltinTemplateType(const Token& InToken) noexcept { return IsBuiltinTemplateType(InToken.GetType()); }
+
 	/*
 		Check that given token is modifier.
 	*/

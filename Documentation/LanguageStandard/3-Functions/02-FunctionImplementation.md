@@ -54,7 +54,7 @@ See [function declaration](01-FunctionDeclaration.md).
 
 ## Implementation code
 
-- **GAML** supports nested namespaces
+- **GAML** does not supports nested pure namespaces "{ ... {} ... }"
 - all operations must end with ';'
 - local variable declared in the scope of the operator is invisible to the top-level scope
 - when accessing a variable, the one closest to the current scope is selected

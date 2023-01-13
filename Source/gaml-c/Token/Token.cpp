@@ -173,6 +173,7 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 	CASE_LEXEME("continue",					CONTINUE)
 
 	CASE_LEXEME("if",						IF)
+	CASE_LEXEME("elif",						ELIF)
 	CASE_LEXEME("else",						ELSE)
 	CASE_LEXEME("switch",					SWITCH)
 	CASE_LEXEME("switch_all",				SWITCH_ALL)
@@ -378,6 +379,7 @@ std::string Token::GetTypeAsStr() const noexcept
 	CASE_TOKEN(CONTINUE,					"continue")
 
 	CASE_TOKEN(IF,							"if")
+	CASE_TOKEN(ELIF,						"elif")
 	CASE_TOKEN(ELSE,						"else")
 	CASE_TOKEN(SWITCH,						"switch")
 	CASE_TOKEN(SWITCH_ALL,					"switch all")

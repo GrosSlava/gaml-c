@@ -173,6 +173,7 @@ enum class ETokenType
 
 	// conditions
 	IF,                         // if
+	ELIF,                       // elif
 	ELSE,                       // else
 	SWITCH,                     // switch
 	SWITCH_ALL,					// switch_all

@@ -6,6 +6,44 @@
 
 
 
+size_t FParserHelperLibrary::GetLastClosePairIndex(ETokenType OpenPair, size_t StartIndex, const std::vector<Token>& Tokens) noexcept
+{
+	if( !IsOpenPairToken(OpenPair) )
+	{
+		return Tokens.size();
+	}
+
+	int LOpenCount = 1;
+	size_t LIndex = StartIndex;
+	const ETokenType LCloseType = FParserHelperLibrary::GetMatchClosePairType(OpenPair);
+
+	while( LIndex < Tokens.size() && LOpenCount > 0 )
+	{
+		const ETokenType& LTokenType = Tokens[LIndex].GetType();
+
+		if( LTokenType == OpenPair )
+		{
+			++LOpenCount;
+		}
+		else if( LTokenType == LCloseType )
+		{
+			--LOpenCount;
+		}
+
+		++LIndex;
+	}
+
+	if( LIndex >= Tokens.size() && LOpenCount > 0 )
+	{
+		return Tokens.size();
+	}
+	return LIndex - 1;
+}
+
+
+
+
+
 std::string FParserHelperLibrary::GetModuleRealName(const std::string& ModuleNameOrAlias, const FProgramInfo& ProgramInfo)
 {
 	if( ProgramInfo.ImportedModulesInfo.find(ModuleNameOrAlias) != ProgramInfo.ImportedModulesInfo.end() ) return ModuleNameOrAlias;

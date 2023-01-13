@@ -8,7 +8,7 @@
 
 
 /*
-	Enviroment for local symbols for code interpretation.
+	Environment for local symbols for code interpretation.
 */
 struct FASTSymbols
 {

@@ -10,6 +10,7 @@
 #include "LeafNode.h"
 #include "ASTOperators.h"
 
+#include "../../ParserHelperLibrary.h"
 #include "../../../Logger/ErrorLogger.h"
 
 
@@ -23,8 +24,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens, const FCompileOptio
 	size_t LIndex = 0;
 	while( LIndex < InTokens.size() )
 	{
-		const Token& LCurrentToken = InTokens[LIndex];
-		switch( LCurrentToken.GetType() )
+		switch( InTokens[LIndex].GetType() )
 		{
 		case ETokenType::SEMICOLON:
 		{
@@ -35,99 +35,128 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens, const FCompileOptio
 		{
 			if( LIndex + 1 >= InTokens.size() )
 			{
-				FErrorLogger::Raise(EErrorMessageType::EXPECTED_CONTROL_OPERATOR, LCurrentToken, CompileOptions);
+				FErrorLogger::Raise(EErrorMessageType::EXPECTED_CONTROL_OPERATOR, InTokens[LIndex], CompileOptions);
 				return;
 			}
+			++LIndex;
 
-			switch( InTokens[LIndex + 1].GetType() )
+			switch( InTokens[LIndex].GetType() )
 			{
 			case ETokenType::DO:
 			{
-				//TODO
+				HasControlStatement = true;
+				ExprSequence.push_back(Parse_StaticDo(InTokens, LIndex));
 
+				++LIndex;
 				continue;
 			}
 			case ETokenType::WHILE:
 			{
-				//TODO
+				HasControlStatement = true;
+				ExprSequence.push_back(Parse_StaticWhile(InTokens, LIndex));
 
+				++LIndex;
 				continue;
 			}
 			case ETokenType::FOR:
 			{
-				//TODO
+				HasControlStatement = true;
+				ExprSequence.push_back(Parse_StaticFor(InTokens, LIndex));
 
+				++LIndex;
 				continue;
 			}
 			case ETokenType::FOREACH:
 			{
-				//TODO
+				HasControlStatement = true;
+				ExprSequence.push_back(Parse_StaticForeach(InTokens, LIndex));
 
+				++LIndex;
 				continue;
 			}
 			case ETokenType::IF:
 			{
-				//TODO
+				HasControlStatement = true;
+				ExprSequence.push_back(Parse_StaticIf(InTokens, LIndex));
 
+				++LIndex;
 				continue;
 			}
 			case ETokenType::SWITCH:
 			{
-				//TODO
+				HasControlStatement = true;
+				ExprSequence.push_back(Parse_StaticSwitch(InTokens, LIndex));
 
+				++LIndex;
 				continue;
 			}
 			case ETokenType::SWITCH_ALL:
 			{
-				//TODO
+				HasControlStatement = true;
+				ExprSequence.push_back(Parse_StaticSwitchAll(InTokens, LIndex));
 
+				++LIndex;
 				continue;
 			}
 			}
 
-			FErrorLogger::Raise(EErrorMessageType::EXPECTED_CONTROL_OPERATOR, InTokens[LIndex + 1], CompileOptions);
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_CONTROL_OPERATOR, InTokens[LIndex], CompileOptions);
 			return;
 		}
 		case ETokenType::DO:
 		{
-			//TODO
+			HasControlStatement = true;
+			ExprSequence.push_back(Parse_Do(InTokens, LIndex));
 
+			++LIndex;
 			continue;
 		}
 		case ETokenType::WHILE:
 		{
-			//TODO
+			HasControlStatement = true;
+			ExprSequence.push_back(Parse_While(InTokens, LIndex));
 
+			++LIndex;
 			continue;
 		}
 		case ETokenType::FOR:
 		{
-			//TODO
+			HasControlStatement = true;
+			ExprSequence.push_back(Parse_For(InTokens, LIndex));
 
+			++LIndex;
 			continue;
 		}
 		case ETokenType::FOREACH:
 		{
-			//TODO
+			HasControlStatement = true;
+			ExprSequence.push_back(Parse_Foreach(InTokens, LIndex));
 
+			++LIndex;
 			continue;
 		}
 		case ETokenType::IF:
 		{
-			//TODO
+			HasControlStatement = true;
+			ExprSequence.push_back(Parse_If(InTokens, LIndex));
 
+			++LIndex;
 			continue;
 		}
 		case ETokenType::SWITCH:
 		{
-			//TODO
+			HasControlStatement = true;
+			ExprSequence.push_back(Parse_Switch(InTokens, LIndex));
 
+			++LIndex;
 			continue;
 		}
 		case ETokenType::SWITCH_ALL:
 		{
-			//TODO
+			HasControlStatement = true;
+			ExprSequence.push_back(Parse_SwitchAll(InTokens, LIndex));
 
+			++LIndex;
 			continue;
 		}
 		default:
@@ -139,8 +168,8 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens, const FCompileOptio
 			}
 
 			ExprSequence.push_back(ParseExpr(std::vector<Token>(InTokens.begin() + LIndex, InTokens.begin() + LExpressionEndIndex - 1)));
-			LIndex = LExpressionEndIndex + 1;
 
+			LIndex = LExpressionEndIndex + 1;
 			continue;
 		}
 		}
@@ -163,6 +192,16 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 		return nullptr;
 	}
 	case ETokenType::BINARY_INVERSE:
+	{
+		//TODO
+		return nullptr;
+	}
+	case ETokenType::PLUS:
+	{
+		//TODO
+		return nullptr;
+	}
+	case ETokenType::MINUS:
 	{
 		//TODO
 		return nullptr;
@@ -253,11 +292,6 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 		return nullptr;
 	}
 	case ETokenType::ADDR:
-	{
-		//TODO
-		return nullptr;
-	}
-	case ETokenType::LBRA:
 	{
 		//TODO
 		return nullptr;
@@ -394,6 +428,196 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 }
 
 
+
+
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_Scope(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::LBRA )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, "", 0, 0, 0, CurrentCompileOptions);
+		return nullptr;
+	}
+
+	const size_t LBraScopeEnd = FParserHelperLibrary::GetLastClosePairIndex(ETokenType::LBRA, Index + 1, InTokens);
+	if( LBraScopeEnd == InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_RBRA, InTokens[Index], CurrentCompileOptions);
+		return nullptr;
+	}
+
+	std::shared_ptr<ScopeNode> LScopeNode = std::make_shared<ScopeNode>();
+	if( LBraScopeEnd > Index + 1 )
+	{
+		LScopeNode->BuildAST(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LBraScopeEnd - 1), CurrentCompileOptions);
+	}
+
+	Index = LBraScopeEnd;
+	return LScopeNode;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_StaticDo(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::DO )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, "", 0, 0, 0, CurrentCompileOptions);
+		return nullptr;
+	}
+
+	if( Index + 1 >= InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index], CurrentCompileOptions);
+		return nullptr;
+	}
+	++Index;
+
+	if( InTokens[Index].GetType() != ETokenType::LBRA )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index], CurrentCompileOptions);
+		return nullptr;
+	}
+
+	std::shared_ptr<StaticDoNode> LStaticDoNode = std::make_shared<StaticDoNode>();
+
+	std::shared_ptr<IASTNode> LDoScope = Parse_Scope(InTokens, Index);
+	LStaticDoNode->SetOperand(STATIC_DO_NODE_BODY_OPERAND, LDoScope);
+
+	if( Index + 1 < InTokens.size() && InTokens[Index + 1].GetType() == ETokenType::LPAR )
+	{
+		++Index;
+
+		const size_t LParEnd = FParserHelperLibrary::GetLastClosePairIndex(ETokenType::LPAR, Index + 1, InTokens);
+		if( LParEnd == InTokens.size() )
+		{
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_RPAR, InTokens[Index], CurrentCompileOptions);
+			return nullptr;
+		}
+
+		if( LParEnd > Index + 1 )
+		{
+			std::shared_ptr<IASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd - 1));
+			LStaticDoNode->SetOperand(STATIC_DO_NODE_CONDITION_OPERAND, LConditionExpr);
+		}
+
+		Index = LParEnd;
+	}
+
+	return LStaticDoNode;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_StaticWhile(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_StaticFor(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_StaticForeach(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_StaticIf(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_StaticSwitch(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_StaticSwitchAll(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_Do(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::DO )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, "", 0, 0, 0, CurrentCompileOptions);
+		return nullptr;
+	}
+
+	if( Index + 1 >= InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index], CurrentCompileOptions);
+		return nullptr;
+	}
+	++Index;
+
+	if( InTokens[Index].GetType() != ETokenType::LBRA )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index], CurrentCompileOptions);
+		return nullptr;
+	}
+
+	std::shared_ptr<DoNode> LDoNode = std::make_shared<DoNode>();
+
+	std::shared_ptr<IASTNode> LDoScope = Parse_Scope(InTokens, Index);
+	LDoNode->SetOperand(DO_NODE_BODY_OPERAND, LDoScope);
+
+	if( Index + 1 < InTokens.size() && InTokens[Index + 1].GetType() == ETokenType::LPAR )
+	{
+		++Index;
+
+		const size_t LParEnd = FParserHelperLibrary::GetLastClosePairIndex(ETokenType::LPAR, Index + 1, InTokens);
+		if( LParEnd == InTokens.size() )
+		{
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_RPAR, InTokens[Index], CurrentCompileOptions);
+			return nullptr;
+		}
+
+		if( LParEnd > Index + 1 )
+		{
+			std::shared_ptr<IASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd - 1));
+			LDoNode->SetOperand(DO_NODE_CONDITION_OPERAND, LConditionExpr);
+		}
+
+		Index = LParEnd;
+	}
+
+	return LDoNode;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_While(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_For(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_Foreach(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_If(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_Switch(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+std::shared_ptr<IASTNode> ScopeNode::Parse_SwitchAll(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	return nullptr;
+}
+
+
+
+//..........................................................................................................................//
+//..........................................................................................................................//
 
 
 

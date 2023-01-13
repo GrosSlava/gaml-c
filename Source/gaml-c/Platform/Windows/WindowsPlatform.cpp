@@ -11,7 +11,7 @@
 
 
 // clang-format off
-FGenericPlatform::int RunMSVC
+int FGenericPlatform::RunMSVC
 (
 	const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
 	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath

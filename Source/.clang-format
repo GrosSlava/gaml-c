@@ -29,7 +29,7 @@ AlignTrailingComments: true
 AlignOperands: true
 PointerAlignment: Left
 ReferenceAlignment: Left
-#QualifierAlignment: Leave
+QualifierAlignment: Leave
 #------------------------------------------------------#
 AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: InlineOnly

@@ -6,7 +6,7 @@ Module - it is unit of code.
 
 ## Module features
 
-1. Each file (except main file) must start with module declaration
+1. Each file (except main file) must **start** with module declaration
 2. Module provides namespace with the name as the module
 3. Module provides custom access to all module members
 4. Module can import other modules

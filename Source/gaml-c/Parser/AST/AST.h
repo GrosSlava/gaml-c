@@ -53,6 +53,13 @@ public:
 	*/
 	std::string GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const;
 
+public:
+
+	/*
+		Check that AST contains only single expression without control operators.
+	*/
+	bool IsPureExpression() const noexcept;
+
 
 
 

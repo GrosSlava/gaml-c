@@ -14,6 +14,7 @@ It is not inserting text like c/c++.
 3. Checking module name and file name
 4. Imported content will be in namespace with imported module name
 5. Imported module can have local alias
+6. Module can only be imported into the global space of the current module (not from a class or function)
 
 
 
@@ -90,29 +91,32 @@ User can't import packages from a completely different path. \
 All third-party modules/packages must locate near compiler executable or in project. 
 
 Search order:
-1. Search '.gh', relative to translating file, count of '.' in importing module converts to "up directory" 
-2. Search '.gaml', relative to translating file, count of  '.' in importing module converts to "up directory" 
+1. Search '.gh', relative to translating file, count of '.' in current module converts to "up directory"
+2. Search '.gaml', relative to translating file, count of  '.' in current module converts to "up directory"
 3. Search '.gh', relative to compiler executable
 4. Search '.gaml', relative to compiler executable
-5. Search folder (package), relative to translating file, count of '.' in importing module converts to "up directory" 
+5. Search folder (package), relative to translating file, count of '.' in current module converts to "up directory"
 6. Search folder (package), relative to compiler executable
 
 ### Module name to path example
 
-import MyModule1; 
+module main; \
+import MyModule1;
 1. PATH_TO_CURRENT + MyModule1 + ".gh"/".gaml"
 2. PATH_TO_COMPILER + MyModule1 + ".gh"/".gaml"
 3. PATH_TO_CURRENT + MyModule1
 4. PATH_TO_COMPILER + MyModule1
 
-import MyPackage.SubPackage; 
-1. PATH_TO_CURRENT + ../MyPackage/SubPackage + ".gh"/".gaml"
+module main; \
+import MyPackage.SubPackage;
+1. PATH_TO_CURRENT + MyPackage/SubPackage + ".gh"/".gaml"
 2. PATH_TO_COMPILER + MyPackage/SubPackage + ".gh"/".gaml"
-3. PATH_TO_CURRENT + ../MyPackage/SubPackage
+3. PATH_TO_CURRENT + MyPackage/SubPackage
 4. PATH_TO_COMPILER + MyPackage/SubPackage
 
+module MyPackage.MyModule2; \
 import MyPackage.SubPackage.MyModule3;
-1. PATH_TO_CURRENT + ../../MyPackage/SubPackage/MyModule3 + ".gh"/".gaml"
+1. PATH_TO_CURRENT + ../MyPackage/SubPackage/MyModule3 + ".gh"/".gaml"
 2. PATH_TO_COMPILER + MyPackage/SubPackage/MyModule3 + ".gh"/".gaml"
-3. PATH_TO_CURRENT + ../../MyPackage/SubPackage/MyModule3
+3. PATH_TO_CURRENT + ../MyPackage/SubPackage/MyModule3
 4. PATH_TO_COMPILER + MyPackage/SubPackage/MyModule3

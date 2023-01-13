@@ -83,3 +83,12 @@ std::string AST::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFact
 
 	return MainScope->GenerateCode(ASTCodeGenFactory, ProgramInfo);
 }
+
+
+
+
+
+bool AST::IsPureExpression() const noexcept
+{
+	return MainScope != nullptr && MainScope->ExprSequence.size() == 1 && !MainScope->GetHasControlStatement();
+}

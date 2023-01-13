@@ -29,7 +29,7 @@ public:
 	/*
 		@return operand at index, invalid index returns nullptr.
 	*/
-	inline std::shared_ptr<IASTNode> GetOperand(int Index) noexcept
+	inline std::shared_ptr<IASTNode> GetOperand(int Index) const noexcept
 	{
 		if( Index < 0 || Index >= Operands.size() ) return nullptr;
 
@@ -54,12 +54,14 @@ protected:
 
 
 
-#define DECLARE_OPERATOR_NODE(Name)                                                                                                              \
+#define DECLARE_OPERATOR_NODE(Name, OpCount)                                                                                                     \
 	class Name final : public BaseOperatorNode                                                                                                   \
 	{                                                                                                                                            \
 	public:                                                                                                                                      \
                                                                                                                                                  \
-		using BaseOperatorNode::BaseOperatorNode;                                                                                                \
+		inline Name() : BaseOperatorNode(OpCount)                                                                                                \
+		{                                                                                                                                        \
+		}                                                                                                                                        \
                                                                                                                                                  \
 	public:                                                                                                                                      \
                                                                                                                                                  \

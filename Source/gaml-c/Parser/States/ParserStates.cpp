@@ -426,6 +426,13 @@ std::shared_ptr<IParserState> DescriptionAlign3_ParserState::Process(FParserStat
 
 	AST LAST;
 	LAST.BuildAST(LDescriptionContext.CodeTokens, InParserStates.GetCompileOptions());
+
+	if( !LAST.IsPureExpression() )
+	{
+		InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+		return nullptr;
+	}
+	
 	LAST.InterpretAST(OutProgramInfo);
 	LDescriptionContext.Modfiers.Align = LAST.GetInterpretResultAsInt();
 
