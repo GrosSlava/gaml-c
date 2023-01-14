@@ -358,4 +358,18 @@ struct FParserHelperLibrary
 		Find first module name declaration in tokens array.
 	*/
 	static std::string GetFirstModuleName(const std::vector<Token>& Tokens) noexcept;
+
+
+
+
+	/*
+		Hegher value means heigher priority.
+
+		@return priority of operation. -1 for non-operation lexeme.
+	*/
+	static int GetOperationPriority(ETokenType TokenType) noexcept;
+	/*
+		@return priority of operation. -1 for non-operation lexeme.
+	*/
+	static inline int GetOperationPriority(const Token& InToken) noexcept { return GetOperationPriority(InToken.GetType()); }
 };

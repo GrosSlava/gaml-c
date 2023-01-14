@@ -125,7 +125,9 @@
     <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\DoNode.cpp" />
     <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\ForeachNode.cpp" />
     <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\ForNode.cpp" />
+    <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\GreatherNode.cpp" />
     <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\IfNode.cpp" />
+    <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\LessNode.cpp" />
     <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\StaticForeachNode.cpp" />
     <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\StaticForNode.cpp" />
     <ClCompile Include="gaml-c\Parser\AST\Nodes\Operators\StaticIfNode.cpp" />

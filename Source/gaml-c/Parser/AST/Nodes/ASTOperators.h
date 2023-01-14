@@ -26,9 +26,9 @@ DECLARE_OPERATOR_NODE(StaticWhileNode, 2);
 #define STATIC_WHILE_NODE_BODY_OPERAND 1
 
 /*
-	Operand 0 - Init body AST.
+	Operand 0 - Init body expression.
 	Operand 1 - Condition expression.
-	Operand 2 - Cycle end body AST.
+	Operand 2 - Cycle end body expression.
 	Operand 3 - Cycle body AST.
 */
 DECLARE_OPERATOR_NODE(StaticForNode, 4);
@@ -84,9 +84,9 @@ DECLARE_OPERATOR_NODE(WhileNode, 2);
 #define WHILE_NODE_BODY_OPERAND 1
 
 /*
-	Operand 0 - Init body AST.
+	Operand 0 - Init body expression.
 	Operand 1 - Condition expression.
-	Operand 2 - Cycle end body AST.
+	Operand 2 - Cycle end body expression.
 	Operand 3 - Cycle body AST.
 */
 DECLARE_OPERATOR_NODE(ForNode, 4);
@@ -124,3 +124,22 @@ DECLARE_OPERATOR_NODE(SwitchNode, 2);
 */
 DECLARE_OPERATOR_NODE(SwitchAllNode, 2);
 //TODO
+
+
+
+
+/*
+	Operand 0 - Left expression.
+	Operand 1 - Right expression.
+*/
+DECLARE_EXPESSION_OPERATOR_NODE(LessNode, 2);
+#define LESS_NODE_LEFT_OPERAND 0
+#define LESS_NODE_RIGHT_OPERAND 1
+
+/*
+	Operand 0 - Left expression.
+	Operand 1 - Right expression.
+*/
+DECLARE_EXPESSION_OPERATOR_NODE(GreatherNode, 2);
+#define GREATHER_NODE_LEFT_OPERAND 0
+#define GREATHER_NODE_RIGHT_OPERAND 1

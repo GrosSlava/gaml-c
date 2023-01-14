@@ -33,7 +33,7 @@ size_t FParserHelperLibrary::GetLastClosePairIndex(ETokenType OpenPair, size_t S
 		++LIndex;
 	}
 
-	if( LIndex >= Tokens.size() && LOpenCount > 0 )
+	if( LOpenCount > 0 )
 	{
 		return Tokens.size();
 	}
@@ -367,4 +367,97 @@ std::string FParserHelperLibrary::GetFirstModuleName(const std::vector<Token>& T
 	}
 
 	return GetModuleCompileName(LModuleName);
+}
+
+
+
+
+
+int FParserHelperLibrary::GetOperationPriority(ETokenType TokenType) noexcept
+{
+	switch( TokenType )
+	{
+	case ETokenType::ASSIGN: return 0;
+
+	case ETokenType::COMMA: return 1;
+
+	case ETokenType::QUESTION: return 2; // ternar if
+	case ETokenType::ADD_ASSIGN: return 2;
+	case ETokenType::SUB_ASSIGN: return 2;
+	case ETokenType::MUL_ASSIGN: return 2;
+	case ETokenType::DIV_ASSIGN: return 2;
+	case ETokenType::MOD_ASSIGN: return 2;
+	case ETokenType::POW_ASSIGN: return 2;
+	case ETokenType::BINARY_AND_ASSIGN: return 2;
+	case ETokenType::BINARY_OR_ASSIGN: return 2;
+	case ETokenType::BINARY_INVERSE_ASSIGN: return 2;
+	case ETokenType::BINARY_XOR_ASSIGN: return 2;
+	case ETokenType::BINARY_SHL_ASSIGN: return 2;
+	case ETokenType::BINARY_SHR_ASSIGN: return 2;
+
+	case ETokenType::OR: return 3;
+
+	case ETokenType::AND: return 4;
+
+	case ETokenType::BINARY_OR: return 5;
+
+	case ETokenType::BINARY_XOR: return 6;
+
+	case ETokenType::BINARY_AND: return 7;
+
+	case ETokenType::EQUAL: return 8;
+	case ETokenType::NOT_EQUAL: return 8;
+	case ETokenType::IS: return 8;
+
+	case ETokenType::LESS: return 9;
+	case ETokenType::GREATER: return 9;
+	case ETokenType::LESS_EQUAL: return 9;
+	case ETokenType::GREATER_EQUAL: return 9;
+
+	case ETokenType::BINARY_SHL: return 10;
+	case ETokenType::BINARY_SHR: return 10;
+	case ETokenType::IN: return 10;
+
+	case ETokenType::PLUS: return 11;
+	case ETokenType::MINUS: return 11;
+
+	case ETokenType::STAR: return 12;
+	case ETokenType::SLASH: return 12;
+	case ETokenType::MOD: return 12;
+	case ETokenType::POW: return 12;
+
+	case ETokenType::EXCLAMATION: return 13;
+	case ETokenType::BINARY_INVERSE: return 13;
+
+	case ETokenType::INC: return 14;
+	case ETokenType::DEC: return 14;
+	case ETokenType::POINT: return 14;
+	case ETokenType::RIGHT_ARROW: return 14;
+
+	case ETokenType::NAMESPACE_ACCESS_OPERATOR: return 15;
+
+	case ETokenType::CAST: return 16;
+	case ETokenType::UNSAFE_CAST: return 16;
+	case ETokenType::DEFAULT: return 16;
+	case ETokenType::SIZE_OF: return 16;
+	case ETokenType::TYPE_OF: return 16;
+	case ETokenType::NAME_OF: return 16;
+	case ETokenType::ALIGN_OF: return 16;
+	case ETokenType::IS_FUNCTION: return 16;
+	case ETokenType::IS_STRUCT: return 16;
+	case ETokenType::IS_ENUM: return 16;
+	case ETokenType::IS_INTERFACE: return 16;
+	case ETokenType::IS_OBJECT: return 16;
+	case ETokenType::IS_COMPONENT: return 16;
+	case ETokenType::IS_SUBCLASS: return 16;
+	case ETokenType::IS_INSTANCE: return 16;
+	case ETokenType::IS_LAMBDA: return 16;
+	case ETokenType::IS_ITERABLE: return 16;
+	case ETokenType::IS_ENUMERABLE: return 16;
+	case ETokenType::IS_ABSTRACT: return 16;
+	case ETokenType::IS_ALIAS: return 16;
+	case ETokenType::ADDR: return 16;
+	}
+
+	return -1;
 }

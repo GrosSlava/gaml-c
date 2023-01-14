@@ -396,7 +396,7 @@
 			"patterns": [
 				{
 					"name": "keyword.control.gaml",
-					"match": "\\b(do|while|static while|for|static for|foreach|static foreach|break|continue|if|static if|else|switch|static switch|switch_all|static switch_all|case|default|return|static)\\b"
+					"match": "\\b(do|static(?:\\s*)do|while|static(?:\\s*)while|for|static(?:\\s*)for|foreach|static(?:\\s*)foreach|break|continue|if|static(?:\\s*)if|else|switch|static(?:\\s*)switch|switch_all|static(?:\\s*)switch_all|case|default|return|static)\\b"
 				}
 			]
 		},

@@ -68,6 +68,8 @@ var uint8 A1 = foo1();
 var uint8 A2;
 var char B2;
 A2, B2 = foo2();
+// can't use any of: +=, -=...
+// A2, B2 += foo2(); // error
 
 A1 = foo1().Result
 A1 = foo2().Result1

@@ -18,7 +18,7 @@ struct FSymbolMetaInfo
 public:
 
 	inline FSymbolMetaInfo() { }
-	FSymbolMetaInfo(const FGamlFileInfo& File, size_t Line) : DeclaredInFile(File), DeclaredAtLine(Line) { }
+	inline FSymbolMetaInfo(const FGamlFileInfo& File, size_t Line) : DeclaredInFile(File), DeclaredAtLine(Line) { }
 
 
 
@@ -162,7 +162,7 @@ enum class EAccessModifier : unsigned char
 */
 enum class EFunctionCallingConvention : unsigned char
 {
-	DEFAULT, // default for current c-compiler
+	DEFAULT, // default for current compiler
 	CDECL,	 // equal to thiscall(this - first argument)
 	STDCALL, // equal to pascal
 	FASTCALL

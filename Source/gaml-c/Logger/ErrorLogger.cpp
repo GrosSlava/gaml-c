@@ -64,9 +64,26 @@ void FErrorLogger::Raise
 				LPosStr.resize(std::max(LLineStr.size(), Pos), ' ');
 				LPosStr[Pos - 1] = '^'; // we are indexing position in row from 1
 
-				for( size_t i = Pos; i < Pos + UnderlineLength && i < LPosStr.size(); ++i )
+				for( size_t i = 0; i < Pos + UnderlineLength && i < LPosStr.size(); ++i )
 				{
-					LPosStr[i] = '~';
+					if( i < Pos )
+					{
+						if( LLineStr[i] == '\t' )
+						{
+							LPosStr[i] = '\t';
+						}
+					}
+					else
+					{
+						if( LLineStr[i] == '\t' )
+						{
+							LPosStr[i] = '\t';
+						}
+						else
+						{
+							LPosStr[i] = '~';
+						}
+					}
 				}
 
 				FCompileLogger::MessageError(LPosStr);
@@ -167,6 +184,7 @@ FErrorInfo FErrorLogger::GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(FUNCTION_DESCRIPTION_MISMATCH):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Mismatch of the function description.");
 	CASE_ERROR(FUNCTION_STATIC_CODE_OVERRIDE):				return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Function static code override.");
 	CASE_ERROR(CLASS_NAME_NOT_FOUND):						return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "Class name was not found.");
+	CASE_ERROR(AST_SET_OPERATOR_OPERAND_OUT_OF_RANGE):		return FErrorInfo(EErrorStage::PARSER, EErrorType::ERROR, EWarningLevel::NoWarnings, "AST set operator operand out of range.");
 	
 	//Code generator
 	CASE_ERROR(NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM):	return FErrorInfo(EErrorStage::CODE_GENERATION, EErrorType::ERROR, EWarningLevel::NoWarnings, "No default compiler for current platform.");

@@ -128,6 +128,46 @@ private:
 		TODO
 	*/
 	std::shared_ptr<IASTNode> Parse_SwitchAll(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		assert(condition, message);
+	*/
+	std::shared_ptr<IASTNode> Parse_Assert(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		static_assert(condition, message);
+	*/
+	std::shared_ptr<IASTNode> Parse_StaticAssert(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		static_error(message);
+	*/
+	std::shared_ptr<IASTNode> Parse_StaticError(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		static_warning(message);
+	*/
+	std::shared_ptr<IASTNode> Parse_StaticWarning(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		static_message(message);
+	*/
+	std::shared_ptr<IASTNode> Parse_StaticMessage(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		using LOCAL_ALIAS = TYPE;
+	*/
+	std::shared_ptr<IASTNode> Parse_Using(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		var TYPE NAME = EXPRESSION;
+	*/
+	std::shared_ptr<IASTNode> Parse_Var(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		break;
+	*/
+	std::shared_ptr<IASTNode> Parse_Break(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		continue;
+	*/
+	std::shared_ptr<IASTNode> Parse_Continue(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		return EXPRESSION;
+	*/
+	std::shared_ptr<IASTNode> Parse_Return(const std::vector<Token>& InTokens, size_t& Index) const;
 
 
 
