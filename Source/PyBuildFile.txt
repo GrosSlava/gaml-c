@@ -25,7 +25,7 @@ Ignore =
 
 # Array of relative paths to dirs for includes search.
 # By default =
-AdditionalIncludeDirs =
+AdditionalIncludeDirs = gaml-c/Core;gaml-c/Frontend;gaml-c/Middleware;gaml-c/Backend
 
 # Array of absolute paths to dirs for libraries search.
 # By default =
