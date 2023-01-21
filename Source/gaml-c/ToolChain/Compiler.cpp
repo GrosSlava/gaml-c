@@ -19,19 +19,13 @@
 
 
 
-std::string FCompiler::Process(const std::string& FilePath, const FCompileOptions& Options)
-{
-	return Process(FGamlFileInfo(FilePath), Options);
-}
-
-std::string FCompiler::Process(const FGamlFileInfo& InFileInfo, const FCompileOptions& Options)
+std::string FCompiler::Process(const FGamlFileInfo& InFileInfo)
 {
 	FileInfo = InFileInfo;
-	CurrentOptions = Options;
 
 	if( FileInfo.ExtensionOnly != FCompilerConfig::COMPILE_FILE_EXTENSION )
 	{
-		LogError(EErrorStage::INITIALIZATION, EErrorType::WARNING, "", "File with extension '" + FileInfo.ExtensionOnly + "' can't be compiled!", 0, 0);
+		LogError(EErrorType::WARNING, "", "File with extension '" + FileInfo.ExtensionOnly + "' can't be compiled!", 0, 0);
 		return "";
 	}
 
@@ -41,7 +35,7 @@ std::string FCompiler::Process(const FGamlFileInfo& InFileInfo, const FCompileOp
 
 	std::vector<Token> LTokens;
 	if( !ProcessLexer(LSourceCode, LTokens) ) return ""; // get lexemes and check it's correctness
-	if( CurrentOptions.DumpLexemes )
+	if( FCoreObjects::CompileOptions.DumpLexemes )
 	{
 		DumpLexemes(LTokens);
 	}
@@ -49,7 +43,7 @@ std::string FCompiler::Process(const FGamlFileInfo& InFileInfo, const FCompileOp
 	FProgramInfo LProgramInfo;
 	if( !ProcessParser(LTokens, LProgramInfo) ) return ""; // analize syntax correctness and generate ast
 	if( !ProcessSemantic(LProgramInfo) ) return "";		   // analize ast by semantic
-	if( CurrentOptions.DumpModuleDependencies )
+	if( FCoreObjects::CompileOptions.DumpModuleDependencies )
 	{
 		DumpModuleDependencies(LProgramInfo);
 	}
@@ -69,7 +63,7 @@ bool FCompiler::Open(std::string& OutCode)
 	const bool LOpenSuccess = FCompilerHelperLibrary::ReadAllFileToStr(FileInfo.GetFileFullPath(), OutCode);
 	if( !LOpenSuccess )
 	{
-		LogError(EErrorStage::INITIALIZATION, EErrorType::WARNING, "", "File '" + FileInfo.GetFileFullPath() + "' not found!", 0, 0);
+		LogError(EErrorType::WARNING, "", "File '" + FileInfo.GetFileFullPath() + "' not found!", 0, 0);
 		return false;
 	}
 
@@ -79,7 +73,7 @@ bool FCompiler::Open(std::string& OutCode)
 bool FCompiler::ProcessLexer(const std::string& Code, std::vector<Token>& OutTokens)
 {
 	FLexer LLexer;
-	LLexer.Process(Code, FileInfo, CurrentOptions, OutTokens);
+	LLexer.Process(Code, FileInfo, OutTokens);
 
 	return true;
 }
@@ -87,7 +81,7 @@ bool FCompiler::ProcessLexer(const std::string& Code, std::vector<Token>& OutTok
 bool FCompiler::ProcessParser(const std::vector<Token>& Tokens, FProgramInfo& OutProgramInfo)
 {
 	FParser LParser;
-	LParser.Process(Tokens, FileInfo, CurrentOptions, true, OutProgramInfo);
+	LParser.Process(Tokens, FileInfo, true, OutProgramInfo);
 
 	return true;
 }
@@ -95,7 +89,7 @@ bool FCompiler::ProcessParser(const std::vector<Token>& Tokens, FProgramInfo& Ou
 bool FCompiler::ProcessSemantic(FProgramInfo& ProgramInfo)
 {
 	FSemanticAnalyser LSemanticAnalyser;
-	LSemanticAnalyser.Process(FileInfo, CurrentOptions, ProgramInfo);
+	LSemanticAnalyser.Process(FileInfo, ProgramInfo);
 
 	return true;
 }
@@ -108,7 +102,7 @@ bool FCompiler::GenerateCode(const FProgramInfo& ProgramInfo, std::string& OutCo
 		return false;
 	}
 
-	const bool LSuccess = LGenerator->GenerateCode(FileInfo, CurrentOptions, ProgramInfo, OutCompiledObjectFilePath);
+	const bool LSuccess = LGenerator->GenerateCode(FileInfo, ProgramInfo, OutCompiledObjectFilePath);
 	delete LGenerator;
 
 	return LSuccess;
@@ -128,7 +122,7 @@ void FCompiler::DumpLexemes(const std::vector<Token>& Tokens)
 	std::ofstream LFile(LFilePath);
 	if( !LFile.is_open() )
 	{
-		LogError(EErrorStage::INITIALIZATION, EErrorType::WARNING, FileInfo.FileNameOnly, "Can't create file '" + LFilePath + "'!", 0, 0);
+		LogError(EErrorType::WARNING, FileInfo.FileNameOnly, "Can't create file '" + LFilePath + "'!", 0, 0);
 		return;
 	}
 
@@ -163,7 +157,7 @@ void FCompiler::DumpModuleDependencies(const FProgramInfo& ProgramInfo)
 	std::ofstream LFile(LFilePath);
 	if( !LFile.is_open() )
 	{
-		LogError(EErrorStage::INITIALIZATION, EErrorType::WARNING, FileInfo.FileNameOnly, "Can't create file '" + LFilePath + "'!", 0, 0);
+		LogError(EErrorType::WARNING, FileInfo.FileNameOnly, "Can't create file '" + LFilePath + "'!", 0, 0);
 		return;
 	}
 
@@ -195,12 +189,12 @@ void FCompiler::DumpModuleDependencies(const FProgramInfo& ProgramInfo)
 
 BaseGenerator* FCompiler::CreateCodeGenerator() const noexcept
 {
-	switch( CurrentOptions.CodeGenerationType )
+	switch( FCoreObjects::CompileOptions.CodeGenerationType )
 	{
 	case ECodeGenerationType::ReduceC: return new ReduceCGenerator();
 	case ECodeGenerationType::LLVM: return new LLVMGenerator();
 	}
 
-	LogError(EErrorStage::INITIALIZATION, EErrorType::ERROR, "", "!!!UNDEFINED CODE GENERATOR TYPE!!!", 0, 0);
+	LogError(EErrorType::ERROR, "", "!!!UNDEFINED CODE GENERATOR TYPE!!!", 0, 0);
 	return nullptr;
 }

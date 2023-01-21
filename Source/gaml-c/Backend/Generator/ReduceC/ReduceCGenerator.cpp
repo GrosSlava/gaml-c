@@ -27,7 +27,7 @@ void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FP
 		// clang-format off
 		GeneratedCodeStr += FReduceCHelperLibrary::GetClassDeclarationCStr
 		(
-			LClassInfo.first, LClassInfo.second, CurrentCompileOptions.TargetPlatform, ProgramInfo
+			LClassInfo.first, LClassInfo.second, FCoreObjects::CompileOptions.TargetPlatform, ProgramInfo
 		);
 		// clang-format on
 		GeneratedCodeStr += "\n";
@@ -47,7 +47,7 @@ void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FP
 		GeneratedCodeStr += FReduceCHelperLibrary::GetVariableDeclarationCStr
 		(
 			LStaticVariableInfo.VariableInfo, false, true, false,
-			CurrentCompileOptions.TargetPlatform, ProgramInfo
+			FCoreObjects::CompileOptions.TargetPlatform, ProgramInfo
 		);
 		// clang-format on
 		GeneratedCodeStr += ";\n";
@@ -67,7 +67,7 @@ void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FP
 		GeneratedCodeStr += FReduceCHelperLibrary::GetFunctionSignatureCStr
 		(
 			LFunctionInfo.first, LFunctionInfo.second.SignatureInfo,
-			CurrentCompileOptions.TargetPlatform, ProgramInfo
+			FCoreObjects::CompileOptions.TargetPlatform, ProgramInfo
 		);
 		// clang-format on
 		GeneratedCodeStr += ";\n";
@@ -82,7 +82,7 @@ void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FP
 		GeneratedCodeStr += FReduceCHelperLibrary::GetFunctionSignatureCStr
 		(
 			LCompilingFunctionInfo.first, ProgramInfo.Functions.at(LCompilingFunctionInfo.first).SignatureInfo, 
-			CurrentCompileOptions.TargetPlatform, ProgramInfo
+			FCoreObjects::CompileOptions.TargetPlatform, ProgramInfo
 		);
 		// clang-format on
 

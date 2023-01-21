@@ -363,6 +363,41 @@ struct FParserHelperLibrary
 
 
 	/*
+		Check that given token is operator.
+	*/
+	static inline bool IsOperatorToken(ETokenType TokenType) noexcept
+	{
+		// clang-format off
+		return	TokenType == ETokenType::LESS 						|| TokenType == ETokenType::GREATER					|| TokenType == ETokenType::LESS_EQUAL			||  TokenType == ETokenType::GREATER_EQUAL		||
+				TokenType == ETokenType::EQUAL 						|| TokenType == ETokenType::NOT_EQUAL				|| TokenType == ETokenType::AND					||  TokenType == ETokenType::OR					||
+				TokenType == ETokenType::EXCLAMATION 				|| TokenType == ETokenType::BINARY_AND				|| TokenType == ETokenType::BINARY_OR			||  TokenType == ETokenType::BINARY_INVERSE		||
+				TokenType == ETokenType::BINARY_XOR 				|| TokenType == ETokenType::BINARY_SHL				|| TokenType == ETokenType::BINARY_SHR			||  TokenType == ETokenType::PLUS				||
+				TokenType == ETokenType::MINUS 						|| TokenType == ETokenType::STAR					|| TokenType == ETokenType::SLASH				||  TokenType == ETokenType::INC				||
+				TokenType == ETokenType::DEC 						|| TokenType == ETokenType::MOD						|| TokenType == ETokenType::POW					||  TokenType == ETokenType::SIZE_OF			||
+				TokenType == ETokenType::TYPE_OF 					|| TokenType == ETokenType::NAME_OF					|| TokenType == ETokenType::ALIGN_OF			||  TokenType == ETokenType::IS_FUNCTION		||
+				TokenType == ETokenType::IS_STRUCT 					|| TokenType == ETokenType::IS_ENUM					|| TokenType == ETokenType::IS_INTERFACE		||  TokenType == ETokenType::IS_OBJECT			||
+				TokenType == ETokenType::IS_COMPONENT 				|| TokenType == ETokenType::IS_SUBCLASS				|| TokenType == ETokenType::IS_INSTANCE			||  TokenType == ETokenType::IS_LAMBDA			||
+				TokenType == ETokenType::IS_ITERABLE 				|| TokenType == ETokenType::IS_ENUMERABLE			|| TokenType == ETokenType::IS_ABSTRACT			||  TokenType == ETokenType::IS_ALIAS			||
+				TokenType == ETokenType::IN 						|| TokenType == ETokenType::IS						|| TokenType == ETokenType::AS					||  TokenType == ETokenType::ADDR				||
+				TokenType == ETokenType::NAMESPACE_ACCESS_OPERATOR 	|| TokenType == ETokenType::RIGHT_ARROW				|| TokenType == ETokenType::RIGHT_FAT_ARROW		||  TokenType == ETokenType::RIGHT_WAVE_ARROW	||
+				TokenType == ETokenType::ASSIGN 					|| TokenType == ETokenType::ADD_ASSIGN				|| TokenType == ETokenType::SUB_ASSIGN			||  TokenType == ETokenType::MUL_ASSIGN			||
+				TokenType == ETokenType::DIV_ASSIGN 				|| TokenType == ETokenType::MOD_ASSIGN				|| TokenType == ETokenType::POW_ASSIGN			||  TokenType == ETokenType::BINARY_AND_ASSIGN	||
+				TokenType == ETokenType::BINARY_OR_ASSIGN 			|| TokenType == ETokenType::BINARY_INVERSE_ASSIGN	|| TokenType == ETokenType::BINARY_XOR_ASSIGN	||  TokenType == ETokenType::BINARY_SHL_ASSIGN	||
+				TokenType == ETokenType::BINARY_SHR_ASSIGN 			|| TokenType == ETokenType::COLON					|| TokenType == ETokenType::COMMA				||  TokenType == ETokenType::POINT				||
+				TokenType == ETokenType::QUESTION 					|| TokenType == ETokenType::ELLIPSIS				|| TokenType == ETokenType::CAST				||  TokenType == ETokenType::UNSAFE_CAST		||
+				TokenType == ETokenType::ASSERT 					|| TokenType == ETokenType::STATIC_ASSERT			|| TokenType == ETokenType::STATIC_ERROR		||  TokenType == ETokenType::STATIC_WARNING		||
+				TokenType == ETokenType::STATIC_MESSAGE 			|| TokenType == ETokenType::DO						|| TokenType == ETokenType::WHILE				||  TokenType == ETokenType::FOR				||
+				TokenType == ETokenType::FOREACH 					|| TokenType == ETokenType::BREAK					|| TokenType == ETokenType::CONTINUE			||  TokenType == ETokenType::IF					||
+				TokenType == ETokenType::ELIF 						|| TokenType == ETokenType::ELSE					|| TokenType == ETokenType::SWITCH				||  TokenType == ETokenType::SWITCH_ALL			||
+				TokenType == ETokenType::CASE 						|| TokenType == ETokenType::DEFAULT					|| TokenType == ETokenType::RETURN;
+		// clang-format on
+	}
+	/*
+		Check that given token is operator.
+	*/
+	static inline bool IsOperatorToken(const Token& InToken) noexcept { return IsOperatorToken(InToken.GetType()); }
+
+	/*
 		Hegher value means heigher priority.
 
 		@return priority of operation. -1 for non-operation lexeme.

@@ -53,6 +53,20 @@ public:
 		return *this;
 	}
 
+public:
+
+	friend bool operator==(const FGamlFileInfo& A, const FGamlFileInfo& B)
+	{
+		if( A.GetSize() != B.GetSize() ) return false;
+		return A.GetFileFullPath() == B.GetFileFullPath();
+	}
+	friend bool operator!=(const FGamlFileInfo& A, const FGamlFileInfo& B)
+	{
+		if( A.GetSize() != B.GetSize() ) return true;
+		return A.GetFileFullPath() != B.GetFileFullPath();
+	}
+
+
 
 
 public:

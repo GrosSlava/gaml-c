@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#include "CompilerOptions.h"
+#include "CoreObjects.h"
 #include "GamlFileInfo.h"
 #include "CompilerHelperLibrary.h"
 
@@ -31,9 +31,8 @@ public:
 
 		@param ObjectFilesPaths - Array of object files to link.
 		@param LibsFilesPaths - Array of paths to libraries.
-		@param Options - Compilation options.
 	*/
-	void Process(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths, const FCompileOptions& Options);
+	void Process(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths);
 
 private:
 
@@ -42,14 +41,17 @@ private:
 	*/
 	inline std::string GetOutputDirectoryPath() const noexcept
 	{
-		return CurrentCompileOptions.OutputDir.empty() ? FirstFileInfo.PathToFileOnly : CurrentCompileOptions.OutputDir;
+		return FCoreObjects::CompileOptions.OutputDir.empty() ? FirstFileInfo.PathToFileOnly : FCoreObjects::CompileOptions.OutputDir;
 	}
 	/*
 		@return path to resulting file.
 	*/
 	inline std::string GetOutputFilePath(const std::string& Extension) const noexcept
 	{
-		const std::string LProgramName = CurrentCompileOptions.ProgramName.empty() ? FirstFileInfo.FileNameOnly : CurrentCompileOptions.ProgramName;
+		// clang-format off
+		const std::string LProgramName =	FCoreObjects::CompileOptions.ProgramName.empty() ? 
+											FirstFileInfo.FileNameOnly : FCoreObjects::CompileOptions.ProgramName;
+		// clang-format on
 		return FCompilerHelperLibrary::CatPaths(GetOutputDirectoryPath(), LProgramName + "." + Extension);
 	}
 
@@ -59,7 +61,7 @@ private:
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, const std::string& ObjectFilePath) const
 	{
-		FErrorLogger::Raise(ErrorMessageType, ObjectFilePath, 0, 0, 0, CurrentCompileOptions);
+		FErrorLogger::Raise(ErrorMessageType, ObjectFilePath, 0, 0, 0);
 	}
 
 private:
@@ -74,10 +76,6 @@ private:
 
 private:
 
-	/*
-		Cached compiler options.
-	*/
-	FCompileOptions CurrentCompileOptions;
 	/*
 		Cached name of first passed file.
 	*/

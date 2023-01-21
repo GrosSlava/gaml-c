@@ -8,7 +8,7 @@
 
 
 
-void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const std::string& File, const std::string& Message, size_t Line, size_t Pos)
+void FCompileLogger::Raise(EErrorType ErrorType, const std::string& File, const std::string& Message, size_t Line, size_t Pos)
 {
 	std::string LErrorMessage = "";
 	LErrorMessage.reserve(64 + File.size() + Message.size());
@@ -18,7 +18,7 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 		LErrorMessage += "\"" + File + "\" ";
 	}
 
-	if( ErrorStage != EErrorStage::INITIALIZATION && Line + Pos != 0 )
+	if( Line + Pos != 0 )
 	{
 		LErrorMessage += "[";
 		LErrorMessage += std::to_string(Line);
@@ -33,17 +33,6 @@ void FCompileLogger::Raise(EErrorStage ErrorStage, EErrorType ErrorType, const s
 	case EErrorType::WARNING:			{ LErrorMessage += "WARNING ";						break; }
 	case EErrorType::ERROR:				{ LErrorMessage += "ERROR ";						break; }
 	default:							{ LErrorMessage += "INVALIID ERROR TYPE ";			break; }
-	}
-
-	switch( ErrorStage )
-	{
-	case EErrorStage::INITIALIZATION:	{ LErrorMessage += "Initialization: ";				break; }
-	case EErrorStage::LEXER:			{ LErrorMessage += "Lexer: ";						break; }
-	case EErrorStage::PARSER:			{ LErrorMessage += "Parser: ";						break; }
-	case EErrorStage::SEMANTIC:			{ LErrorMessage += "Analizer: ";					break; }
-	case EErrorStage::CODE_GENERATION:	{ LErrorMessage += "Compiler: ";					break; }
-	case EErrorStage::LINKER:			{ LErrorMessage += "Linker: ";						break; }
-	default:							{ LErrorMessage += "INVALIID STAGE: ";				break; }
 	}
 	// clang-format on
 

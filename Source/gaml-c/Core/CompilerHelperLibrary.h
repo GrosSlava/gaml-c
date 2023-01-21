@@ -22,6 +22,8 @@ struct FGamlFileInfo;
 */
 struct FCompilerHelperLibrary
 {
+	//.........................................................Misc........................................................//
+
 	/*
 		Time code performance.
 
@@ -46,9 +48,6 @@ struct FCompilerHelperLibrary
 	*/
 	static std::string GetPrettyTimeStr(size_t MillisecondsCount) noexcept;
 
-
-
-
 	/*
 		Execute console command on platform.
 		
@@ -56,8 +55,10 @@ struct FCompilerHelperLibrary
 	*/
 	static int RunConsoleCommand(const std::string& Command);
 
+	//.....................................................................................................................//
 
 
+	//.....................................................Path............................................................//
 
 	/*
 		Split file path into Path/Name/Extension.
@@ -109,8 +110,10 @@ struct FCompilerHelperLibrary
 	*/
 	static std::string MakeUpDirectoryStr(size_t UpCount);
 
+	//.....................................................................................................................//
 
 
+	//...................................................Files.............................................................//
 
 	// clang-format off
 	/*
@@ -146,9 +149,6 @@ struct FCompilerHelperLibrary
 	*/
 	static std::string GetBestFolderName(const std::string& Path, const std::vector<std::string>& FoldersBestOrder);
 
-
-
-
 	/*
 		Read file into string.
 
@@ -165,4 +165,6 @@ struct FCompilerHelperLibrary
 		@return success.
 	*/
 	static bool ReadAllFileToStr(std::ifstream& File, std::string& OutFileSource);
+
+	//.....................................................................................................................//
 };

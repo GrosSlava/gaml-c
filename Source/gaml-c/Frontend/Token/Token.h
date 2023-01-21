@@ -10,10 +10,6 @@
 
 
 
-struct FCompileOptions;
-
-
-
 /*
 	Base lexeme from source code.
 	@see ETokenType, FTokenHelperLibrary.
@@ -23,10 +19,10 @@ struct Token
 public:
 
 	Token() = delete;
-	inline Token(const FGamlFileInfo& InFileInfo, const std::string& InLexeme, size_t InLine, size_t InPos, const FCompileOptions& CompileOptions) :
+	inline Token(const FGamlFileInfo& InFileInfo, const std::string& InLexeme, size_t InLine, size_t InPos) :
 		LexemeStr(InLexeme), FileInfo(InFileInfo), Line(InLine), Pos(InPos)
 	{
-		DetermineTokenType(CompileOptions);
+		DetermineTokenType();
 	}
 	Token(const Token& Other) : Type(Other.Type), LexemeStr(Other.LexemeStr), FileInfo(Other.FileInfo), Line(Other.Line), Pos(Other.Pos) { }
 	Token(Token&& Other) noexcept :
@@ -106,10 +102,8 @@ private:
 
 	/*
 		Set Type based on LexemeStr.
-
-		@param CompileOptions - Compile options to use in errors.
 	*/
-	void DetermineTokenType(const FCompileOptions& CompileOptions);
+	void DetermineTokenType();
 
 
 

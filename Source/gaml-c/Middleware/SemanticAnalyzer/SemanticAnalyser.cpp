@@ -8,7 +8,7 @@
 
 
 
-void FSemanticAnalyser::Process(const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, FProgramInfo& ProgramInfo)
+void FSemanticAnalyser::Process(const FGamlFileInfo& FileInfo, FProgramInfo& ProgramInfo)
 {
 	//TODO
 }

@@ -13,7 +13,6 @@ class ScopeNode;
 class IASTCodeGenFactory;
 struct Token;
 
-struct FCompileOptions;
 struct FProgramInfo;
 
 
@@ -37,7 +36,7 @@ public:
 		@param InTokens - Array of tokens to parse concrete expression.
 		@param CompileOptions - Current compiling options.
 	*/
-	void BuildAST(const std::vector<Token>& InTokens, const FCompileOptions& CompileOptions);
+	void BuildAST(const std::vector<Token>& InTokens);
 
 	/*
 		Recursive interpret AST.

@@ -7,7 +7,7 @@
 #include "GeneratorHelperLibrary.h"
 
 #include "GamlFileInfo.h"
-#include "CompilerOptions.h"
+#include "CoreObjects.h"
 #include "CompilerConfig.h"
 #include "CompilerHelperLibrary.h"
 
@@ -40,14 +40,13 @@ public:
 		Translate code to object file.
 
 		@param FileInfo - Original file info.
-		@param CompileOptions - Current compile options.
 		@param ProgramInfo - Program abstract view.
 		@param OutCompiledObjectFilePath - Result path to generated object file.
 		@return success.
 	*/
 	virtual bool GenerateCode
 	(
-		const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, const FProgramInfo& ProgramInfo, 
+		const FGamlFileInfo& FileInfo, const FProgramInfo& ProgramInfo, 
 		std::string& OutCompiledObjectFilePath
 	);
 	// clang-format on
@@ -70,7 +69,7 @@ protected:
 	*/
 	inline std::string GetOutputDirectoryPath() const noexcept
 	{
-		return CurrentCompileOptions.OutputDir.empty() ? CurrentFileInfo.PathToFileOnly : CurrentCompileOptions.OutputDir;
+		return FCoreObjects::CompileOptions.OutputDir.empty() ? CurrentFileInfo.PathToFileOnly : FCoreObjects::CompileOptions.OutputDir;
 	}
 	/*
 		@param ExtensionOnlyStr - file extension wihout '.'
@@ -87,7 +86,7 @@ protected:
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, size_t Line, size_t Pos, size_t UnderlineLength) const
 	{
-		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Line, Pos, UnderlineLength, CurrentCompileOptions);
+		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), Line, Pos, UnderlineLength);
 	}
 
 
@@ -99,8 +98,4 @@ protected:
 		Info of file from which we take tokens.
 	*/
 	FGamlFileInfo CurrentFileInfo;
-	/*
-		Cached compiler options.
-	*/
-	FCompileOptions CurrentCompileOptions;
 };

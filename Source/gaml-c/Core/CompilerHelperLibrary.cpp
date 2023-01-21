@@ -10,6 +10,8 @@
 
 
 
+//.........................................................Misc........................................................//
+
 std::string FCompilerHelperLibrary::GetPrettyTimeStr(size_t MillisecondsCount) noexcept
 {
 	const size_t LSeconds = MillisecondsCount / 1000;
@@ -25,18 +27,18 @@ std::string FCompilerHelperLibrary::GetPrettyTimeStr(size_t MillisecondsCount) n
 	// clang-format on
 }
 
-
-
-
-
 int FCompilerHelperLibrary::RunConsoleCommand(const std::string& Command)
 {
 	return system(Command.c_str());
 }
 
+//.....................................................................................................................//
 
 
 
+
+
+//.....................................................Path............................................................//
 
 void FCompilerHelperLibrary::SplitFilePath(const std::string& FilePath, std::string& OutPathOnly, std::string& OutNameOnly, std::string& OutExtensionOnly)
 {
@@ -124,9 +126,13 @@ std::string FCompilerHelperLibrary::MakeUpDirectoryStr(size_t UpCount)
 	return LResult;
 }
 
+//.....................................................................................................................//
 
 
 
+
+
+//...................................................Files.............................................................//
 
 // clang-format off
 void FCompilerHelperLibrary::GetAllFilesWithExtensionsInFolder
@@ -195,10 +201,6 @@ std::string FCompilerHelperLibrary::GetBestFolderName(const std::string& Path, c
 	return "";
 }
 
-
-
-
-
 bool FCompilerHelperLibrary::ReadAllFileToStr(const std::string& FilePath, std::string& OutFileSource)
 {
 	std::ifstream LFile(FilePath, std::ios::binary);
@@ -223,3 +225,5 @@ bool FCompilerHelperLibrary::ReadAllFileToStr(std::ifstream& File, std::string& 
 
 	return true;
 }
+
+//.....................................................................................................................//

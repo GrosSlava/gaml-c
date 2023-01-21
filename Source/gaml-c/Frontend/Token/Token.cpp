@@ -11,7 +11,7 @@
 
 
 
-void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
+void Token::DetermineTokenType()
 {
 	/*
 		Table for token type hashing.
@@ -231,11 +231,11 @@ void Token::DetermineTokenType(const FCompileOptions& CompileOptions)
 
 	if( LexemeStr.empty() )
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos, 0, CompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos, 0);
 	}
 	else
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos, LexemeStr.size() - 1, CompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_LEXEME, FileInfo.GetFileFullPath(), Line, Pos, LexemeStr.size() - 1);
 	}
 }
 

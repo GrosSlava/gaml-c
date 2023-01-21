@@ -13,13 +13,12 @@
 // clang-format off
 void FParser::Process
 (
-	const std::vector<Token>& Tokens, const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, bool InIsMainModule, 
+	const std::vector<Token>& Tokens, const FGamlFileInfo& FileInfo, bool InIsMainModule, 
 	FProgramInfo& OutProgramInfo
 )
 // clang-format on
 {
 	CurrentFileInfo = FileInfo;
-	CurrentCompileOptions = CompileOptions;
 	IsMainModule = InIsMainModule;
 
 
@@ -65,27 +64,27 @@ void FParser::CheckPairs(const std::vector<Token>& Tokens)
 				{
 				case ETokenType::LBRA:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_LBRA, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, LToken);
 					return;
 				}
 				case ETokenType::LPAR:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_LPAR, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, LToken);
 					return;
 				}
 				case ETokenType::LSQR:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_LSQR, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_LSQR, LToken);
 					return;
 				}
 				case ETokenType::LTRI:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_LTRI, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_LTRI, LToken);
 					return;
 				}
 				}
 
-				RaiseError(EErrorMessageType::INVALID_CLOSE_PAIR, LToken);
+				FErrorLogger::Raise(EErrorMessageType::INVALID_CLOSE_PAIR, LToken);
 				return;
 			}
 			else if( !FParserHelperLibrary::DoesPairTokensMatch(LPairTokensStack.back(), LToken) )
@@ -94,27 +93,27 @@ void FParser::CheckPairs(const std::vector<Token>& Tokens)
 				{
 				case ETokenType::RBRA:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_RBRA, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_RBRA, LToken);
 					return;
 				}
 				case ETokenType::RPAR:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_RPAR, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_RPAR, LToken);
 					return;
 				}
 				case ETokenType::RSQR:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_RSQR, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_RSQR, LToken);
 					return;
 				}
 				case ETokenType::RTRI:
 				{
-					RaiseError(EErrorMessageType::EXPECTED_RTRI, LToken);
+					FErrorLogger::Raise(EErrorMessageType::EXPECTED_RTRI, LToken);
 					return;
 				}
 				}
 
-				RaiseError(EErrorMessageType::INVALID_CLOSE_PAIR, LToken);
+				FErrorLogger::Raise(EErrorMessageType::INVALID_CLOSE_PAIR, LToken);
 				return;
 			}
 			else
@@ -126,14 +125,14 @@ void FParser::CheckPairs(const std::vector<Token>& Tokens)
 
 	if( !LPairTokensStack.empty() )
 	{
-		RaiseError(EErrorMessageType::OPEN_PAIR_SHOULD_HAVE_CLOSE, LPairTokensStack.back());
+		FErrorLogger::Raise(EErrorMessageType::OPEN_PAIR_SHOULD_HAVE_CLOSE, LPairTokensStack.back());
 		return;
 	}
 }
 
 void FParser::ProcessSymbolsScanning(const std::vector<Token>& Tokens, FProgramInfo& OutProgramInfo)
 {
-	FParserStates LParserStates(CurrentFileInfo, CurrentCompileOptions, IsMainModule);
+	FParserStates LParserStates(CurrentFileInfo, IsMainModule);
 	std::shared_ptr<IParserState> LState = LParserStates.GDefault_ParserState;
 
 	for( const Token& LToken : Tokens )
@@ -141,13 +140,13 @@ void FParser::ProcessSymbolsScanning(const std::vector<Token>& Tokens, FProgramI
 		LState = LState->Process(LParserStates, LToken, OutProgramInfo);
 		if( LState == nullptr )
 		{
-			RaiseError(EErrorMessageType::INVALID_STATE, LToken);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, LToken);
 			return;
 		}
 	}
 	if( LState != LParserStates.GDefault_ParserState || !LParserStates.IsStateStackEmpty() )
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, CurrentFileInfo.GetFileFullPath(), 0, 0, 0, CurrentCompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, CurrentFileInfo.GetFileFullPath(), 0, 0, 0);
 		return;
 	}
 }

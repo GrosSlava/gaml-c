@@ -2,8 +2,6 @@
 
 #include "BaseOperatorNode.h"
 
-#include "CompilerOptions.h"
-
 #include "Logger/ErrorLogger.h"
 
 
@@ -14,9 +12,7 @@ void BaseOperatorNode::SetOperand(int Index, std::shared_ptr<IASTNode> Operand)
 {
 	if( Index < 0 || Index >= Operands.size() )
 	{
-		FCompileOptions LCompileOptions;
-		LCompileOptions.IncludeContextIntoErrors = true;
-		FErrorLogger::Raise(EErrorMessageType::AST_SET_OPERATOR_OPERAND_OUT_OF_RANGE, ContextToken, LCompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::AST_SET_OPERATOR_OPERAND_OUT_OF_RANGE, ContextToken);
 		return;
 	}
 

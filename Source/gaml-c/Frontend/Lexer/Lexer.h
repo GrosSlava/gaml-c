@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 
 #include "GamlFileInfo.h"
-#include "CompilerOptions.h"
 
 #include "Logger/ErrorLogger.h"
 
@@ -35,10 +34,9 @@ public:
 
 		@param Code - Source code str.
 		@param FileInfo - Original file info.
-		@param CompileOptions - Current compiling options.
 		@param OutTokens - Extracted tokens result.
 	*/
-	void Process(const std::string& Code, const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, std::vector<Token>& OutTokens);
+	void Process(const std::string& Code, const FGamlFileInfo& FileInfo, std::vector<Token>& OutTokens);
 
 private:
 
@@ -47,7 +45,7 @@ private:
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType) const
 	{
-		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), CurrentLine, CurrentPos - 1, 0, CurrentCompileOptions);
+		FErrorLogger::Raise(ErrorMessageType, CurrentFileInfo.GetFileFullPath(), CurrentLine, CurrentPos - 1, 0);
 	}
 
 private:
@@ -73,10 +71,6 @@ private:
 		Info of file from which we take tokens.
 	*/
 	FGamlFileInfo CurrentFileInfo;
-	/*
-		Cached compiler options.
-	*/
-	FCompileOptions CurrentCompileOptions;
 
 	/*
 		Current token line.

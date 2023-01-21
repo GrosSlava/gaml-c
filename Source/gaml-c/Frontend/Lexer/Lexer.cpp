@@ -9,12 +9,11 @@
 
 
 
-void FLexer::Process(const std::string& Code, const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, std::vector<Token>& OutTokens)
+void FLexer::Process(const std::string& Code, const FGamlFileInfo& FileInfo, std::vector<Token>& OutTokens)
 {
 	OutTokens.clear();
 
 	CurrentFileInfo = FileInfo;
-	CurrentCompileOptions = CompileOptions;
 
 	CurrentLine = 1; // we are indexing rows from 1
 	CurrentPos = 1;	 // we are indexing position in row from 1
@@ -582,7 +581,7 @@ void FLexer::PushCurrentLexeme(std::vector<Token>& OutTokens, size_t PosBack)
 		LCurrentPos -= PosBack;
 	}
 
-	Token LToken(CurrentFileInfo, CurrentLexeme, LLine, LCurrentPos, CurrentCompileOptions);
+	Token LToken(CurrentFileInfo, CurrentLexeme, LLine, LCurrentPos);
 	OutTokens.push_back(LToken);
 	CurrentLexeme.clear();
 }

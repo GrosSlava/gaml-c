@@ -48,6 +48,15 @@ enum class EWarningLevel : unsigned char
 };
 
 /*
+	Severity of the error.
+*/
+enum class EErrorType : unsigned char
+{
+	ERROR,
+	WARNING
+};
+
+/*
 	Types of available code generations.
 */
 enum class ECodeGenerationType : unsigned char

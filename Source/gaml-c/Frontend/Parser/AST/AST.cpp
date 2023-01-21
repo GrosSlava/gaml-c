@@ -9,10 +9,10 @@
 
 
 
-void AST::BuildAST(const std::vector<Token>& InTokens, const FCompileOptions& CompileOptions)
+void AST::BuildAST(const std::vector<Token>& InTokens)
 {
 	MainScope = std::make_shared<ScopeNode>();
-	MainScope->BuildAST(InTokens, CompileOptions);
+	MainScope->BuildAST(InTokens);
 }
 
 

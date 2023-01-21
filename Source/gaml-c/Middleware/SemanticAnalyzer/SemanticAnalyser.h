@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 
 #include "GamlFileInfo.h"
-#include "CompilerOptions.h"
 
 
 
@@ -24,7 +23,7 @@ public:
 
 public:
 
-	void Process(const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, FProgramInfo& ProgramInfo);
+	void Process(const FGamlFileInfo& FileInfo, FProgramInfo& ProgramInfo);
 
 
 
@@ -35,9 +34,4 @@ private:
 		Information about compiling file.
 	*/
 	FGamlFileInfo FileInfo;
-
-	/*
-		Cached compiler options.
-	*/
-	FCompileOptions CurrentOptions;
 };

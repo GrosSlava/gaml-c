@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 
+#include "CoreObjects.h"
 #include "GamlFileInfo.h"
-#include "CompilerOptions.h"
 #include "CompilerHelperLibrary.h"
 
 #include "Logger/ErrorLogger.h"
@@ -35,8 +35,8 @@ public:
 	/*
 		Start compilation pipeline.
 	*/
-	std::string Process(const std::string& FilePath, const FCompileOptions& Options);
-	std::string Process(const FGamlFileInfo& InFileInfo, const FCompileOptions& Options);
+	inline std::string Process(const std::string& FilePath) { return Process(FGamlFileInfo(FilePath)); }
+	std::string Process(const FGamlFileInfo& InFileInfo);
 
 private:
 
@@ -45,7 +45,7 @@ private:
 	*/
 	inline std::string GetCompilerOutputDir(const std::string& FileName) const noexcept
 	{
-		const std::string LFilePath = CurrentOptions.OutputDir.empty() ? FileInfo.PathToFileOnly : CurrentOptions.OutputDir;
+		const std::string LFilePath = FCoreObjects::CompileOptions.OutputDir.empty() ? FileInfo.PathToFileOnly : FCoreObjects::CompileOptions.OutputDir;
 		return FCompilerHelperLibrary::CatPaths(LFilePath, FileName);
 	}
 
@@ -53,11 +53,11 @@ private:
 	/*
 		Log error based on compiler context.
 	*/
-	inline void LogError(EErrorStage ErrorStage, EErrorType ErrorType, const std::string& FileName, const std::string& Message, size_t Line, size_t Pos) const
+	inline void LogError(EErrorType ErrorType, const std::string& FileName, const std::string& Message, size_t Line, size_t Pos) const
 	{
-		if( CurrentOptions.Silent ) return;
+		if( FCoreObjects::CompileOptions.Silent ) return;
 
-		FCompileLogger::Raise(ErrorStage, ErrorType, FileName, Message, Line, Pos);
+		FCompileLogger::Raise(ErrorType, FileName, Message, Line, Pos);
 	}
 
 private:
@@ -99,9 +99,4 @@ private:
 		Information about compiling file.
 	*/
 	FGamlFileInfo FileInfo;
-
-	/*
-		Cached compiler options.
-	*/
-	FCompileOptions CurrentOptions;
 };

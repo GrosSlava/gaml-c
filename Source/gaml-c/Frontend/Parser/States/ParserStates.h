@@ -5,11 +5,8 @@
 #include "CoreMinimal.h"
 
 #include "StatesContext.h"
-
 #include "Parser/ProgramSymbols.h"
-
 #include "GamlFileInfo.h"
-#include "CompilerOptions.h"
 
 #include "Logger/ErrorLogger.h"
 
@@ -163,8 +160,8 @@ struct FParserStates
 public:
 
 	FParserStates() = delete;
-	inline FParserStates(const FGamlFileInfo& InFileInfo, const FCompileOptions& InCompileOptions, bool InIsMainModule) :
-		FileInfo(InFileInfo), CompileOptions(InCompileOptions), IsMainModule(InIsMainModule)
+	inline FParserStates(const FGamlFileInfo& InFileInfo, bool InIsMainModule) :
+		FileInfo(InFileInfo), IsMainModule(InIsMainModule)
 	{
 	}
 	~FParserStates() { }
@@ -258,22 +255,10 @@ public:
 	*/
 	inline const FGamlFileInfo& GetFileInfo() const noexcept { return FileInfo; }
 	/*
-		@return current compile options.
-	*/
-	inline const FCompileOptions& GetCompileOptions() const noexcept { return CompileOptions; }
-	/*
 		@return true if parsing main module(false if parsing imported into main module).
 	*/
 	inline bool GetIsMainModule() const noexcept { return IsMainModule; }
 
-
-	/*
-		Raise error based on state context.
-	*/
-	inline void RaiseError(EErrorMessageType ErrorMessageType, const Token& Token) const
-	{
-		FErrorLogger::Raise(ErrorMessageType, Token, CompileOptions);
-	}
 
 
 	/*
@@ -303,12 +288,11 @@ public:
 	{
 		if( IsStateStackEmpty() )
 		{
-			RaiseError(EErrorMessageType::STATE_STACK_EMPTY, ContextToken);
+			FErrorLogger::Raise(EErrorMessageType::STATE_STACK_EMPTY, ContextToken);
 		}
 
 		return PopState();
 	}
-
 
 public:
 
@@ -347,10 +331,6 @@ private:
 		Info of parsing file.
 	*/
 	FGamlFileInfo FileInfo;
-	/*
-		Cached compiler options.
-	*/
-	FCompileOptions CompileOptions;
 	/*
 		Indicates that the main module is being parsed (imported modules are marked as non-main).
 	*/

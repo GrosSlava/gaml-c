@@ -14,14 +14,13 @@
 // clang-format off
 bool BaseGenerator::GenerateCode
 (
-	const FGamlFileInfo& FileInfo, const FCompileOptions& CompileOptions, const FProgramInfo& ProgramInfo, 
+	const FGamlFileInfo& FileInfo, const FProgramInfo& ProgramInfo, 
 	std::string& OutCompiledObjectFilePath
 )
 // clang-format on
 {
 	// set context
 	CurrentFileInfo = FileInfo;
-	CurrentCompileOptions = CompileOptions;
 
 	OutCompiledObjectFilePath.clear();
 
@@ -39,7 +38,7 @@ bool BaseGenerator::GenerateCode
 	std::ofstream LFile(LOutFilePath);
 	if( !LFile.is_open() )
 	{
-		FCompileLogger::Raise(EErrorStage::INITIALIZATION, EErrorType::ERROR, FileInfo.FileNameOnly, "Can't create file '" + LOutFilePath + "'!", 0, 0);
+		FCompileLogger::Raise(EErrorType::ERROR, FileInfo.FileNameOnly, "Can't create file '" + LOutFilePath + "'!", 0, 0);
 		return false;
 	}
 
@@ -48,9 +47,9 @@ bool BaseGenerator::GenerateCode
 
 
 	// compile generated code by native compiler
-	if( !CurrentCompileOptions.NoTranslation )
+	if( !FCoreObjects::CompileOptions.NoTranslation )
 	{
-		const std::string LFileExtension = FPlatformHelperLibrary::GetPlatformObjectFileExtension(CurrentCompileOptions.TargetPlatform);
+		const std::string LFileExtension = FPlatformHelperLibrary::GetPlatformObjectFileExtension(FCoreObjects::CompileOptions.TargetPlatform);
 		if( LFileExtension.empty() )
 		{
 			RaiseError(EErrorMessageType::INVALID_GENERATION_EXTENSION, 0, 0, 0);
@@ -58,11 +57,11 @@ bool BaseGenerator::GenerateCode
 		}
 
 		OutCompiledObjectFilePath = GetOutputFilePath(LFileExtension);
-		FGenericPlatform::RunThirdPartyCompiler(CurrentFileInfo, CurrentCompileOptions, LOutFilePath, GetOutputDirectoryPath(), OutCompiledObjectFilePath);
+		FGenericPlatform::RunThirdPartyCompiler(CurrentFileInfo, LOutFilePath, GetOutputDirectoryPath(), OutCompiledObjectFilePath);
 	}
 
 	// remove generated low-level code if needed
-	if( !CurrentCompileOptions.DumpGeneratedCode )
+	if( !FCoreObjects::CompileOptions.DumpGeneratedCode )
 	{
 		std::remove(LOutFilePath.c_str());
 	}

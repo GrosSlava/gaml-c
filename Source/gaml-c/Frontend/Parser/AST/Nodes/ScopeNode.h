@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 
 #include "ASTNode.h"
-#include "CompilerOptions.h"
 
 
 
@@ -33,7 +32,7 @@ public:
 		@param InTokens - Array of all scope tokens to parse.
 		@param CompileOptions - Current compiling options.
 	*/
-	void BuildAST(const std::vector<Token>& InTokens, const FCompileOptions& CompileOptions);
+	void BuildAST(const std::vector<Token>& InTokens);
 
 public:
 
@@ -169,6 +168,38 @@ private:
 	*/
 	std::shared_ptr<IASTNode> Parse_Return(const std::vector<Token>& InTokens, size_t& Index) const;
 
+	/*
+		IDENTIFIER(EXPRESSION)
+	*/
+	std::shared_ptr<IASTNode> Parse_Call(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		IDENTIFIER[EXPRESSION]
+	*/
+	std::shared_ptr<IASTNode> Parse_IndexAccess(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		class<|EXPRESSION|>
+	*/
+	std::shared_ptr<IASTNode> Parse_Class(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		array<|EXPRESSION|>
+	*/
+	std::shared_ptr<IASTNode> Parse_Array(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		lambda (EXPRESSION) [EXPRESSION] { ... }
+	*/
+	std::shared_ptr<IASTNode> Parse_Lambda(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		CONDITION ? EXPRESSION : EXPRESSION 
+	*/
+	std::shared_ptr<IASTNode> Parse_Thernal(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		cast<|EXPRESSION|>(EXPRESSION)
+	*/
+	std::shared_ptr<IASTNode> Parse_Cast(const std::vector<Token>& InTokens, size_t& Index) const;
+	/*
+		unsafe_cast<|EXPRESSION|>(EXPRESSION)
+	*/
+	std::shared_ptr<IASTNode> Parse_UnsafeCast(const std::vector<Token>& InTokens, size_t& Index) const;
 
 
 
@@ -180,11 +211,6 @@ public:
 	std::vector<std::shared_ptr<IASTNode>> ExprSequence;
 
 private:
-
-	/*
-		Cached compile options.
-	*/
-	FCompileOptions CurrentCompileOptions;
 
 	/*
 		Flag shows that this AST has any control statement. 

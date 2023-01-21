@@ -129,6 +129,28 @@ DECLARE_OPERATOR_NODE(SwitchAllNode, 2);
 
 
 /*
+	Operand 0 - Name to call.
+	Operand 1 - Arguments expression.
+*/
+DECLARE_EXPESSION_OPERATOR_NODE(CallNode, 2);
+#define CALL_NODE_NAME_OPERAND 0
+#define CALL_NODE_ARGUMENTS_OPERAND 1
+
+/*
+	Operand 0 - Name to access.
+	Operand 1 - Index expression.
+*/
+DECLARE_EXPESSION_OPERATOR_NODE(IndexAccessNode, 2);
+#define INDEX_ACCESS_NODE_NAME_OPERAND 0
+#define INDEX_ACCESS_NODE_INDEX_OPERAND 1
+
+/*
+	Operand 0 - Elements expression.
+*/
+DECLARE_EXPESSION_OPERATOR_NODE(RHArrayNode, 1);
+#define RHARRAY_NODE_ELEMENTS_OPERAND 0
+
+/*
 	Operand 0 - Left expression.
 	Operand 1 - Right expression.
 */

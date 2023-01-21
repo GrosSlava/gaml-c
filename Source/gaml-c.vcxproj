@@ -90,6 +90,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gaml-c\Core\CoreObjects.cpp" />
+    <ClCompile Include="gaml-c\Core\Logger\ErrorName.cpp" />
+    <ClCompile Include="gaml-c\Frontend\Parser\AST\Nodes\Operators\CallNode.cpp" />
+    <ClCompile Include="gaml-c\Frontend\Parser\AST\Nodes\Operators\IndexAccessNode.cpp" />
+    <ClCompile Include="gaml-c\Frontend\Parser\AST\Nodes\Operators\RHArrayNode.cpp" />
     <ClCompile Include="gaml-c\ToolChain\Compiler.cpp" />
     <ClCompile Include="gaml-c\Core\CompilerConfig.cpp" />
     <ClCompile Include="gaml-c\Core\GamlFileInfo.cpp" />
@@ -154,6 +159,8 @@
     <ClCompile Include="gaml-c\ToolChain\ToolChain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gaml-c\Core\CoreObjects.h" />
+    <ClInclude Include="gaml-c\Core\Logger\ErrorName.h" />
     <ClInclude Include="gaml-c\ToolChain\Compiler.h" />
     <ClInclude Include="gaml-c\Core\CompilerConfig.h" />
     <ClInclude Include="gaml-c\Core\GamlFileInfo.h" />

@@ -3,6 +3,7 @@
 #include "ParserStates.h"
 #include "Parser/ParserHelperLibrary.h"
 
+#include "CoreObjects.h"
 #include "CompilerConfig.h"
 #include "CompilerHelperLibrary.h"
 
@@ -172,7 +173,7 @@ std::shared_ptr<IParserState> Default_ParserState::Process(FParserStates& InPars
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -194,7 +195,7 @@ std::shared_ptr<IParserState> StartDescription_ParserState::Process(FParserState
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -209,7 +210,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsExternC )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsExternC = true;
@@ -219,7 +220,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::CDECL;
@@ -229,7 +230,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::STDCALL;
@@ -239,7 +240,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.CallingConvention != EFunctionCallingConvention::DEFAULT )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.CallingConvention = EFunctionCallingConvention::FASTCALL;
@@ -249,7 +250,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsConst )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsConst = true;
@@ -259,7 +260,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsMutable )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsMutable = true;
@@ -269,7 +270,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsStatic )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsStatic = true;
@@ -279,7 +280,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsVirtual )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsVirtual = true;
@@ -289,7 +290,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsOverride )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsOverride = true;
@@ -299,7 +300,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsAbstract )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsAbstract = true;
@@ -309,7 +310,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsFinal )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsFinal = true;
@@ -319,7 +320,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsDeprecated )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsDeprecated = true;
@@ -329,7 +330,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.IsUnimplemented )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		LDescriptionContext.Modfiers.IsUnimplemented = true;
@@ -339,7 +340,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	{
 		if( LDescriptionContext.Modfiers.Align != -1 )
 		{
-			InParserStates.RaiseError(EErrorMessageType::DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
 			return nullptr;
 		}
 		return InParserStates.GDescriptionAlign1_ParserState;
@@ -356,7 +357,7 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -366,7 +367,7 @@ std::shared_ptr<IParserState> DescriptionAlign1_ParserState::Process(FParserStat
 
 	if( InToken.GetType() != ETokenType::LPAR )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_LPAR, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InToken);
 		return nullptr;
 	}
 
@@ -425,18 +426,18 @@ std::shared_ptr<IParserState> DescriptionAlign3_ParserState::Process(FParserStat
 	}
 
 	AST LAST;
-	LAST.BuildAST(LDescriptionContext.CodeTokens, InParserStates.GetCompileOptions());
+	LAST.BuildAST(LDescriptionContext.CodeTokens);
 
 	if( !LAST.IsPureExpression() )
 	{
-		InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+		FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 		return nullptr;
 	}
 	
 	LAST.InterpretAST(OutProgramInfo);
 	LDescriptionContext.Modfiers.Align = LAST.GetInterpretResultAsInt();
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -446,7 +447,7 @@ std::shared_ptr<IParserState> DescriptionParam1_ParserState::Process(FParserStat
 
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 		return nullptr;
 	}
 
@@ -468,7 +469,7 @@ std::shared_ptr<IParserState> DescriptionParam1_ParserState::Process(FParserStat
 	}
 	default:
 	{
-		InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InToken);
 		return nullptr;
 	}
 	}
@@ -480,7 +481,7 @@ std::shared_ptr<IParserState> DescriptionParam2_ParserState::Process(FParserStat
 {
 	if( InToken.GetType() != ETokenType::COLON )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_COLON, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_COLON, InToken);
 		return nullptr;
 	}
 
@@ -503,7 +504,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			{
 				if( LDescriptionContext.Inputs.back().Modifiers.IsConst )
 				{
-					InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+					FErrorLogger::Raise(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
 					return nullptr;
 				}
 
@@ -514,7 +515,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			{
 				if( LDescriptionContext.Returns.back().Modifiers.IsConst )
 				{
-					InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+					FErrorLogger::Raise(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
 					return nullptr;
 				}
 
@@ -523,7 +524,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			}
 			default:
 			{
-				InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+				FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InToken);
 				return nullptr;
 			}
 			}
@@ -538,7 +539,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			{
 				if( LDescriptionContext.Inputs.back().Modifiers.IsMutable )
 				{
-					InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+					FErrorLogger::Raise(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
 					return nullptr;
 				}
 
@@ -549,7 +550,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			{
 				if( LDescriptionContext.Returns.back().Modifiers.IsMutable )
 				{
-					InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+					FErrorLogger::Raise(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
 					return nullptr;
 				}
 
@@ -558,7 +559,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 			}
 			default:
 			{
-				InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+				FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InToken);
 				return nullptr;
 			}
 			}
@@ -583,7 +584,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 		}
 		default:
 		{
-			InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+			FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InToken);
 			return nullptr;
 		}
 		}
@@ -620,7 +621,7 @@ std::shared_ptr<IParserState> DescriptionParam3_ParserState::Process(FParserStat
 		return InParserStates.GStartUserType_ParserState;
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -645,7 +646,7 @@ std::shared_ptr<IParserState> DescriptionParam4_ParserState::Process(FParserStat
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -691,17 +692,17 @@ std::shared_ptr<IParserState> DescriptionParam6_ParserState::Process(FParserStat
 	{
 	case EDescriptionContext::Param:
 	{
-		LDescriptionContext.Inputs.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens, InParserStates.GetCompileOptions());
+		LDescriptionContext.Inputs.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens);
 		break;
 	}
 	case EDescriptionContext::Return:
 	{
-		LDescriptionContext.Returns.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens, InParserStates.GetCompileOptions());
+		LDescriptionContext.Returns.back().DefaultValueTree.BuildAST(LDescriptionContext.CodeTokens);
 		break;
 	}
 	default:
 	{
-		InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InToken);
 		return nullptr;
 	}
 	}
@@ -718,7 +719,7 @@ std::shared_ptr<IParserState> DescriptionParam6_ParserState::Process(FParserStat
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -733,7 +734,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 	{
 		if( InParserStates.StatesContext.StateContextType != EStateContextType::Global )
 		{
-			InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 			return nullptr;
 		}
 
@@ -763,7 +764,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 	{
 		if( InParserStates.StatesContext.StateContextType != EStateContextType::Global )
 		{
-			InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 			return nullptr;
 		}
 
@@ -782,7 +783,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 	{
 		if( InParserStates.StatesContext.StateContextType != EStateContextType::Global )
 		{
-			InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 			return nullptr;
 		}
 
@@ -801,7 +802,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 	{
 		if( InParserStates.StatesContext.StateContextType != EStateContextType::Global )
 		{
-			InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 			return nullptr;
 		}
 
@@ -820,7 +821,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 	{
 		if( InParserStates.StatesContext.StateContextType != EStateContextType::Global )
 		{
-			InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 			return nullptr;
 		}
 
@@ -839,7 +840,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 	{
 		if( InParserStates.StatesContext.StateContextType != EStateContextType::Global )
 		{
-			InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 			return nullptr;
 		}
 
@@ -901,7 +902,7 @@ std::shared_ptr<IParserState> EndDescription_ParserState::Process(FParserStates&
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -924,7 +925,7 @@ std::shared_ptr<IParserState> DescriptionParamType_ParserState::Process(FParserS
 	}
 	default:
 	{
-		InParserStates.RaiseError(EErrorMessageType::INVALID_STATE, InToken);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InToken);
 		return nullptr;
 	}
 	}
@@ -1015,7 +1016,7 @@ std::shared_ptr<IParserState> GlobalAccessModifier_ParserState::Process(FParserS
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1050,7 +1051,7 @@ std::shared_ptr<IParserState> LocalAccessModifier_ParserState::Process(FParserSt
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1062,7 +1063,7 @@ std::shared_ptr<IParserState> StartDeclareModule_ParserState::Process(FParserSta
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 		return nullptr;
 	}
 
@@ -1089,7 +1090,7 @@ std::shared_ptr<IParserState> DeclareModule1_ParserState::Process(FParserStates&
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1099,7 +1100,7 @@ std::shared_ptr<IParserState> StartImplementModule_ParserState::Process(FParserS
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 		return nullptr;
 	}
 
@@ -1126,7 +1127,7 @@ std::shared_ptr<IParserState> ImplementModule1_ParserState::Process(FParserState
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1136,7 +1137,7 @@ std::shared_ptr<IParserState> StartImportModule_ParserState::Process(FParserStat
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 		return nullptr;
 	}
 
@@ -1166,7 +1167,7 @@ std::shared_ptr<IParserState> ImportModule1_ParserState::Process(FParserStates& 
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1174,7 +1175,7 @@ std::shared_ptr<IParserState> ImportModule2_ParserState::Process(FParserStates& 
 {
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 		return nullptr;
 	}
 
@@ -1186,7 +1187,7 @@ std::shared_ptr<IParserState> ImportModule3_ParserState::Process(FParserStates& 
 {
 	if( InToken.GetType() != ETokenType::SEMICOLON )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
 		return nullptr;
 	}
 
@@ -1208,7 +1209,7 @@ std::shared_ptr<IParserState> StartDeclareFunction_ParserState::Process(FParserS
 
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_FUNCTION_NAME, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_FUNCTION_NAME, InToken);
 		return nullptr;
 	}
 
@@ -1227,7 +1228,7 @@ std::shared_ptr<IParserState> DeclareFunction1_ParserState::Process(FParserState
 	{
 		if( InParserStates.StatesContext.StateContextType != EStateContextType::Global )
 		{
-			InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
 			return nullptr;
 		}
 
@@ -1238,7 +1239,7 @@ std::shared_ptr<IParserState> DeclareFunction1_ParserState::Process(FParserState
 		}
 		else
 		{
-			InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
 			return nullptr;
 		}
 
@@ -1269,7 +1270,7 @@ std::shared_ptr<IParserState> DeclareFunction1_ParserState::Process(FParserState
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+	FErrorLogger::Raise(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
 	return nullptr;
 }
 
@@ -1335,7 +1336,7 @@ std::shared_ptr<IParserState> DeclareFunction3_ParserState::Process(FParserState
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1386,7 +1387,7 @@ std::shared_ptr<IParserState> StartDeclareClass_ParserState::Process(FParserStat
 
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_CLASS_NAME, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_CLASS_NAME, InToken);
 	}
 
 	LClassContext.ClassName = InToken.GetLexeme();
@@ -1411,7 +1412,7 @@ std::shared_ptr<IParserState> DeclareClass1_ParserState::Process(FParserStates& 
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1445,7 +1446,7 @@ std::shared_ptr<IParserState> DeclareClass2_ParserState::Process(FParserStates& 
 	}
 
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1463,7 +1464,7 @@ std::shared_ptr<IParserState> DeclareClass3_ParserState::Process(FParserStates& 
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1471,7 +1472,7 @@ std::shared_ptr<IParserState> DeclareClass4_ParserState::Process(FParserStates& 
 {
 	if( InToken.GetType() != ETokenType::LBRA )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_LBRA, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InToken);
 		return nullptr;
 	}
 
@@ -1552,7 +1553,7 @@ std::shared_ptr<IParserState> DeclareClassInternal_ParserState::Process(FParserS
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1618,7 +1619,7 @@ std::shared_ptr<IParserState> StartDeclareField_ParserState::Process(FParserStat
 	{
 		if( LVariableContext.VariableInfo.Modifiers.IsStatic )
 		{
-			InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
 		}
 
 		LVariableContext.VariableInfo.Modifiers.IsStatic = true;
@@ -1628,7 +1629,7 @@ std::shared_ptr<IParserState> StartDeclareField_ParserState::Process(FParserStat
 	{
 		if( LVariableContext.VariableInfo.Modifiers.IsConst )
 		{
-			InParserStates.RaiseError(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
+			FErrorLogger::Raise(EErrorMessageType::MEMBER_DOUBLE_MODIFIER, InToken);
 		}
 
 		LVariableContext.VariableInfo.Modifiers.IsConst = true;
@@ -1636,7 +1637,7 @@ std::shared_ptr<IParserState> StartDeclareField_ParserState::Process(FParserStat
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1646,7 +1647,7 @@ std::shared_ptr<IParserState> DeclareField1_ParserState::Process(FParserStates& 
 
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 	}
 
 	LVariableContext.VariableName = InToken.GetLexeme();
@@ -1671,7 +1672,7 @@ std::shared_ptr<IParserState> DeclareField2_ParserState::Process(FParserStates& 
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1683,7 +1684,7 @@ std::shared_ptr<IParserState> DeclareField3_ParserState::Process(FParserStates& 
 	{
 		if( LVariableContext.DefaultValueTokens.empty() )
 		{
-			InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 		}
 
 		if( !InParserStates.RegisterVariableFromContext(OutProgramInfo, InToken) )
@@ -1718,7 +1719,7 @@ std::shared_ptr<IParserState> StartDefineAlias_ParserState::Process(FParserState
 
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_ALIAS_NAME, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_ALIAS_NAME, InToken);
 		return nullptr;
 	}
 
@@ -1730,7 +1731,7 @@ std::shared_ptr<IParserState> DefineAlias1_ParserState::Process(FParserStates& I
 {
 	if( InToken.GetType() != ETokenType::ASSIGN )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_ASSIGN, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_ASSIGN, InToken);
 		return nullptr;
 	}
 
@@ -1767,7 +1768,7 @@ std::shared_ptr<IParserState> DefineAlias2_ParserState::Process(FParserStates& I
 	{
 		if( InToken.GetLexeme() == LAliasContext.AliasName )
 		{
-			InParserStates.RaiseError(EErrorMessageType::ALIAS_NAME_REDEFINITION, InToken);
+			FErrorLogger::Raise(EErrorMessageType::ALIAS_NAME_REDEFINITION, InToken);
 			return nullptr;
 		}
 
@@ -1779,7 +1780,7 @@ std::shared_ptr<IParserState> DefineAlias2_ParserState::Process(FParserStates& I
 		return InParserStates.GStartUserType_ParserState;
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1787,7 +1788,7 @@ std::shared_ptr<IParserState> DefineAlias3_ParserState::Process(FParserStates& I
 {
 	if( InToken.GetType() != ETokenType::SEMICOLON )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
 		return nullptr;
 	}
 
@@ -1814,7 +1815,7 @@ std::shared_ptr<IParserState> StartStaticAssert_ParserState::Process(FParserStat
 
 	if( InToken.GetType() != ETokenType::LPAR )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_LPAR, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InToken);
 		return nullptr;
 	}
 
@@ -1856,7 +1857,7 @@ std::shared_ptr<IParserState> StaticAssert2_ParserState::Process(FParserStates& 
 {
 	if( InToken.GetType() != ETokenType::SEMICOLON )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_SEMICOLON, InToken);
 		return nullptr;
 	}
 
@@ -1949,7 +1950,7 @@ std::shared_ptr<IParserState> UserType1_ParserState::Process(FParserStates& InPa
 
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 		return nullptr;
 	}
 
@@ -1974,7 +1975,7 @@ std::shared_ptr<IParserState> UserType2_ParserState::Process(FParserStates& InPa
 	}
 	}
 
-	InParserStates.RaiseError(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
+	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
 }
 
@@ -1984,7 +1985,7 @@ std::shared_ptr<IParserState> UserType3_ParserState::Process(FParserStates& InPa
 
 	if( InToken.GetType() != ETokenType::IDENTIFIER )
 	{
-		InParserStates.RaiseError(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_IDENTIFIER, InToken);
 		return nullptr;
 	}
 
@@ -1996,7 +1997,7 @@ std::shared_ptr<IParserState> UserType3_ParserState::Process(FParserStates& InPa
 	ETypeKind LTypeKind = FParserHelperLibrary::GetUserTypeKind(LCompileName, OutProgramInfo);
 	if( LTypeKind == ETypeKind::UNDEFINED )
 	{
-		InParserStates.RaiseError(EErrorMessageType::CLASS_NAME_NOT_FOUND, InToken);
+		FErrorLogger::Raise(EErrorMessageType::CLASS_NAME_NOT_FOUND, InToken);
 		return nullptr;
 	}
 
@@ -2018,7 +2019,7 @@ void FParserStates::RegisterMainModule(FProgramInfo& OutProgramInfo, const Token
 	if( !GetIsMainModule() )
 	{
 		// imported module should already have name in MainModuleName
-		RaiseError(EErrorMessageType::NO_NAME_NOT_MAIN_MODULE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::NO_NAME_NOT_MAIN_MODULE, TokenCTX);
 	}
 
 
@@ -2034,32 +2035,32 @@ bool FParserStates::RegisterModuleFromContext(FProgramInfo& OutProgramInfo, cons
 {
 	if( StatesContext.ModuleDeclarationContext.ModulePath.empty() )
 	{
-		RaiseError(EErrorMessageType::MODULE_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	if( StatesContext.StateContextType != EStateContextType::Global )
 	{
-		RaiseError(EErrorMessageType::INVALID_STATE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, TokenCTX);
 		return false;
 	}
 
 	if( StatesContext.ModuleNameDeclared )
 	{
-		RaiseError(EErrorMessageType::MODULE_NAME_REDEFINITION, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
 
 	const std::string LModuleName = FParserHelperLibrary::GetModuleCompileName(StatesContext.ModuleDeclarationContext.ModulePath);
 	if( !GetIsMainModule() && OutProgramInfo.MainModuleName != LModuleName ) // module name was set at the import stage
 	{
-		RaiseError(EErrorMessageType::INVALID_IMPORTING_MODULE_NAME, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_IMPORTING_MODULE_NAME, TokenCTX);
 		return false;
 	}
 
 	if( OutProgramInfo.ImportedModulesInfo.find(LModuleName) != OutProgramInfo.ImportedModulesInfo.end() )
 	{
-		RaiseError(EErrorMessageType::MODULE_DOUBLE_IMPORT, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_DOUBLE_IMPORT, TokenCTX);
 		return false;
 	}
 
@@ -2076,25 +2077,25 @@ bool FParserStates::ImplementModuleFromContext(FProgramInfo& OutProgramInfo, con
 {
 	if( StatesContext.ModuleImplementingContext.ModulePath.empty() )
 	{
-		RaiseError(EErrorMessageType::MODULE_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	if( StatesContext.StateContextType != EStateContextType::Global )
 	{
-		RaiseError(EErrorMessageType::INVALID_STATE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, TokenCTX);
 		return false;
 	}
 
 	if( StatesContext.ModuleNameDeclared )
 	{
-		RaiseError(EErrorMessageType::MODULE_NAME_REDEFINITION, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
 
 	if( !GetIsMainModule() )
 	{
-		RaiseError(EErrorMessageType::IMPORTING_IMPLEMENT_MODULE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::IMPORTING_IMPLEMENT_MODULE, TokenCTX);
 		return false;
 	}
 
@@ -2104,7 +2105,7 @@ bool FParserStates::ImplementModuleFromContext(FProgramInfo& OutProgramInfo, con
 
 	if( OutProgramInfo.ImportedModulesInfo.find(LModuleName) != OutProgramInfo.ImportedModulesInfo.end() )
 	{
-		RaiseError(EErrorMessageType::MODULE_DOUBLE_IMPORT, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_DOUBLE_IMPORT, TokenCTX);
 		return false;
 	}
 
@@ -2115,7 +2116,7 @@ bool FParserStates::ImplementModuleFromContext(FProgramInfo& OutProgramInfo, con
 	const bool LImportSuccess = ImportModule(OutProgramInfo, LImportingModuleRelativePath, LModuleName, TokenCTX);
 	if( !LImportSuccess )
 	{
-		RaiseError(EErrorMessageType::MODULE_NOT_FOUND, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NOT_FOUND, TokenCTX);
 		return false;
 	}
 
@@ -2126,13 +2127,13 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 {
 	if( StatesContext.ModuleImportingContext.ModulePath.empty() )
 	{
-		RaiseError(EErrorMessageType::MODULE_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	if( StatesContext.StateContextType != EStateContextType::Global )
 	{
-		RaiseError(EErrorMessageType::INVALID_STATE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, TokenCTX);
 		return false;
 	}
 
@@ -2145,7 +2146,7 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 	{
 		if( StatesContext.ModuleImportingContext.AliasName.find('.') != std::string::npos )
 		{
-			RaiseError(EErrorMessageType::MODULE_ALIAS_CONTAINS_INVALID_CHAR, TokenCTX);
+			FErrorLogger::Raise(EErrorMessageType::MODULE_ALIAS_CONTAINS_INVALID_CHAR, TokenCTX);
 			return false;
 		}
 
@@ -2156,7 +2157,7 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 		  )
 		// clang-format on
 		{
-			RaiseError(EErrorMessageType::MODULE_ALIAS_NAME_REDEFINITION, TokenCTX);
+			FErrorLogger::Raise(EErrorMessageType::MODULE_ALIAS_NAME_REDEFINITION, TokenCTX);
 			return false;
 		}
 
@@ -2175,7 +2176,7 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 	}
 	if( !LImportSuccess )
 	{
-		RaiseError(EErrorMessageType::MODULE_NOT_FOUND, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NOT_FOUND, TokenCTX);
 		return false;
 	}
 
@@ -2192,12 +2193,12 @@ bool FParserStates::ImportModule
 {
 	if( ImportModuleName == FCompilerConfig::RESERVED_MAIN_MODULE_NAME )
 	{
-		RaiseError(EErrorMessageType::IMPORTING_MAIN_MODULE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::IMPORTING_MAIN_MODULE, TokenCTX);
 		return false;
 	}
 
 
-	const std::string LCompilerPathOnly = FGamlFileInfo(CompileOptions.PathToCompiler).PathToFileOnly;
+	const std::string LCompilerPathOnly = FGamlFileInfo(FCoreObjects::CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
 	FParserHelperLibrary::SplitModuleCompileNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
@@ -2276,24 +2277,24 @@ bool FParserStates::ImportModule
 
 	std::vector<Token> LTokens;
 	FLexer LLexer;
-	LLexer.Process(LSourceCode, LModuleFileInfo, CompileOptions, LTokens);
+	LLexer.Process(LSourceCode, LModuleFileInfo, LTokens);
 
 	const std::string LModuleRealName = FParserHelperLibrary::GetFirstModuleName(LTokens);
 	if( LModuleRealName == FCompilerConfig::RESERVED_MAIN_MODULE_NAME )
 	{
-		RaiseError(EErrorMessageType::IMPORTING_MAIN_MODULE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::IMPORTING_MAIN_MODULE, TokenCTX);
 		return false;
 	}
 	if( ImportModuleName != LModuleRealName )
 	{
-		RaiseError(EErrorMessageType::MODULE_NAME_NOT_MATCH_FILE_NAME, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::MODULE_NAME_NOT_MATCH_FILE_NAME, TokenCTX);
 		return false;
 	}
 
 	const std::string LSavedMainModuleName = OutProgramInfo.MainModuleName;
 	OutProgramInfo.MainModuleName = ImportModuleName; // not main module should check this name by it's name
 	FParser LParser;
-	LParser.Process(LTokens, LModuleFileInfo, CompileOptions, false, OutProgramInfo);
+	LParser.Process(LTokens, LModuleFileInfo, false, OutProgramInfo);
 	OutProgramInfo.MainModuleName = LSavedMainModuleName;
 
 	return true;
@@ -2301,7 +2302,7 @@ bool FParserStates::ImportModule
 
 bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::string& ImportPackageRelativePath, const Token& TokenCTX)
 {
-	const std::string LCompilerPathOnly = FGamlFileInfo(CompileOptions.PathToCompiler).PathToFileOnly;
+	const std::string LCompilerPathOnly = FGamlFileInfo(FCoreObjects::CompileOptions.PathToCompiler).PathToFileOnly;
 
 	std::vector<std::string> LCurrentModulePathParts;
 	FParserHelperLibrary::SplitModuleCompileNameToParts(OutProgramInfo.MainModuleName, LCurrentModulePathParts);
@@ -2337,7 +2338,7 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 		std::ifstream LFile(LFileInfo.GetFileFullPath(), std::ios::binary);
 		if( !LFile.is_open() )
 		{
-			RaiseError(EErrorMessageType::IMPORTING_PACKAGE_PROBLEM, TokenCTX);
+			FErrorLogger::Raise(EErrorMessageType::IMPORTING_PACKAGE_PROBLEM, TokenCTX);
 			return false;
 		}
 
@@ -2346,7 +2347,7 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 
 		std::vector<Token> LTokens;
 		FLexer LLexer;
-		LLexer.Process(LSourceCode, LFileInfo, CompileOptions, LTokens);
+		LLexer.Process(LSourceCode, LFileInfo, LTokens);
 
 		// return empty name for implementing modules, so do not include them
 		const std::string LPackageModuleRealName = FParserHelperLibrary::GetFirstModuleName(LTokens);
@@ -2372,7 +2373,7 @@ bool FParserStates::ImportPackage(FProgramInfo& OutProgramInfo, const std::strin
 		const std::string LSavedMainModuleName = OutProgramInfo.MainModuleName;
 		OutProgramInfo.MainModuleName = LPackageModuleRealName; // not main module should check this name by it's name
 		FParser LParser;
-		LParser.Process(LTokens, LFileInfo, CompileOptions, false, OutProgramInfo);
+		LParser.Process(LTokens, LFileInfo, false, OutProgramInfo);
 		OutProgramInfo.MainModuleName = LSavedMainModuleName;
 	}
 
@@ -2385,7 +2386,7 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 
 	if( LFunctionContext.FunctionName.empty() )
 	{
-		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
@@ -2393,7 +2394,7 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 
 	if( LFunctionCompileName.empty() )
 	{
-		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
@@ -2405,33 +2406,33 @@ bool FParserStates::RegisterFunctionFromContext(FProgramInfo& OutProgramInfo, bo
 		{
 			if( !StatesContext.FunctionDeclarationContext.StaticCodeTokens.empty() )
 			{
-				RaiseError(EErrorMessageType::FUNCTION_STATIC_CODE_OVERRIDE, TokenCTX);
+				FErrorLogger::Raise(EErrorMessageType::FUNCTION_STATIC_CODE_OVERRIDE, TokenCTX);
 				return false;
 			}
 			if( !FParserHelperLibrary::AreFunctionsDeepEqual(LFunctionContext.FunctionInfo.SignatureInfo, LProgramFunctionIterator->second.SignatureInfo) )
 			{
-				RaiseError(EErrorMessageType::FUNCTION_DESCRIPTION_MISMATCH, TokenCTX);
+				FErrorLogger::Raise(EErrorMessageType::FUNCTION_DESCRIPTION_MISMATCH, TokenCTX);
 				return false;
 			}
 
 			return true;
 		}
 
-		RaiseError(EErrorMessageType::FUNCTION_NAME_REDEFINITION, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::FUNCTION_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
 	else
 	{
 		if( !LFunctionContext.FunctionInfo.ClassDeclarationNamespace.empty() )
 		{
-			RaiseError(EErrorMessageType::FUNCTION_DECLARATION_NOT_FOUND, TokenCTX);
+			FErrorLogger::Raise(EErrorMessageType::FUNCTION_DECLARATION_NOT_FOUND, TokenCTX);
 			return false;
 		}
 	}
 
 
 	LFunctionContext.FunctionInfo.ClassDeclarationNamespace = GetCTXClassCompileName(OutProgramInfo);
-	LFunctionContext.FunctionInfo.SignatureInfo.StaticCodeTree.BuildAST(LFunctionContext.StaticCodeTokens, CompileOptions);
+	LFunctionContext.FunctionInfo.SignatureInfo.StaticCodeTree.BuildAST(LFunctionContext.StaticCodeTokens);
 
 	OutProgramInfo.Functions.insert(std::pair(LFunctionCompileName, LFunctionContext.FunctionInfo));
 	return true;
@@ -2444,7 +2445,7 @@ bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutP
 	// our function implementation based on declaration context as a part of function declaration/implementation usage
 	if( StatesContext.FunctionDeclarationContext.FunctionName.empty() )
 	{
-		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
@@ -2452,19 +2453,19 @@ bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutP
 
 	if( LFunctionCompileName.empty() )
 	{
-		RaiseError(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::FUNCTION_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	if( OutProgramInfo.Functions.find(LFunctionCompileName) == OutProgramInfo.Functions.end() )
 	{
-		RaiseError(EErrorMessageType::FUNCTION_DECLARATION_NOT_FOUND, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::FUNCTION_DECLARATION_NOT_FOUND, TokenCTX);
 		return false;
 	}
 
 	if( OutProgramInfo.CompilingFunctionsAST.find(LFunctionCompileName) != OutProgramInfo.CompilingFunctionsAST.end() )
 	{
-		RaiseError(EErrorMessageType::FUNCTION_IMPLEMENTATION_NAME_REDEFINITION, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::FUNCTION_IMPLEMENTATION_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
 
@@ -2472,7 +2473,7 @@ bool FParserStates::RegisterFunctionImplementationFromContext(FProgramInfo& OutP
 
 
 
-	LFunctionImplContext.CompilingFunctionInfo.FunctionCodeTree.BuildAST(LFunctionImplContext.FunctionCodeTokens, CompileOptions);
+	LFunctionImplContext.CompilingFunctionInfo.FunctionCodeTree.BuildAST(LFunctionImplContext.FunctionCodeTokens);
 
 	OutProgramInfo.CompilingFunctionsAST.insert(std::pair(LFunctionCompileName, LFunctionImplContext.CompilingFunctionInfo));
 	return true;
@@ -2485,26 +2486,26 @@ bool FParserStates::RegisterVariableFromContext(FProgramInfo& OutProgramInfo, co
 
 	if( LVariableContext.VariableName.empty() )
 	{
-		RaiseError(EErrorMessageType::VARIABLE_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::VARIABLE_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	if( StatesContext.StateContextType != EStateContextType::InClass )
 	{
-		RaiseError(EErrorMessageType::INVALID_STATE, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, TokenCTX);
 		return false;
 	}
 
 	if( LClassContext.ClassInfo.Variables.find(LVariableContext.VariableName) != LClassContext.ClassInfo.Variables.end() )
 	{
-		RaiseError(EErrorMessageType::VARIABLE_NAME_REDEFINITION, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::VARIABLE_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
 
 
 
 	LVariableContext.VariableInfo.VariableName = LVariableContext.VariableName;
-	LVariableContext.VariableInfo.DefaultValueTree.BuildAST(LVariableContext.DefaultValueTokens, CompileOptions);
+	LVariableContext.VariableInfo.DefaultValueTree.BuildAST(LVariableContext.DefaultValueTokens);
 
 	LClassContext.ClassInfo.Variables.insert(std::pair(LVariableContext.VariableName, LVariableContext.VariableInfo));
 	return true;
@@ -2514,20 +2515,20 @@ bool FParserStates::RegisterClassFromContext(FProgramInfo& OutProgramInfo, const
 {
 	if( StatesContext.ClassDeclarationContext.ClassName.empty() )
 	{
-		RaiseError(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	const std::string LClassCompileName = GetCTXClassCompileName(OutProgramInfo);
 	if( LClassCompileName.empty() )
 	{
-		RaiseError(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	if( OutProgramInfo.Classes.find(LClassCompileName) != OutProgramInfo.Classes.end() )
 	{
-		RaiseError(EErrorMessageType::CLASS_NAME_REDEFINITION, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::CLASS_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
 
@@ -2543,21 +2544,21 @@ bool FParserStates::FinishClassRegistrationFromContext(FProgramInfo& OutProgramI
 
 	if( LClassContext.ClassName.empty() )
 	{
-		RaiseError(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	const std::string LClassCompileName = GetCTXClassCompileName(OutProgramInfo);
 	if( LClassCompileName.empty() )
 	{
-		RaiseError(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::CLASS_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	auto LClassInfoIter = OutProgramInfo.Classes.find(LClassCompileName);
 	if( LClassInfoIter == OutProgramInfo.Classes.end() )
 	{
-		RaiseError(EErrorMessageType::CLASS_NAME_NOT_FOUND, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::CLASS_NAME_NOT_FOUND, TokenCTX);
 		return false;
 	}
 
@@ -2574,7 +2575,7 @@ bool FParserStates::RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const
 
 	if( LAliasContext.AliasName.empty() )
 	{
-		RaiseError(EErrorMessageType::ALIAS_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::ALIAS_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
@@ -2582,13 +2583,13 @@ bool FParserStates::RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const
 
 	if( LAliasCompileName.empty() )
 	{
-		RaiseError(EErrorMessageType::ALIAS_NAME_GENERATION_PROBLEM, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::ALIAS_NAME_GENERATION_PROBLEM, TokenCTX);
 		return false;
 	}
 
 	if( OutProgramInfo.TypeAliases.find(LAliasCompileName) != OutProgramInfo.TypeAliases.end() )
 	{
-		RaiseError(EErrorMessageType::ALIAS_NAME_REDEFINITION, TokenCTX);
+		FErrorLogger::Raise(EErrorMessageType::ALIAS_NAME_REDEFINITION, TokenCTX);
 		return false;
 	}
 
@@ -2602,7 +2603,7 @@ bool FParserStates::RegisterStaticAssertFromContext(FProgramInfo& OutProgramInfo
 {
 	FStaticAssertContext& LStaticAssertContext = StatesContext.StaticAssertContext;
 
-	LStaticAssertContext.StaticAssertInfo.CodeTree.BuildAST(LStaticAssertContext.Expression, CompileOptions);
+	LStaticAssertContext.StaticAssertInfo.CodeTree.BuildAST(LStaticAssertContext.Expression);
 	LStaticAssertContext.StaticAssertInfo.ModuleContextName = OutProgramInfo.MainModuleName;
 	LStaticAssertContext.StaticAssertInfo.ClassContextName = GetCTXClassCompileName(OutProgramInfo);
 

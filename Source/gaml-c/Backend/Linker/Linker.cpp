@@ -11,14 +11,13 @@
 
 
 
-void FLinker::Process(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths, const FCompileOptions& Options)
+void FLinker::Process(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths)
 {
 	if( ObjectFilesPaths.empty() )
 	{
 		return;
 	}
 
-	CurrentCompileOptions = Options;
 	FirstFileInfo.SetFromPath(ObjectFilesPaths[0]);
 
 	RunThirdPartyLinker(ObjectFilesPaths, LibsFilesPaths);
@@ -28,9 +27,9 @@ void FLinker::Process(const std::vector<std::string>& ObjectFilesPaths, const st
 
 void FLinker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths)
 {
-	const std::string ExecutableFileExtension = FPlatformHelperLibrary::GetPlatformExecutableFileExtension(CurrentCompileOptions.TargetPlatform);
-	const std::string LibraryFileExtension = FPlatformHelperLibrary::GetPlatformLibraryFileExtension(CurrentCompileOptions.TargetPlatform);
-	const std::string OuptputFilePath = GetOutputFilePath(CurrentCompileOptions.IsDLL ? LibraryFileExtension : ExecutableFileExtension);
+	const std::string ExecutableFileExtension = FPlatformHelperLibrary::GetPlatformExecutableFileExtension(FCoreObjects::CompileOptions.TargetPlatform);
+	const std::string LibraryFileExtension = FPlatformHelperLibrary::GetPlatformLibraryFileExtension(FCoreObjects::CompileOptions.TargetPlatform);
+	const std::string OuptputFilePath = GetOutputFilePath(FCoreObjects::CompileOptions.IsDLL ? LibraryFileExtension : ExecutableFileExtension);
 
 	if( ExecutableFileExtension.empty() || LibraryFileExtension.empty() )
 	{
@@ -38,5 +37,5 @@ void FLinker::RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPat
 	}
 
 
-	FGenericPlatform::RunThirdPartyLinker(CurrentCompileOptions, OuptputFilePath, ObjectFilesPaths, LibsFilesPaths);
+	FGenericPlatform::RunThirdPartyLinker(OuptputFilePath, ObjectFilesPaths, LibsFilesPaths);
 }

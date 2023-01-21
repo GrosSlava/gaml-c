@@ -4,13 +4,10 @@
 
 #include "CoreMinimal.h"
 
-#include "CompilerOptions.h"
-
 
 
 
 struct FGamlFileInfo;
-
 
 
 
@@ -34,14 +31,12 @@ public:
 		@param SourceFilePaths - Array of source files to compile.
 		@param ObjectFilesPaths - Array of additional object files for linking.
 		@param LibsFilesPaths - Array of additional libraries for linking.
-		@param CompileOptions - Compilation options.
 	*/
 	void Process
 	(
 		const std::vector<FGamlFileInfo>& SourceFilePaths, 
 		const std::vector<std::string>& ObjectFilesPaths,
-		const std::vector<std::string>& LibsFilesPaths, 
-		const FCompileOptions& CompileOptions
+		const std::vector<std::string>& LibsFilesPaths
 	);
 	// clang-format on
 
@@ -53,14 +48,4 @@ private:
 	void LinkProgram(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths);
 
 	//..................................................//
-
-
-
-
-private:
-
-	/*
-		Cached compile options.
-	*/
-	FCompileOptions CurrentCompileOptions;
 };

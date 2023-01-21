@@ -2,6 +2,7 @@
 
 #include "ToolChain.h"
 
+#include "CoreObjects.h"
 #include "GamlFileInfo.h"
 #include "CompilerHelperLibrary.h"
 
@@ -19,16 +20,13 @@ void FToolChain::Process
 (
 	const std::vector<FGamlFileInfo>& SourceFilePaths,
 	const std::vector<std::string>& ObjectFilesPaths,
-	const std::vector<std::string>& LibsFilesPaths,
-	const FCompileOptions& CompileOptions
+	const std::vector<std::string>& LibsFilesPaths
 )
 // clang-format on
 {
-	CurrentCompileOptions = CompileOptions;
-
 	if( SourceFilePaths.empty() && ObjectFilesPaths.empty() )
 	{
-		FErrorLogger::Raise(EErrorMessageType::NO_FILES_TO_COMPILE, "", 0, 0, 0, CurrentCompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::NO_FILES_TO_COMPILE, "", 0, 0, 0);
 		return;
 	}
 
@@ -41,7 +39,7 @@ void FToolChain::Process
 			std::vector<std::string> LCompiledObjectFiles;
 			CompileSourceFiles(SourceFilePaths, LCompiledObjectFiles);
 
-			if( !CurrentCompileOptions.NoLinking )
+			if( !FCoreObjects::CompileOptions.NoLinking )
 			{
 				LCompiledObjectFiles.insert(LCompiledObjectFiles.end(), ObjectFilesPaths.begin(), ObjectFilesPaths.end());
 				LinkProgram(ObjectFilesPaths, LibsFilesPaths);
@@ -51,7 +49,7 @@ void FToolChain::Process
 	//....................................................................//
 
 
-	if( CurrentCompileOptions.ShowCompileTime && !CurrentCompileOptions.Silent )
+	if( FCoreObjects::CompileOptions.ShowCompileTime && !FCoreObjects::CompileOptions.Silent )
 	{
 		FCompileLogger::MessageText("Compilation time " + FCompilerHelperLibrary::GetPrettyTimeStr(LCompilationTime));
 	}
@@ -69,13 +67,13 @@ void FToolChain::CompileSourceFiles(const std::vector<FGamlFileInfo>& SourceFile
 
 	for( size_t i = 0; i < SourceFilePaths.size(); ++i )
 	{
-		const std::string LObjectFilePath = LCompiler.Process(SourceFilePaths[i], CurrentCompileOptions);
+		const std::string LObjectFilePath = LCompiler.Process(SourceFilePaths[i]);
 		if( !LObjectFilePath.empty() )
 		{
 			OutObjectFilesPaths.push_back(LObjectFilePath);
 		}
 
-		if( CurrentCompileOptions.ShowProgress && !CurrentCompileOptions.Silent )
+		if( FCoreObjects::CompileOptions.ShowProgress && !FCoreObjects::CompileOptions.Silent )
 		{
 			const std::string LIndexText = std::to_string(i + 1);
 			const std::string LProgressString = "[" + LIndexText + "/" + LSourceFilesCountText + "] " + SourceFilePaths[i].GetFileFullPath();
@@ -88,5 +86,5 @@ void FToolChain::CompileSourceFiles(const std::vector<FGamlFileInfo>& SourceFile
 void FToolChain::LinkProgram(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths)
 {
 	FLinker LLinker;
-	LLinker.Process(ObjectFilesPaths, LibsFilesPaths, CurrentCompileOptions);
+	LLinker.Process(ObjectFilesPaths, LibsFilesPaths);
 }

@@ -13,7 +13,7 @@
 // clang-format off
 int FGenericPlatform::RunMSVC
 (
-	const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+	const FGamlFileInfo& OriginalFile,
 	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
 )
 // clang-format on
@@ -24,7 +24,7 @@ int FGenericPlatform::RunMSVC
 	ConsoleCommand += '\"' + GetMSVCHostDirectory();
 
 	// for compiling to target platform use native tools command prompt for VS
-	switch( CompileOptions.TargetArch )
+	switch( FCoreObjects::CompileOptions.TargetArch )
 	{
 	case ETargetArch::x86:
 	{
@@ -48,12 +48,12 @@ int FGenericPlatform::RunMSVC
 	}
 	default:
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, OriginalFile.GetFileFullPath(), 0, 0, 0, CompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, OriginalFile.GetFileFullPath(), 0, 0, 0);
 		break;
 	}
 	}
 
-	switch( CompileOptions.OptimizationLevel )
+	switch( FCoreObjects::CompileOptions.OptimizationLevel )
 	{
 	case EOptimizationLevel::NoOptimization:
 	{
@@ -73,13 +73,13 @@ int FGenericPlatform::RunMSVC
 	}
 
 	// clang-format off
-	if( CompileOptions.IsDebug )                    { ConsoleCommand += ""; }
-	if( CompileOptions.ConvertWarningsToErrors )    { ConsoleCommand += " -WX"; }
-	if( CompileOptions.DumpAssembly )               { ConsoleCommand += " -FAcs -Fa" + OutputDirectoryPath; }
-	if( CompileOptions.NoBuiltin )                  { ConsoleCommand += ""; }
-	if( CompileOptions.Freestanding )               { ConsoleCommand += ""; }
-	if( CompileOptions.NoStackProtection )          { ConsoleCommand += " -GS-"; }
-	if( CompileOptions.NoRedZone )                  { ConsoleCommand += ""; }
+	if( FCoreObjects::CompileOptions.IsDebug )                    { ConsoleCommand += ""; }
+	if( FCoreObjects::CompileOptions.ConvertWarningsToErrors )    { ConsoleCommand += " -WX"; }
+	if( FCoreObjects::CompileOptions.DumpAssembly )               { ConsoleCommand += " -FAcs -Fa" + OutputDirectoryPath; }
+	if( FCoreObjects::CompileOptions.NoBuiltin )                  { ConsoleCommand += ""; }
+	if( FCoreObjects::CompileOptions.Freestanding )               { ConsoleCommand += ""; }
+	if( FCoreObjects::CompileOptions.NoStackProtection )          { ConsoleCommand += " -GS-"; }
+	if( FCoreObjects::CompileOptions.NoRedZone )                  { ConsoleCommand += ""; }
 	// clang-format on
 
 	ConsoleCommand += " -TC -Gd -c -nologo -Wall -Qspectre- -source-charset:utf-8 -execution-charset:utf-8 -fp:precise";
@@ -92,7 +92,7 @@ int FGenericPlatform::RunMSVC
 // clang-format off
 int FGenericPlatform::RunLLC
 (
-	const FGamlFileInfo& OriginalFile, const FCompileOptions& CompileOptions,
+	const FGamlFileInfo& OriginalFile,
 	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
 )
 // clang-format on
@@ -108,7 +108,7 @@ int FGenericPlatform::RunLLC
 // clang-format off
 int FGenericPlatform::RunThirdPartyLinker
 (
-	const FCompileOptions& CompileOptions, const std::string& OutputFilePath,
+	const std::string& OutputFilePath,
 	const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths
 )
 // clang-format on
@@ -118,7 +118,7 @@ int FGenericPlatform::RunThirdPartyLinker
 
 	ConsoleCommand += '\"' + GetMSVCHostDirectory();
 
-	switch( CompileOptions.TargetArch )
+	switch( FCoreObjects::CompileOptions.TargetArch )
 	{
 	case ETargetArch::x86:
 	{
@@ -142,12 +142,12 @@ int FGenericPlatform::RunThirdPartyLinker
 	}
 	default:
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, 0, CompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_LINK, "", 0, 0, 0);
 		break;
 	}
 	}
 
-	switch( CompileOptions.SubsystemType )
+	switch( FCoreObjects::CompileOptions.SubsystemType )
 	{
 	case ESubsystemType::Console:
 	{
@@ -161,12 +161,12 @@ int FGenericPlatform::RunThirdPartyLinker
 	}
 	default:
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, 0, CompileOptions);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_SUBSYSTEM, "", 0, 0, 0);
 		break;
 	}
 	}
 
-	for( const std::string& LLibSearchPath : CompileOptions.AdditionalLibsSearchingDirs )
+	for( const std::string& LLibSearchPath : FCoreObjects::CompileOptions.AdditionalLibsSearchingDirs )
 	{
 		if( LLibSearchPath.empty() )
 		{
@@ -184,10 +184,10 @@ int FGenericPlatform::RunThirdPartyLinker
 	}
 
 	// clang-format off
-	if( CompileOptions.Freestanding )           { ConsoleCommand += " -NODEFAULTLIB"; }
-	if( !CompileOptions.EntryPoint.empty() )    { ConsoleCommand += " -ENTRY:" + CompileOptions.EntryPoint; }
-	if( CompileOptions.IsDebug )                { ConsoleCommand += " -DEBUG:FULL"; }
-	if( CompileOptions.IsDLL )                  { ConsoleCommand += " -DLL"; }
+	if( FCoreObjects::CompileOptions.Freestanding )           { ConsoleCommand += " -NODEFAULTLIB"; }
+	if( !FCoreObjects::CompileOptions.EntryPoint.empty() )    { ConsoleCommand += " -ENTRY:" + FCoreObjects::CompileOptions.EntryPoint; }
+	if( FCoreObjects::CompileOptions.IsDebug )                { ConsoleCommand += " -DEBUG:FULL"; }
+	if( FCoreObjects::CompileOptions.IsDLL )                  { ConsoleCommand += " -DLL"; }
 	// clang-format on
 
 	ConsoleCommand += " -NOLOGO -DYNAMICBASE -INCREMENTAL";
