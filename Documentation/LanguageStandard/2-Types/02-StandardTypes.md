@@ -9,7 +9,7 @@ So, if your system (for example, a 32-bit machine) does not support 64-bit types
 `uint8` - 8-bit unsigned integer [0 - 255] \
 `uint16` - 16-bit unsigned integer [0 - 65 535] \
 `uint32`- 32-bit unsigned integer [0 - 4 294 967 295] \
-`int64`- 64-bit unsigned integer [0 - 18 446 744 073 709 551 615] \
+`uint64`- 64-bit unsigned integer [0 - 18 446 744 073 709 551 615] \
 `int8` - 8-bit  integer [-128 - 127] \
 `int16` - 16-bit integer [-32 768 - 32 767] \
 `int32` - 32-bit integer [-2 147 483 648 - 2 147 483 647] \

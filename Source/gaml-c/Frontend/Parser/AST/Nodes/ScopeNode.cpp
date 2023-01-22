@@ -669,11 +669,10 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 		}
 
 			//.....................................................................................//
-
-
-			FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InTokens[LIndex]);
-			return nullptr;
 		}
+
+		FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InTokens[LIndex]);
+		return nullptr;
 	}
 
 	// link nodes

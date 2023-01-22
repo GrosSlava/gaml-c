@@ -54,7 +54,8 @@ When some class A inherit other one B:
 - A can **not** contains fields with same names as in B 
 
 Keyword `this` can be used in class methods to get access to current class instance. \
-`this` always have the same type as current class type.
+`this` always have the same type as current class type. \
+`this` is always pointer (access to members can be provided by '->' operator)
 
 
 

@@ -51,7 +51,7 @@ See [operators overloading](../6-Classes/07-OperatorsOverloading.md) for casts i
 1. `cast<|T|>(WHAT)` - safe cast object WHAT to T. \
 Safe cast can convert WHAT to T if WHAT have safe method to convert to T.
 
-For [class](../6-Classes/01-ClassSystem.md) cast can convert from child to parent
+For [class](../6-Classes/01-ClassSystem.md) cast can convert from child to parent.
 
 ### Example
 
@@ -60,9 +60,9 @@ var uint32 CastedChar = cast<|uint32|>('H');
 ```
 
 2. `unsafe_cast<|T|>(WHAT)` - unsafe cast object WHAT to T. \
-Unsafe cast can convert WHAT to T if there is any unsafe way to do it (e.g. convert to other type who have method to convert to T).
+Unsafe cast can convert WHAT to T if there is any safe or unsafe way to do it (e.g. convert to other type who have method to convert to T).
 
-For [class](../6-Classes/01-ClassSystem.md) unsafe_cast can convert from child to parent and from parent to child
+For [class](../6-Classes/01-ClassSystem.md) unsafe_cast can convert from child to parent and from parent to child.
 
 ### Example
 

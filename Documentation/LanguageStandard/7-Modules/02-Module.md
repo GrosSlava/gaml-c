@@ -24,6 +24,7 @@ Module - it is unit of code.
 2. All unnamed modules interpreted as main
 3. Main module can't be imported
 4. [Entry point](../8-Main/01-Main.md) will be searched in main module
+5. Program can't have more than one main module(or 2 modules with the same name)
 
 
 

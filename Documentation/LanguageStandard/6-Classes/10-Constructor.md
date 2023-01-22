@@ -31,7 +31,7 @@ struct FMyStruct
 	***
 	func FMyStruct
 	{
-		this.A = Other.A;
+		this->A = Other.A;
 	}
 	
 	// Overload constructor
@@ -40,7 +40,7 @@ struct FMyStruct
 	***
 	func FMyStruct
 	{
-		this.A = A;
+		this->A = A;
 	}
 
 	...

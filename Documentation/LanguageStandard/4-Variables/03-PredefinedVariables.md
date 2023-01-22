@@ -15,3 +15,6 @@ Compiler provides a number of global predefined `static const` variables.
 
 4. Current translating module name \
 `static const string MODULE_NAME`
+
+5. Absolute path to translating file \
+`static const string ABS_FILE_PATH`

@@ -367,7 +367,7 @@ func end {}
 ***
 	@return Result: [iterable type]
 ***
-func iterator {}
+func Iterator {}
 ```
 
 2. A[1] \
@@ -386,7 +386,7 @@ func OpElementAccess {}
 ***
 	@return Result: int32
 ***
-func hash {}
+func Hash {}
 ```
 
 4. Get first element for enumerating \

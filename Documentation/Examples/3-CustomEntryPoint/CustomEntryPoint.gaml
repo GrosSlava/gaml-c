@@ -10,8 +10,6 @@
 	*/
 
 	@extern_c
-
-	@param MyArg: int32
 ***
 func CustomEntryPoint
 {
@@ -63,11 +61,11 @@ func main
 ***
 func init
 {
-	// module1::init_module_internal();
-	// module2::init_module_internal();
+	// module1::InitModuleInternal();
+	// module2::InitModuleInternal();
 
-	// module1::init_module();
-	// module2::init_module();
+	// module1::InitModule();
+	// module2::InitModule();
 }
 
 ***
@@ -77,9 +75,9 @@ func init
 ***
 func deinit
 {
-	// module1::deinit_module_internal();
-	// module2::deinit_module_internal();
+	// module1::DeinitModuleInternal();
+	// module2::DeinitModuleInternal();
 
-	// module1::deinit_module();
-	// module2::deinit_module();
+	// module1::DeinitModule();
+	// module2::DeinitModule();
 }

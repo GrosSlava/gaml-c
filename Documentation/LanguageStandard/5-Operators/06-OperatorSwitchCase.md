@@ -1,0 +1,103 @@
+# Operator switch/case
+
+`switch` is complex operator. \
+It provides branch selection.
+
+Same to "switch" in c/c++, but cases don't need 'break' at the end. \
+Cases can't fallthrough. \
+Each `case` must have scope brackets.
+
+`switch` operator has `static` version.
+
+### Example
+
+```
+var int32 a = 5;
+switch( a )
+{
+case 1
+{
+	a = 11;
+}
+case [2, 3] // case 2 and 3
+{
+	a = 51;
+}
+case [4 ... 10] // case 4 to 10 (4, 5, 6, 7, 8, 9, 10)
+{
+	a = 51;
+}
+case [11 ... 13, 17, 20 ... 22] // case for (11, 12, 13, 17, 20, 21, 22)
+{
+	a = 1;
+}
+default // default case
+{
+	a = 0;
+}
+}
+```
+
+```
+// switch/case works with strings
+var const string s = "Hello";
+switch( s )
+{
+case "He"
+{
+	// do smth
+}
+case ["llo", "o"]
+{
+	// do smth
+}
+case ["Hello"]
+{
+	// do smth
+}
+default // default case
+{
+	// do smth
+}
+}
+```
+
+```
+/*
+	Compile time switch.
+	Body of this 'switch' will be interpreted during compile time and will be converted into code.
+	Select one case code from body.
+*/
+static switch( s )
+{
+	// case smth
+}
+```
+
+```
+// let us have an enum and we want to switch by all it's members
+// switch_all is similar to switch, but works only with enums 
+switch_all(MyEnumVar)
+{
+case EMyEnum::One
+{
+	// do smth
+}
+case EMyEnum::Two
+{
+	// do smth
+}
+}
+```
+
+```
+/*
+	Compile time switch_all.
+	Body of this 'switch_all' will be interpreted during compile time and will be converted into code.
+	Select one case code from body.
+*/
+static switch_all( MyEnumVar )
+{
+	// case smth
+}
+```

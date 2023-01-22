@@ -18,13 +18,14 @@ Module can be separated to 2 parts: "header" and "source".
 - Source file has ".gaml" extension
 - Source file must implemet module
 - Source file can be compiler
-- Source file can't be imported
+- Source file can't be imported (header file will be selected first)
 
 
 
 ## Module implementation
 
-".gaml" file can implement module.
+".gaml" file can implement module. \
+Technically, module implementation it is importing header and add something to it (e.g function implementation).
 
 - Implementation file must start with declaration about implementation
 - Implementation file can't be imported

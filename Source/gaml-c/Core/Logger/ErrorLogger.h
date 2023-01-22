@@ -18,10 +18,8 @@ struct Token;
 	Helper struct to raise warnings and errors from compiler.
 	@see FCompileLogger.
 */
-class FErrorLogger
+struct FErrorLogger
 {
-public:
-
 	// clang-format off
 	/*
 		@param MessageType - Type of error.

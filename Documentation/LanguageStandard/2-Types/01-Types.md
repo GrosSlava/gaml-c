@@ -1,6 +1,6 @@
 # Types
 
-## Kinds of types:
+## Kinds of types
 
 1. [Standard types](02-StandardTypes.md)
 2. [Built-in types](03-BuiltinTypes.md)

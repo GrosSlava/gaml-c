@@ -1,70 +1,36 @@
+# Operators
 
-Operators:
+## Kinds of operators
 
-a < b       --- less
-a > b       --- greather
-a <= b      --- less or equal
-a >= b      --- greather or equal
-a == b      --- equal
-a != b      --- not equal
-a && b      --- and
-a || b      --- or
-!a          --- not
-
-a & b       --- binary and
-a | b       --- binary or
-~a          --- binary inverse
-a ^ b       --- binary xor
-a << b      --- binary shift left
-a >> b      --- binary shift right
-
-a + b       --- plus
-a - b       --- minus
-a * b       --- multiply
-a / b       --- divide
-a++         --- increment (no ++a unlike C)
-a--         --- decrement (no --a unlike C)
-a % b       --- mod
-a ^^ b      --- power
-a = b       --- assign
-a += b      --- equals to a = a + b
-a -= b      --- equals to a = a - b
-a *= b      --- equals to a = a * b
-a /= b      --- equals to a = a / b
-a %= b      --- equals to a = a % b
-a ^^= b     --- equals to a = a ^^ b
-a &= b      --- equals a = a & b
-a |= b      --- equals to a = a | b
-a ^= b      --- equals to a = a ^ b
-a <<= b     --- equals to a = a << b
-a >>= b     --- equals to a = a >> b
-
-a ? b : c   --- ternary operator, can be read as "if a then b else c"
-
-a::b        --- access b from namespace a
-
-a in b      --- check that b contains a (for classes - address of a)
-a is b      --- check that object a is deep copy of b (useful for class objects), for default types (int32, bool etc.) '==' and 'is' are equal
-
-// we can change operations sequence by ()
+1. `Control` operators
+2. `Expression` operators
 
 
-sizeof(a)           --- count of bits of type size of object/type
-typeof(a)           --- type of object/type
-nameof(a)           --- compile name of object/type
-alignof(a)          --- memory align of object/type
-isfunction(a)       --- check that object/type is function
-isstruct(a)         --- check that object/type is struct
-isenum(a)           --- check that object/type is enum
-isinterface(a)      --- check that object/type is interface
-isobject(a)         --- check that object/type is object
-iscomponent(a)      --- check that object/type is component
-issubclass(a, b)    --- check that object/type a is subclass of object/type b
-isinstance(a, B)    --- check that object a is instance of type B
-isiterable(a)       --- check that object/type is isiterable
-isenumerable(a)      
-isabstract(a)       --- check that object/type has abstract method
-isalias(A, B)       --- check that type A is alias for type B
-islambda(a, B) 
-addr(a)             --- get addres of object (return type is addr_t)
-default(a)          --- get default value for object, if function has default value for argument return it(e.g for integer it is 0)
+
+## Control operators
+
+Control operators are operators that provide a change in the behavior of the program.
+
+### Complex control operators
+
+1. Operator [do](02-OperatorDo.md)
+2. Operator [for](03-OperatorFor.md)
+3. Operator [foreach](04-OperatorForeach.md)
+4. Operator [if/else](05-OperatorIfElse.md)
+5. Operator [switch/case](06-OperatorSwitchCase.md)
+6. Operator [while](07-OperatorWhile.md)
+
+### Simple control operators
+
+1. [Assert](08-Asserts.md) operators
+2. [Declaration](09-DeclarationOperators.md) operators
+3. [Statement](10-StatementControlOperators.md) control operators
+
+
+
+## Expression operators
+
+Expression operators are operators that can be used for describing action or can be used as part of control operator.
+
+1. [List](11-ExpressionOperators.md) of expression operators
+2. [Precedence](12-OperatorsPrecedence.md) of expression operators
