@@ -56,7 +56,6 @@ Operators priority can be changed by `()` operator
 - sizeof(a)             --- count of bits of type size of object/type
 - typeof(a)             --- type of object/type
 - nameof(a)             --- compile name of object/type
-- alignof(a)            --- memory align of object/type
 - isfunction(a)         --- check that object/type is function
 - isstruct(a)           --- check that object/type is struct
 - isenum(a)             --- check that object/type is enum

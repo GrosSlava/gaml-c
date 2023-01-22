@@ -336,15 +336,6 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 		LDescriptionContext.Modfiers.IsUnimplemented = true;
 		return InParserStates.GStartDescription_ParserState;
 	}
-	case ETokenType::ALIGN:
-	{
-		if( LDescriptionContext.Modfiers.Align != -1 )
-		{
-			FErrorLogger::Raise(EErrorMessageType::DOUBLE_MODIFIER, InToken);
-			return nullptr;
-		}
-		return InParserStates.GDescriptionAlign1_ParserState;
-	}
 	case ETokenType::PARAM:
 	{
 		LDescriptionContext.DescriptionContext = EDescriptionContext::Param;
@@ -356,86 +347,6 @@ std::shared_ptr<IParserState> DescriptionModifier_ParserState::Process(FParserSt
 		return InParserStates.GDescriptionParam1_ParserState;
 	}
 	}
-
-	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
-	return nullptr;
-}
-
-std::shared_ptr<IParserState> DescriptionAlign1_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
-{
-	FDescriptionContext& LDescriptionContext = InParserStates.StatesContext.DescriptionContext;
-
-	if( InToken.GetType() != ETokenType::LPAR )
-	{
-		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InToken);
-		return nullptr;
-	}
-
-	LDescriptionContext.OpenBracketLayer = 1;
-	return InParserStates.GDescriptionAlign2_ParserState;
-}
-
-std::shared_ptr<IParserState> DescriptionAlign2_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
-{
-	FDescriptionContext& LDescriptionContext = InParserStates.StatesContext.DescriptionContext;
-
-	switch( InToken.GetType() )
-	{
-	case ETokenType::LPAR:
-	{
-		++LDescriptionContext.OpenBracketLayer;
-		LDescriptionContext.CodeTokens.push_back(InToken);
-
-		return InParserStates.GDescriptionAlign2_ParserState;
-	}
-	case ETokenType::RPAR:
-	{
-		--LDescriptionContext.OpenBracketLayer;
-		if( LDescriptionContext.OpenBracketLayer == 0 )
-		{
-			return InParserStates.GDescriptionAlign3_ParserState;
-		}
-
-		LDescriptionContext.CodeTokens.push_back(InToken);
-		return InParserStates.GDescriptionAlign2_ParserState;
-	}
-	default:
-	{
-		LDescriptionContext.CodeTokens.push_back(InToken);
-		return InParserStates.GDescriptionAlign2_ParserState;
-	}
-	}
-
-	return nullptr;
-}
-
-std::shared_ptr<IParserState> DescriptionAlign3_ParserState::Process(FParserStates& InParserStates, const Token& InToken, FProgramInfo& OutProgramInfo)
-{
-	FDescriptionContext& LDescriptionContext = InParserStates.StatesContext.DescriptionContext;
-
-	switch( InToken.GetType() )
-	{
-	case ETokenType::DOG:
-	{
-		return InParserStates.GDescriptionModifier_ParserState;
-	}
-	case ETokenType::DESCRIPTION_BLOCK:
-	{
-		return InParserStates.GEndDescription_ParserState;
-	}
-	}
-
-	AST LAST;
-	LAST.BuildAST(LDescriptionContext.CodeTokens);
-
-	if( !LAST.IsPureExpression() )
-	{
-		FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
-		return nullptr;
-	}
-	
-	LAST.InterpretAST(OutProgramInfo);
-	LDescriptionContext.Modfiers.Align = LAST.GetInterpretResultAsInt();
 
 	FErrorLogger::Raise(EErrorMessageType::UNEXPECTED_EXPRESSION, InToken);
 	return nullptr;
@@ -2109,16 +2020,16 @@ bool FParserStates::ImplementModuleFromContext(FProgramInfo& OutProgramInfo, con
 		return false;
 	}
 
-	OutProgramInfo.MainModuleName = LModuleName;
-	StatesContext.ModuleNameDeclared = true;
-
 	const std::string LImportingModuleRelativePath = FCompilerHelperLibrary::MakePathFromParts(StatesContext.ModuleImplementingContext.ModulePath);
-	const bool LImportSuccess = ImportModule(OutProgramInfo, LImportingModuleRelativePath, LModuleName, TokenCTX);
+	const bool LImportSuccess = ImportModule(OutProgramInfo, LImportingModuleRelativePath, LModuleName, TokenCTX, true);
 	if( !LImportSuccess )
 	{
 		FErrorLogger::Raise(EErrorMessageType::MODULE_NOT_FOUND, TokenCTX);
 		return false;
 	}
+
+	OutProgramInfo.MainModuleName = LModuleName;
+	StatesContext.ModuleNameDeclared = true;
 
 	return true;
 }
@@ -2187,7 +2098,7 @@ bool FParserStates::ImportModuleFromContext(FProgramInfo& OutProgramInfo, const 
 bool FParserStates::ImportModule
 (
 	FProgramInfo& OutProgramInfo, 
-	const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX
+	const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX, bool AsMain
 )
 // clang-format on
 {
@@ -2254,16 +2165,16 @@ bool FParserStates::ImportModule
 	}
 
 
-	std::vector<std::string>& LRequiredModules = OutProgramInfo.ImportedModulesInfo[OutProgramInfo.MainModuleName].RequiredModulesNames;
+
 
 	// stop import recursion
-	// clang-format off
-	if( 
-		ImportModuleName == OutProgramInfo.MainModuleName || 
-		OutProgramInfo.ImportedModulesInfo.find(ImportModuleName) != OutProgramInfo.ImportedModulesInfo.end() ||
-		std::find(LRequiredModules.begin(), LRequiredModules.end(), ImportModuleName) != LRequiredModules.end() 
-	  )
-	// clang-format on
+	if( OutProgramInfo.ImportedModulesInfo.find(ImportModuleName) != OutProgramInfo.ImportedModulesInfo.end() )
+	{
+		LFile.close();
+		return true;
+	}
+	std::vector<std::string>& LRequiredModules = OutProgramInfo.ImportedModulesInfo[OutProgramInfo.MainModuleName].RequiredModulesNames;
+	if( std::find(LRequiredModules.begin(), LRequiredModules.end(), ImportModuleName) != LRequiredModules.end() )
 	{
 		LFile.close();
 		return true;
@@ -2294,7 +2205,7 @@ bool FParserStates::ImportModule
 	const std::string LSavedMainModuleName = OutProgramInfo.MainModuleName;
 	OutProgramInfo.MainModuleName = ImportModuleName; // not main module should check this name by it's name
 	FParser LParser;
-	LParser.Process(LTokens, LModuleFileInfo, false, OutProgramInfo);
+	LParser.Process(LTokens, LModuleFileInfo, AsMain, OutProgramInfo);
 	OutProgramInfo.MainModuleName = LSavedMainModuleName;
 
 	return true;

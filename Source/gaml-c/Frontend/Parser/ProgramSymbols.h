@@ -276,10 +276,6 @@ public:
 		Value - compiling function info.
 	*/
 	std::unordered_map<std::string, FCompilingFunctionInfo> CompilingFunctionsAST;
-	/*
-		Cached static variables from all classes.
-	*/
-	std::vector<FCompilingVariableInfo> CompilingStaticVariables;
 
 	//............................................................................................//
 };

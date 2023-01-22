@@ -52,9 +52,6 @@ DECLARE_STATE_CLASS(Default)
 // *** ... ***
 DECLARE_STATE_CLASS(StartDescription)	  // -> *** -> @|***
 DECLARE_STATE_CLASS(DescriptionModifier)  // *** -> @ -> [MODIFIER]|param|return|align
-DECLARE_STATE_CLASS(DescriptionAlign1)	  // @ -> align -> (
-DECLARE_STATE_CLASS(DescriptionAlign2)	  // align -> ( -> )
-DECLARE_STATE_CLASS(DescriptionAlign3)	  // ( -> ) -> @|***
 DECLARE_STATE_CLASS(DescriptionParam1)	  // @ -> param|return -> [IDENTIFIER]
 DECLARE_STATE_CLASS(DescriptionParam2)	  // [IDENTIFIER] -> : -> const|mut|[standard type]|[user type]
 DECLARE_STATE_CLASS(DescriptionParam3)	  // : -> const|mut|[standard type]|[user type] -> (|@|***
@@ -160,10 +157,7 @@ struct FParserStates
 public:
 
 	FParserStates() = delete;
-	inline FParserStates(const FGamlFileInfo& InFileInfo, bool InIsMainModule) :
-		FileInfo(InFileInfo), IsMainModule(InIsMainModule)
-	{
-	}
+	inline FParserStates(const FGamlFileInfo& InFileInfo, bool InIsMainModule) : FileInfo(InFileInfo), IsMainModule(InIsMainModule) { }
 	~FParserStates() { }
 
 
@@ -177,9 +171,6 @@ public:
 
 	DECLARE_STATE(StartDescription)
 	DECLARE_STATE(DescriptionModifier)
-	DECLARE_STATE(DescriptionAlign1)
-	DECLARE_STATE(DescriptionAlign2)
-	DECLARE_STATE(DescriptionAlign3)
 	DECLARE_STATE(DescriptionParam1)
 	DECLARE_STATE(DescriptionParam2)
 	DECLARE_STATE(DescriptionParam3)
@@ -308,7 +299,13 @@ public:
 	bool RegisterAliasFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 	bool RegisterStaticAssertFromContext(FProgramInfo& OutProgramInfo, const Token& TokenCTX);
 
-	bool ImportModule(FProgramInfo& OutProgramInfo, const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX);
+	// clang-format off
+	bool ImportModule
+	(
+		FProgramInfo& OutProgramInfo, 
+		const std::string& ImportModuleRelativePath, const std::string& ImportModuleName, const Token& TokenCTX, bool AsMain = false
+	);
+	// clang-format on
 	bool ImportPackage(FProgramInfo& OutProgramInfo, const std::string& ImportPackageRelativePath, const Token& TokenCTX);
 
 	std::string GetCTXFunctionCompileName(const FProgramInfo& OutProgramInfo) const;

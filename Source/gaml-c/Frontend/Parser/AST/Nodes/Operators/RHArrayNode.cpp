@@ -1,59 +1,17 @@
 // Copyright 2022 - 2023 GrosSlava.
 
 #include "Parser/AST/Nodes/ASTOperators.h"
-#include "Logger/CompileLogger.h"
+#include "Logger/ErrorLogger.h"
 
 
 
 
 
-void RHArrayNode::InterpretAST(const FProgramInfo& ProgramInfo, FASTSymbols& LocalInfo)
+void RHArrayNode::AssignSubTrees(std::shared_ptr<ASTNode> Lhs, std::shared_ptr<ASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
 {
-	//TODO
+	OutUseLeft = false;
+	OutUseRight = false;
+
+	FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
 }
 
-bool RHArrayNode::GetInterpretResultAsBool() const
-{
-	//TODO
-	return false;
-}
-
-int RHArrayNode::GetInterpretResultAsInt() const
-{
-	//TODO
-	return 0;
-}
-
-double RHArrayNode::GetInterpretResultAsDouble() const
-{
-	//TODO
-	return 0.0;
-}
-
-std::string RHArrayNode::GetInterpretResultAsString() const
-{
-	//TODO
-	return "";
-}
-
-
-
-
-
-void RHArrayNode::AssignSubTrees(std::shared_ptr<IASTNode> Lhs, std::shared_ptr<IASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
-{
-	//TODO
-	OutUseLeft = true;
-	OutUseRight = true;
-}
-
-
-
-
-
-std::string RHArrayNode::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const
-{
-	return "";
-
-	//TODO
-}

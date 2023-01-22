@@ -4,16 +4,11 @@
 
 #include "CoreMinimal.h"
 
-#include "ASTSymbols.h"
-
 
 
 
 class ScopeNode;
-class IASTCodeGenFactory;
 struct Token;
-
-struct FProgramInfo;
 
 
 
@@ -39,25 +34,15 @@ public:
 	void BuildAST(const std::vector<Token>& InTokens);
 
 	/*
-		Recursive interpret AST.
-	*/
-	void InterpretAST(const FProgramInfo& ProgramInfo);
-	bool GetInterpretResultAsBool() const;
-	int GetInterpretResultAsInt() const;
-	double GetInterpretResultAsDouble() const;
-	std::string GetInterpretResultAsString() const;
-
-	/*
-		Gnerate code based on AST.
-	*/
-	std::string GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const;
-
-public:
-
-	/*
 		Check that AST contains only single expression without control operators.
 	*/
 	bool IsPureExpression() const noexcept;
+
+
+	/*
+		Convert tree to str.
+	*/
+	std::string GetTreeAsStr() const noexcept;
 
 
 

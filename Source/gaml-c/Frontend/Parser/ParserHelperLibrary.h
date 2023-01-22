@@ -374,7 +374,7 @@ struct FParserHelperLibrary
 				TokenType == ETokenType::BINARY_XOR 				|| TokenType == ETokenType::BINARY_SHL				|| TokenType == ETokenType::BINARY_SHR			||  TokenType == ETokenType::PLUS				||
 				TokenType == ETokenType::MINUS 						|| TokenType == ETokenType::STAR					|| TokenType == ETokenType::SLASH				||  TokenType == ETokenType::INC				||
 				TokenType == ETokenType::DEC 						|| TokenType == ETokenType::MOD						|| TokenType == ETokenType::POW					||  TokenType == ETokenType::SIZE_OF			||
-				TokenType == ETokenType::TYPE_OF 					|| TokenType == ETokenType::NAME_OF					|| TokenType == ETokenType::ALIGN_OF			||  TokenType == ETokenType::IS_FUNCTION		||
+				TokenType == ETokenType::TYPE_OF 					|| TokenType == ETokenType::NAME_OF					||  TokenType == ETokenType::IS_FUNCTION		||
 				TokenType == ETokenType::IS_STRUCT 					|| TokenType == ETokenType::IS_ENUM					|| TokenType == ETokenType::IS_INTERFACE		||  TokenType == ETokenType::IS_OBJECT			||
 				TokenType == ETokenType::IS_COMPONENT 				|| TokenType == ETokenType::IS_SUBCLASS				|| TokenType == ETokenType::IS_INSTANCE			||  TokenType == ETokenType::IS_LAMBDA			||
 				TokenType == ETokenType::IS_ITERABLE 				|| TokenType == ETokenType::IS_ENUMERABLE			|| TokenType == ETokenType::IS_ABSTRACT			||  TokenType == ETokenType::IS_ALIAS			||
@@ -402,9 +402,12 @@ struct FParserHelperLibrary
 
 		@return priority of operation. -1 for non-operation lexeme.
 	*/
-	static int GetOperationPriority(ETokenType TokenType) noexcept;
+	static int GetOperationPriority(ETokenType TokenType, bool UseAlternative) noexcept;
 	/*
 		@return priority of operation. -1 for non-operation lexeme.
 	*/
-	static inline int GetOperationPriority(const Token& InToken) noexcept { return GetOperationPriority(InToken.GetType()); }
+	static inline int GetOperationPriority(const Token& InToken, bool UseAlternative) noexcept
+	{
+		return GetOperationPriority(InToken.GetType(), UseAlternative);
+	}
 };

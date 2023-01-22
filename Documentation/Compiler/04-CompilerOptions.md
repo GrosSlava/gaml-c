@@ -75,8 +75,14 @@
 > `--dump_lexeme` \
 > Dump lexemes to file
 
+> `--dump_ast` \
+> Dump all ast to file
+
 > `--dump_modules` \
 > Dump modules dependencies to file
+
+> `--dump_ir` \
+> Dump IR to file
 
 > `--dump_c` \
 > Dump generated code to file

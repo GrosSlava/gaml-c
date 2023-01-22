@@ -2,12 +2,6 @@
 
 #include "ScopeNode.h"
 
-#include "Token/Token.h"
-
-#include "Parser/AST/ASTCodeGenFactory.h"
-#include "Parser/AST/ASTSymbols.h"
-
-#include "LeafNode.h"
 #include "ASTOperators.h"
 
 #include "Parser/ParserHelperLibrary.h"
@@ -43,7 +37,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 			case ETokenType::DO:
 			{
 				HasControlStatement = true;
-				ExprSequence.push_back(Parse_StaticDo(InTokens, LIndex));
+				Children.push_back(Parse_StaticDo(InTokens, LIndex));
 
 				++LIndex;
 				continue;
@@ -51,7 +45,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 			case ETokenType::WHILE:
 			{
 				HasControlStatement = true;
-				ExprSequence.push_back(Parse_StaticWhile(InTokens, LIndex));
+				Children.push_back(Parse_StaticWhile(InTokens, LIndex));
 
 				++LIndex;
 				continue;
@@ -59,7 +53,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 			case ETokenType::FOR:
 			{
 				HasControlStatement = true;
-				ExprSequence.push_back(Parse_StaticFor(InTokens, LIndex));
+				Children.push_back(Parse_StaticFor(InTokens, LIndex));
 
 				++LIndex;
 				continue;
@@ -67,7 +61,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 			case ETokenType::FOREACH:
 			{
 				HasControlStatement = true;
-				ExprSequence.push_back(Parse_StaticForeach(InTokens, LIndex));
+				Children.push_back(Parse_StaticForeach(InTokens, LIndex));
 
 				++LIndex;
 				continue;
@@ -75,7 +69,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 			case ETokenType::IF:
 			{
 				HasControlStatement = true;
-				ExprSequence.push_back(Parse_StaticIf(InTokens, LIndex));
+				Children.push_back(Parse_StaticIf(InTokens, LIndex));
 
 				++LIndex;
 				continue;
@@ -83,7 +77,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 			case ETokenType::SWITCH:
 			{
 				HasControlStatement = true;
-				ExprSequence.push_back(Parse_StaticSwitch(InTokens, LIndex));
+				Children.push_back(Parse_StaticSwitch(InTokens, LIndex));
 
 				++LIndex;
 				continue;
@@ -91,7 +85,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 			case ETokenType::SWITCH_ALL:
 			{
 				HasControlStatement = true;
-				ExprSequence.push_back(Parse_StaticSwitchAll(InTokens, LIndex));
+				Children.push_back(Parse_StaticSwitchAll(InTokens, LIndex));
 
 				++LIndex;
 				continue;
@@ -104,7 +98,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::DO:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Do(InTokens, LIndex));
+			Children.push_back(Parse_Do(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -112,7 +106,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::WHILE:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_While(InTokens, LIndex));
+			Children.push_back(Parse_While(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -120,7 +114,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::FOR:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_For(InTokens, LIndex));
+			Children.push_back(Parse_For(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -128,7 +122,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::FOREACH:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Foreach(InTokens, LIndex));
+			Children.push_back(Parse_Foreach(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -136,7 +130,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::IF:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_If(InTokens, LIndex));
+			Children.push_back(Parse_If(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -144,7 +138,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::SWITCH:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Switch(InTokens, LIndex));
+			Children.push_back(Parse_Switch(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -152,7 +146,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::SWITCH_ALL:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_SwitchAll(InTokens, LIndex));
+			Children.push_back(Parse_SwitchAll(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -160,7 +154,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::ASSERT:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Assert(InTokens, LIndex));
+			Children.push_back(Parse_Assert(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -168,7 +162,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::STATIC_ASSERT:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_StaticAssert(InTokens, LIndex));
+			Children.push_back(Parse_StaticAssert(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -176,7 +170,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::STATIC_ERROR:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_StaticError(InTokens, LIndex));
+			Children.push_back(Parse_StaticError(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -184,7 +178,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::STATIC_WARNING:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_StaticWarning(InTokens, LIndex));
+			Children.push_back(Parse_StaticWarning(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -192,7 +186,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::STATIC_MESSAGE:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_StaticMessage(InTokens, LIndex));
+			Children.push_back(Parse_StaticMessage(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -200,7 +194,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::USING:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Using(InTokens, LIndex));
+			Children.push_back(Parse_Using(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -208,7 +202,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::VAR:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Var(InTokens, LIndex));
+			Children.push_back(Parse_Var(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -216,7 +210,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::BREAK:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Break(InTokens, LIndex));
+			Children.push_back(Parse_Break(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -224,7 +218,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::CONTINUE:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Continue(InTokens, LIndex));
+			Children.push_back(Parse_Continue(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -232,7 +226,7 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 		case ETokenType::RETURN:
 		{
 			HasControlStatement = true;
-			ExprSequence.push_back(Parse_Return(InTokens, LIndex));
+			Children.push_back(Parse_Return(InTokens, LIndex));
 
 			++LIndex;
 			continue;
@@ -245,13 +239,21 @@ void ScopeNode::BuildAST(const std::vector<Token>& InTokens)
 				++LExpressionEndIndex;
 			}
 
-			ExprSequence.push_back(ParseExpr(std::vector<Token>(InTokens.begin() + LIndex, InTokens.begin() + LExpressionEndIndex)));
+			Children.push_back(ParseExpr(std::vector<Token>(InTokens.begin() + LIndex, InTokens.begin() + LExpressionEndIndex)));
 
 			LIndex = LExpressionEndIndex + 1;
 			continue;
 		}
 		}
 	}
+}
+
+void ScopeNode::AssignSubTrees(std::shared_ptr<ASTNode> Lhs, std::shared_ptr<ASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
+{
+	OutUseLeft = false;
+	OutUseRight = false;
+
+	FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
 }
 
 
@@ -262,7 +264,7 @@ class UExprParseListNode
 {
 public:
 
-	std::shared_ptr<IASTNode> ASTPart;
+	std::shared_ptr<ASTNode> ASTPart;
 
 	std::shared_ptr<UExprParseListNode> Left;
 	std::shared_ptr<UExprParseListNode> Right;
@@ -272,7 +274,7 @@ struct FExprParseList
 {
 public:
 
-	void AddASTNode(std::shared_ptr<IASTNode> ASTNode)
+	void AddASTNode(std::shared_ptr<ASTNode> ASTNode)
 	{
 		if( Head == nullptr )
 		{
@@ -337,7 +339,7 @@ public:
 	std::shared_ptr<UExprParseListNode> Tail;
 };
 
-std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InTokens) const
+std::shared_ptr<ASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InTokens) const
 {
 	if( InTokens.empty() )
 	{
@@ -383,7 +385,7 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 				}
 			}
 
-			std::shared_ptr<IASTNode> LLeafNode = std::make_shared<LeafNode>(InTokens[LIndex]);
+			std::shared_ptr<ASTNode> LLeafNode = std::make_shared<OperandNode>(InTokens[LIndex]);
 			LASTParts.AddASTNode(LLeafNode);
 
 			++LIndex;
@@ -421,7 +423,7 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 				}
 			}
 
-			std::shared_ptr<IASTNode> LLeafNode = std::make_shared<LeafNode>(InTokens[LIndex]);
+			std::shared_ptr<ASTNode> LLeafNode = std::make_shared<OperandNode>(InTokens[LIndex]);
 			LASTParts.AddASTNode(LLeafNode);
 
 			++LIndex;
@@ -456,7 +458,7 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 		case ETokenType::SUPER:
 		case ETokenType::NONE:
 		{
-			std::shared_ptr<IASTNode> LLeafNode = std::make_shared<LeafNode>(InTokens[LIndex]);
+			std::shared_ptr<ASTNode> LLeafNode = std::make_shared<OperandNode>(InTokens[LIndex]);
 			LASTParts.AddASTNode(LLeafNode);
 
 			++LIndex;
@@ -473,7 +475,7 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 
 			if( LParEnd > LIndex + 1 )
 			{
-				std::shared_ptr<IASTNode> LExpr = ParseExpr(std::vector<Token>(InTokens.begin() + LIndex + 1, InTokens.begin() + LParEnd - 1));
+				std::shared_ptr<ASTNode> LExpr = ParseExpr(std::vector<Token>(InTokens.begin() + LIndex + 1, InTokens.begin() + LParEnd - 1));
 				LASTParts.AddASTNode(LExpr);
 			}
 
@@ -493,8 +495,8 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 
 			if( LSqrEnd > LIndex + 1 )
 			{
-				std::shared_ptr<IASTNode> LExpr = ParseExpr(std::vector<Token>(InTokens.begin() + LIndex + 1, InTokens.begin() + LSqrEnd - 1));
-				LRHArrayNode->SetOperand(RHARRAY_NODE_ELEMENTS_OPERAND, LExpr);
+				std::shared_ptr<ASTNode> LExpr = ParseExpr(std::vector<Token>(InTokens.begin() + LIndex + 1, InTokens.begin() + LSqrEnd - 1));
+				LRHArrayNode->SetChild(RHARRAY_NODE_ELEMENTS_OPERAND, LExpr);
 			}
 
 			LASTParts.AddASTNode(LRHArrayNode);
@@ -508,66 +510,135 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 
 		//...........................Unary/binary operators....................................//
 
-#define CASE_OPERATOR(TokenName, ClassName)                                                         \
-	case ETokenType::TokenName:                                                                     \
-	{                                                                                               \
-		std::shared_ptr<ClassName> LASTNode = std::make_shared<ClassName>(InTokens[LIndex]);        \
-		LASTParts.AddASTNode(LASTNode);                                                             \
-                                                                                                    \
-		const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex]); \
-		if( LOperatorPriority == -1 )                                                               \
-		{                                                                                           \
-			FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);                \
-			return nullptr;                                                                         \
-		}                                                                                           \
-		OperatorsPrioritySort[LOperatorPriority].push_back(LASTParts.Tail);                         \
-                                                                                                    \
-		++LIndex;                                                                                   \
-		continue;                                                                                   \
+#define CASE_OPERATOR(TokenName, ClassName)                                                                \
+	case ETokenType::TokenName:                                                                            \
+	{                                                                                                      \
+		std::shared_ptr<ClassName> LASTNode = std::make_shared<ClassName>(InTokens[LIndex]);               \
+		LASTParts.AddASTNode(LASTNode);                                                                    \
+                                                                                                           \
+		const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex], false); \
+		if( LOperatorPriority == -1 )                                                                      \
+		{                                                                                                  \
+			FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);                       \
+			return nullptr;                                                                                \
+		}                                                                                                  \
+		OperatorsPrioritySort[LOperatorPriority].push_back(LASTParts.Tail);                                \
+                                                                                                           \
+		++LIndex;                                                                                          \
+		continue;                                                                                          \
 	}
 			// clang-format off
-		//TODO
 		CASE_OPERATOR(LESS, LessNode)
 		CASE_OPERATOR(GREATER, GreatherNode)
-		CASE_OPERATOR(LESS_EQUAL, GreatherNode)
-		CASE_OPERATOR(GREATER_EQUAL, GreatherNode)
-		CASE_OPERATOR(EQUAL, GreatherNode)
-		CASE_OPERATOR(NOT_EQUAL, GreatherNode)
-		CASE_OPERATOR(AND, GreatherNode)
-		CASE_OPERATOR(OR, GreatherNode)
-		CASE_OPERATOR(EXCLAMATION, GreatherNode)
-		CASE_OPERATOR(BINARY_AND, GreatherNode)
-		CASE_OPERATOR(BINARY_OR, GreatherNode)
-		CASE_OPERATOR(BINARY_INVERSE, GreatherNode)
-		CASE_OPERATOR(BINARY_XOR, GreatherNode)
-		CASE_OPERATOR(BINARY_SHL, GreatherNode)
-		CASE_OPERATOR(BINARY_SHR, GreatherNode)
-		CASE_OPERATOR(STAR, GreatherNode)
-		CASE_OPERATOR(SLASH, GreatherNode)
-		CASE_OPERATOR(INC, GreatherNode)
-		CASE_OPERATOR(DEC, GreatherNode)
-		CASE_OPERATOR(MOD, GreatherNode)
-		CASE_OPERATOR(POW, GreatherNode)
-		CASE_OPERATOR(IN, GreatherNode)
-		CASE_OPERATOR(IS, GreatherNode)
-		CASE_OPERATOR(PLUS, GreatherNode)
-		CASE_OPERATOR(MINUS, GreatherNode)
-		CASE_OPERATOR(NAMESPACE_ACCESS_OPERATOR, GreatherNode)
-		CASE_OPERATOR(RIGHT_ARROW, GreatherNode)
-		CASE_OPERATOR(POINT, GreatherNode)
-		CASE_OPERATOR(ASSIGN, GreatherNode)
-		CASE_OPERATOR(ADD_ASSIGN, GreatherNode)
-		CASE_OPERATOR(SUB_ASSIGN, GreatherNode)
-		CASE_OPERATOR(MUL_ASSIGN, GreatherNode)
-		CASE_OPERATOR(DIV_ASSIGN, GreatherNode)
-		CASE_OPERATOR(MOD_ASSIGN, GreatherNode)
-		CASE_OPERATOR(POW_ASSIGN, GreatherNode)
-		CASE_OPERATOR(BINARY_AND_ASSIGN, GreatherNode)
-		CASE_OPERATOR(BINARY_OR_ASSIGN, GreatherNode)
-		CASE_OPERATOR(BINARY_INVERSE_ASSIGN, GreatherNode)
-		CASE_OPERATOR(BINARY_XOR_ASSIGN, GreatherNode)
-		CASE_OPERATOR(BINARY_SHL_ASSIGN, GreatherNode)
-		CASE_OPERATOR(BINARY_SHR_ASSIGN, GreatherNode)
+		CASE_OPERATOR(LESS_EQUAL, LessEqualNode)
+		CASE_OPERATOR(GREATER_EQUAL, GreatherEqualNode)
+		CASE_OPERATOR(EQUAL, EqualNode)
+		CASE_OPERATOR(NOT_EQUAL, NotEqualNode)
+		CASE_OPERATOR(AND, AndNode)
+		CASE_OPERATOR(OR, OrNode)
+		CASE_OPERATOR(EXCLAMATION, ExclimationNode)
+		CASE_OPERATOR(BINARY_AND, BinaryAndNode)
+		CASE_OPERATOR(BINARY_OR, BinaryOrNode)
+		CASE_OPERATOR(BINARY_INVERSE, BinaryInverseNode)
+		CASE_OPERATOR(BINARY_XOR, BinaryXorNode)
+		CASE_OPERATOR(BINARY_SHL, BinaryShlNode)
+		CASE_OPERATOR(BINARY_SHR, BinaryShrNode)
+		CASE_OPERATOR(STAR, MultiplyNode)
+		CASE_OPERATOR(SLASH, DivideNode)
+		CASE_OPERATOR(INC, IncNode)
+		CASE_OPERATOR(DEC, DecNode)
+		CASE_OPERATOR(MOD, ModNode)
+		CASE_OPERATOR(POW, PowNode)
+		CASE_OPERATOR(IN, InNode)
+		CASE_OPERATOR(IS, IsNode)
+			// clang-format on
+		case ETokenType::PLUS:
+		{
+			if( LIndex == 0 || FParserHelperLibrary::IsOperatorToken(InTokens[LIndex - 1]) )
+			{
+				std::shared_ptr<PositiveNode> LASTNode = std::make_shared<PositiveNode>(InTokens[LIndex]);
+				LASTParts.AddASTNode(LASTNode);
+
+				const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex], true);
+				if( LOperatorPriority == -1 )
+				{
+					FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);
+					return nullptr;
+				}
+				OperatorsPrioritySort[LOperatorPriority].push_back(LASTParts.Tail);
+
+				++LIndex;
+				continue;
+			}
+			else
+			{
+				std::shared_ptr<PlusNode> LASTNode = std::make_shared<PlusNode>(InTokens[LIndex]);
+				LASTParts.AddASTNode(LASTNode);
+
+				const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex], false);
+				if( LOperatorPriority == -1 )
+				{
+					FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);
+					return nullptr;
+				}
+				OperatorsPrioritySort[LOperatorPriority].push_back(LASTParts.Tail);
+
+				++LIndex;
+				continue;
+			}
+		}
+		case ETokenType::MINUS:
+		{
+			if( LIndex == 0 || FParserHelperLibrary::IsOperatorToken(InTokens[LIndex - 1]) )
+			{
+				std::shared_ptr<NegativeNode> LASTNode = std::make_shared<NegativeNode>(InTokens[LIndex]);
+				LASTParts.AddASTNode(LASTNode);
+
+				const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex], true);
+				if( LOperatorPriority == -1 )
+				{
+					FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);
+					return nullptr;
+				}
+				OperatorsPrioritySort[LOperatorPriority].push_back(LASTParts.Tail);
+
+				++LIndex;
+				continue;
+			}
+			else
+			{
+				std::shared_ptr<MinusNode> LASTNode = std::make_shared<MinusNode>(InTokens[LIndex]);
+				LASTParts.AddASTNode(LASTNode);
+
+				const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex], false);
+				if( LOperatorPriority == -1 )
+				{
+					FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);
+					return nullptr;
+				}
+				OperatorsPrioritySort[LOperatorPriority].push_back(LASTParts.Tail);
+
+				++LIndex;
+				continue;
+			}
+		}
+			// clang-format off
+		CASE_OPERATOR(NAMESPACE_ACCESS_OPERATOR, NamespaceAccessNode)
+		CASE_OPERATOR(RIGHT_ARROW, RightArrowNode)
+		CASE_OPERATOR(POINT, PointNode)
+		CASE_OPERATOR(ASSIGN, AssignNode)
+		CASE_OPERATOR(ADD_ASSIGN, AddAssignNode)
+		CASE_OPERATOR(SUB_ASSIGN, SubAssignNode)
+		CASE_OPERATOR(MUL_ASSIGN, MulAssignNode)
+		CASE_OPERATOR(DIV_ASSIGN, DivAssignNode)
+		CASE_OPERATOR(MOD_ASSIGN, ModAssignNode)
+		CASE_OPERATOR(POW_ASSIGN, PowAssignNode)
+		CASE_OPERATOR(BINARY_AND_ASSIGN, BinaryAndAssignNode)
+		CASE_OPERATOR(BINARY_OR_ASSIGN, BinaryOrAssignNode)
+		CASE_OPERATOR(BINARY_INVERSE_ASSIGN, BinaryInverseAssignNode)
+		CASE_OPERATOR(BINARY_XOR_ASSIGN, BinaryXorAssignNode)
+		CASE_OPERATOR(BINARY_SHL_ASSIGN, BinaryShlAssignNode)
+		CASE_OPERATOR(BINARY_SHR_ASSIGN, BinaryShrAssignNode)
 			// clang-format on
 
 #undef CASE_OPERATOR
@@ -577,69 +648,67 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 
 			//............Keyword operators with operands in pairs.................................//
 
-#define CASE_KEYWORD_OPERATOR(TokenName, ClassName)                                                                                     \
-	case ETokenType::TokenName:                                                                                                         \
-	{                                                                                                                                   \
-		const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex]);                                     \
-		if( LOperatorPriority == -1 )                                                                                                   \
-		{                                                                                                                               \
-			FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);                                                    \
-			return nullptr;                                                                                                             \
-		}                                                                                                                               \
-                                                                                                                                        \
-		std::shared_ptr<ClassName> LASTNode = std::make_shared<ClassName>(InTokens[LIndex]);                                            \
-		if( LIndex + 1 >= InTokens.size() )                                                                                             \
-		{                                                                                                                               \
-			FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[LIndex]);                                                    \
-			return nullptr;                                                                                                             \
-		}                                                                                                                               \
-		++LIndex;                                                                                                                       \
-		if( InTokens[LIndex].GetType() != ETokenType::LPAR )                                                                            \
-		{                                                                                                                               \
-			FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[LIndex]);                                                    \
-			return nullptr;                                                                                                             \
-		}                                                                                                                               \
-                                                                                                                                        \
-		const size_t LParEnd = FParserHelperLibrary::GetLastClosePairIndex(ETokenType::LPAR, LIndex + 1, InTokens);                     \
-		if( LParEnd == InTokens.size() )                                                                                                \
-		{                                                                                                                               \
-			FErrorLogger::Raise(EErrorMessageType::EXPECTED_RPAR, InTokens[LIndex]);                                                    \
-			return nullptr;                                                                                                             \
-		}                                                                                                                               \
-                                                                                                                                        \
-		if( LParEnd > LIndex + 1 )                                                                                                      \
-		{                                                                                                                               \
-			std::shared_ptr<IASTNode> LExpr = ParseExpr(std::vector<Token>(InTokens.begin() + LIndex + 1, InTokens.begin() + LParEnd)); \
-			LASTNode->SetOperand(0, LExpr);                                                                                             \
-		}                                                                                                                               \
-                                                                                                                                        \
-		LASTParts.AddASTNode(LASTNode);                                                                                                 \
-		/* not add to operators priority sort because it already has an operand */                                                      \
-                                                                                                                                        \
-		LIndex = LParEnd + 1;                                                                                                           \
-		continue;                                                                                                                       \
+#define CASE_KEYWORD_OPERATOR(TokenName, ClassName)                                                                                    \
+	case ETokenType::TokenName:                                                                                                        \
+	{                                                                                                                                  \
+		const int LOperatorPriority = FParserHelperLibrary::GetOperationPriority(InTokens[LIndex], false);                             \
+		if( LOperatorPriority == -1 )                                                                                                  \
+		{                                                                                                                              \
+			FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, InTokens[LIndex]);                                                   \
+			return nullptr;                                                                                                            \
+		}                                                                                                                              \
+                                                                                                                                       \
+		std::shared_ptr<ClassName> LASTNode = std::make_shared<ClassName>(InTokens[LIndex]);                                           \
+		if( LIndex + 1 >= InTokens.size() )                                                                                            \
+		{                                                                                                                              \
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[LIndex]);                                                   \
+			return nullptr;                                                                                                            \
+		}                                                                                                                              \
+		++LIndex;                                                                                                                      \
+		if( InTokens[LIndex].GetType() != ETokenType::LPAR )                                                                           \
+		{                                                                                                                              \
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[LIndex]);                                                   \
+			return nullptr;                                                                                                            \
+		}                                                                                                                              \
+                                                                                                                                       \
+		const size_t LParEnd = FParserHelperLibrary::GetLastClosePairIndex(ETokenType::LPAR, LIndex + 1, InTokens);                    \
+		if( LParEnd == InTokens.size() )                                                                                               \
+		{                                                                                                                              \
+			FErrorLogger::Raise(EErrorMessageType::EXPECTED_RPAR, InTokens[LIndex]);                                                   \
+			return nullptr;                                                                                                            \
+		}                                                                                                                              \
+                                                                                                                                       \
+		if( LParEnd > LIndex + 1 )                                                                                                     \
+		{                                                                                                                              \
+			std::shared_ptr<ASTNode> LExpr = ParseExpr(std::vector<Token>(InTokens.begin() + LIndex + 1, InTokens.begin() + LParEnd)); \
+			LASTNode->SetChild(0, LExpr);                                                                                              \
+		}                                                                                                                              \
+                                                                                                                                       \
+		LASTParts.AddASTNode(LASTNode);                                                                                                \
+		/* not add to operators priority sort because it already has an operand */                                                     \
+                                                                                                                                       \
+		LIndex = LParEnd + 1;                                                                                                          \
+		continue;                                                                                                                      \
 	}
 			// clang-format off
-			//TODO
-		CASE_KEYWORD_OPERATOR(SIZE_OF, GreatherNode)
-		CASE_KEYWORD_OPERATOR(TYPE_OF, GreatherNode)
-		CASE_KEYWORD_OPERATOR(NAME_OF, GreatherNode)
-		CASE_KEYWORD_OPERATOR(ALIGN_OF, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_FUNCTION, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_STRUCT, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_ENUM, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_INTERFACE, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_OBJECT, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_COMPONENT, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_SUBCLASS, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_INSTANCE, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_LAMBDA, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_ITERABLE, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_ENUMERABLE, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_ABSTRACT, GreatherNode)
-		CASE_KEYWORD_OPERATOR(IS_ALIAS, GreatherNode)
-		CASE_KEYWORD_OPERATOR(ADDR, GreatherNode)
-		CASE_KEYWORD_OPERATOR(DEFAULT, GreatherNode)
+		CASE_KEYWORD_OPERATOR(SIZE_OF, SizeOfNode)
+		CASE_KEYWORD_OPERATOR(TYPE_OF, TypeOfNode)
+		CASE_KEYWORD_OPERATOR(NAME_OF, NameOfNode)
+		CASE_KEYWORD_OPERATOR(IS_FUNCTION, IsFunctionNode)
+		CASE_KEYWORD_OPERATOR(IS_STRUCT, IsStructNode)
+		CASE_KEYWORD_OPERATOR(IS_ENUM, IsEnumNode)
+		CASE_KEYWORD_OPERATOR(IS_INTERFACE, IsInterfaceNode)
+		CASE_KEYWORD_OPERATOR(IS_OBJECT, IsObjectNode)
+		CASE_KEYWORD_OPERATOR(IS_COMPONENT, IsComponentNode)
+		CASE_KEYWORD_OPERATOR(IS_SUBCLASS, IsSubclassNode)
+		CASE_KEYWORD_OPERATOR(IS_INSTANCE, IsInstanceNode)
+		CASE_KEYWORD_OPERATOR(IS_LAMBDA, IsLambdaNode)
+		CASE_KEYWORD_OPERATOR(IS_ITERABLE, IsIterableNode)
+		CASE_KEYWORD_OPERATOR(IS_ENUMERABLE, IsEnumerableNode)
+		CASE_KEYWORD_OPERATOR(IS_ABSTRACT, IsAbstractNode)
+		CASE_KEYWORD_OPERATOR(IS_ALIAS, IsAliasNode)
+		CASE_KEYWORD_OPERATOR(ADDR, AddrNode)
+		CASE_KEYWORD_OPERATOR(DEFAULT, DefaultNode)
 			// clang-format on
 
 #undef CASE_KEYWORD_OPERATOR
@@ -680,15 +749,10 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 	{
 		for( std::shared_ptr<UExprParseListNode> LExprParseListNode : OperatorsPrioritySort[i] )
 		{
-			// clang-format off
-			if( 
-				std::shared_ptr<BaseExpressionOperatorNode> LAsExpressionOperatorNode =
-				std::dynamic_pointer_cast<BaseExpressionOperatorNode>(LExprParseListNode->ASTPart) 
-			  )
-			// clang-format on
+			if( LExprParseListNode->ASTPart )
 			{
-				std::shared_ptr<IASTNode> LLeftOperand = nullptr;
-				std::shared_ptr<IASTNode> LRightOperand = nullptr;
+				std::shared_ptr<ASTNode> LLeftOperand = nullptr;
+				std::shared_ptr<ASTNode> LRightOperand = nullptr;
 
 				if( std::shared_ptr<UExprParseListNode> LLeftOperandListNode = LExprParseListNode->Left )
 				{
@@ -701,7 +765,7 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 
 				bool LUsedLeft = false;
 				bool LUsedRight = false;
-				LAsExpressionOperatorNode->AssignSubTrees(LLeftOperand, LRightOperand, LUsedLeft, LUsedRight);
+				LExprParseListNode->ASTPart->AssignSubTrees(LLeftOperand, LRightOperand, LUsedLeft, LUsedRight);
 
 				if( LUsedLeft )
 				{
@@ -732,11 +796,11 @@ std::shared_ptr<IASTNode> ScopeNode::ParseExpr(const std::vector<Token>& InToken
 
 
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Scope(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Scope(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::LBRA )
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, "", 0, 0, 0);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
 		return nullptr;
 	}
 
@@ -747,7 +811,7 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_Scope(const std::vector<Token>& InTok
 		return nullptr;
 	}
 
-	std::shared_ptr<ScopeNode> LScopeNode = std::make_shared<ScopeNode>();
+	std::shared_ptr<ScopeNode> LScopeNode = std::make_shared<ScopeNode>(InTokens[Index]);
 	if( LBraScopeEnd > Index + 1 )
 	{
 		LScopeNode->BuildAST(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LBraScopeEnd));
@@ -757,11 +821,11 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_Scope(const std::vector<Token>& InTok
 	return LScopeNode;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticDo(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticDo(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::DO )
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, "", 0, 0, 0);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
 		return nullptr;
 	}
 	std::shared_ptr<StaticDoNode> LStaticDoNode = std::make_shared<StaticDoNode>(InTokens[Index]);
@@ -779,8 +843,8 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_StaticDo(const std::vector<Token>& In
 		return nullptr;
 	}
 
-	std::shared_ptr<IASTNode> LDoScope = Parse_Scope(InTokens, Index);
-	LStaticDoNode->SetOperand(STATIC_DO_NODE_BODY_OPERAND, LDoScope);
+	std::shared_ptr<ASTNode> LDoScope = Parse_Scope(InTokens, Index);
+	LStaticDoNode->SetChild(STATIC_DO_NODE_BODY_OPERAND, LDoScope);
 
 	if( Index + 1 < InTokens.size() && InTokens[Index + 1].GetType() == ETokenType::LPAR )
 	{
@@ -795,8 +859,8 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_StaticDo(const std::vector<Token>& In
 
 		if( LParEnd > Index + 1 )
 		{
-			std::shared_ptr<IASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd));
-			LStaticDoNode->SetOperand(STATIC_DO_NODE_CONDITION_OPERAND, LConditionExpr);
+			std::shared_ptr<ASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd));
+			LStaticDoNode->SetChild(STATIC_DO_NODE_CONDITION_OPERAND, LConditionExpr);
 		}
 
 		Index = LParEnd;
@@ -805,47 +869,96 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_StaticDo(const std::vector<Token>& In
 	return LStaticDoNode;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticWhile(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticWhile(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::WHILE )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
+		return nullptr;
+	}
+	std::shared_ptr<StaticWhileNode> LStaticWhileNode = std::make_shared<StaticWhileNode>(InTokens[Index]);
+
+	if( Index + 1 >= InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[Index]);
+		return nullptr;
+	}
+	++Index;
+
+	if( InTokens[Index].GetType() != ETokenType::LPAR )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[Index]);
+		return nullptr;
+	}
+
+	const size_t LParEnd = FParserHelperLibrary::GetLastClosePairIndex(ETokenType::LPAR, Index + 1, InTokens);
+	if( LParEnd == InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_RPAR, InTokens[Index]);
+		return nullptr;
+	}
+
+	if( LParEnd > Index + 1 )
+	{
+		std::shared_ptr<ASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd));
+		LStaticWhileNode->SetChild(STATIC_WHILE_NODE_CONDITION_OPERAND, LConditionExpr);
+	}
+	Index = LParEnd;
+
+	if( Index + 1 >= InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index]);
+		return nullptr;
+	}
+	++Index;
+
+	if( InTokens[Index].GetType() != ETokenType::LBRA )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index]);
+		return nullptr;
+	}
+
+	std::shared_ptr<ASTNode> LDoScope = Parse_Scope(InTokens, Index);
+	LStaticWhileNode->SetChild(STATIC_WHILE_NODE_BODY_OPERAND, LDoScope);
+
+	return LStaticWhileNode;
+}
+
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticFor(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticFor(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticForeach(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticForeach(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticIf(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticIf(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticSwitch(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticSwitch(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticSwitchAll(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticSwitchAll(const std::vector<Token>& InTokens, size_t& Index) const
-{
-	//TODO
-	return nullptr;
-}
-
-std::shared_ptr<IASTNode> ScopeNode::Parse_Do(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Do(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::DO )
 	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, "", 0, 0, 0);
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
 		return nullptr;
 	}
 	std::shared_ptr<DoNode> LDoNode = std::make_shared<DoNode>(InTokens[Index]);
@@ -863,8 +976,8 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_Do(const std::vector<Token>& InTokens
 		return nullptr;
 	}
 
-	std::shared_ptr<IASTNode> LDoScope = Parse_Scope(InTokens, Index);
-	LDoNode->SetOperand(DO_NODE_BODY_OPERAND, LDoScope);
+	std::shared_ptr<ASTNode> LDoScope = Parse_Scope(InTokens, Index);
+	LDoNode->SetChild(DO_NODE_BODY_OPERAND, LDoScope);
 
 	if( Index + 1 < InTokens.size() && InTokens[Index + 1].GetType() == ETokenType::LPAR )
 	{
@@ -879,8 +992,8 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_Do(const std::vector<Token>& InTokens
 
 		if( LParEnd > Index + 1 )
 		{
-			std::shared_ptr<IASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd));
-			LDoNode->SetOperand(DO_NODE_CONDITION_OPERAND, LConditionExpr);
+			std::shared_ptr<ASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd));
+			LDoNode->SetChild(DO_NODE_CONDITION_OPERAND, LConditionExpr);
 		}
 
 		Index = LParEnd;
@@ -889,196 +1002,195 @@ std::shared_ptr<IASTNode> ScopeNode::Parse_Do(const std::vector<Token>& InTokens
 	return LDoNode;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_While(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_While(const std::vector<Token>& InTokens, size_t& Index) const
+{
+	if( Index >= InTokens.size() || InTokens[Index].GetType() != ETokenType::WHILE )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
+		return nullptr;
+	}
+	std::shared_ptr<WhileNode> LWhileNode = std::make_shared<WhileNode>(InTokens[Index]);
+
+	if( Index + 1 >= InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[Index]);
+		return nullptr;
+	}
+	++Index;
+
+	if( InTokens[Index].GetType() != ETokenType::LPAR )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LPAR, InTokens[Index]);
+		return nullptr;
+	}
+
+	const size_t LParEnd = FParserHelperLibrary::GetLastClosePairIndex(ETokenType::LPAR, Index + 1, InTokens);
+	if( LParEnd == InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_RPAR, InTokens[Index]);
+		return nullptr;
+	}
+
+	if( LParEnd > Index + 1 )
+	{
+		std::shared_ptr<ASTNode> LConditionExpr = ParseExpr(std::vector<Token>(InTokens.begin() + Index + 1, InTokens.begin() + LParEnd));
+		LWhileNode->SetChild(WHILE_NODE_CONDITION_OPERAND, LConditionExpr);
+	}
+	Index = LParEnd;
+
+	if( Index + 1 >= InTokens.size() )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index]);
+		return nullptr;
+	}
+	++Index;
+
+	if( InTokens[Index].GetType() != ETokenType::LBRA )
+	{
+		FErrorLogger::Raise(EErrorMessageType::EXPECTED_LBRA, InTokens[Index]);
+		return nullptr;
+	}
+
+	std::shared_ptr<ASTNode> LDoScope = Parse_Scope(InTokens, Index);
+	LWhileNode->SetChild(WHILE_NODE_BODY_OPERAND, LDoScope);
+
+	return LWhileNode;
+}
+
+std::shared_ptr<ASTNode> ScopeNode::Parse_For(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_For(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Foreach(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Foreach(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_If(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_If(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Switch(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Switch(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_SwitchAll(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_SwitchAll(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Assert(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Assert(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticAssert(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticAssert(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticError(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticError(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticWarning(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticWarning(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_StaticMessage(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_StaticMessage(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Using(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Using(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Var(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Var(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Break(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Break(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Continue(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Continue(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Return(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Return(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Call(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Call(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_IndexAccess(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_IndexAccess(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Class(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Class(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Array(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Array(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Lambda(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Lambda(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Thernal(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Thernal(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_Cast(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
 }
 
-std::shared_ptr<IASTNode> ScopeNode::Parse_Cast(const std::vector<Token>& InTokens, size_t& Index) const
+std::shared_ptr<ASTNode> ScopeNode::Parse_UnsafeCast(const std::vector<Token>& InTokens, size_t& Index) const
 {
 	//TODO
 	return nullptr;
-}
-
-std::shared_ptr<IASTNode> ScopeNode::Parse_UnsafeCast(const std::vector<Token>& InTokens, size_t& Index) const
-{
-	//TODO
-	return nullptr;
-}
-
-
-
-//..........................................................................................................................//
-//..........................................................................................................................//
-
-
-
-void ScopeNode::InterpretAST(const FProgramInfo& ProgramInfo, FASTSymbols& LocalInfo)
-{
-	//TODO
-}
-
-bool ScopeNode::GetInterpretResultAsBool() const
-{
-	//TODO
-	return false;
-}
-
-int ScopeNode::GetInterpretResultAsInt() const
-{
-	//TODO
-	return 0;
-}
-
-double ScopeNode::GetInterpretResultAsDouble() const
-{
-	//TODO
-	return 0.0;
-}
-
-std::string ScopeNode::GetInterpretResultAsString() const
-{
-	//TODO
-	return std::string();
-}
-
-
-
-
-
-std::string ScopeNode::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const
-{
-	if( ASTCodeGenFactory == nullptr ) return "";
-
-	std::shared_ptr<INodeCodeGen<ScopeNode>> LCodeGen = ASTCodeGenFactory->MakeScopeGen();
-	if( LCodeGen == nullptr ) return "";
-
-	return LCodeGen->GenerateCode(this, ProgramInfo);
 }

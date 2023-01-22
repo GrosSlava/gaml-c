@@ -49,7 +49,6 @@ enum class ETokenType
 	SIZE_OF,                    // sizeof
 	TYPE_OF,                    // typeof
 	NAME_OF,                    // nameof
-	ALIGN_OF,                   // alignof
 	IS_FUNCTION,                // isfunction
 	IS_STRUCT,					// isstruct
 	IS_ENUM,					// isenum
@@ -192,7 +191,6 @@ enum class ETokenType
 	FINAL,                      // final
 	DEPRECATED,					// deprecated
 	UNIMPLEMENTED,				// unimplemented
-	ALIGN,						// align
 
 	// function
 	FUNCTION,                   // func

@@ -14,7 +14,7 @@
 // clang-format off
 bool BaseGenerator::GenerateCode
 (
-	const FGamlFileInfo& FileInfo, const FProgramInfo& ProgramInfo, 
+	const FGamlFileInfo& FileInfo, const FIRInfo& IRInfo, 
 	std::string& OutCompiledObjectFilePath
 )
 // clang-format on
@@ -28,7 +28,7 @@ bool BaseGenerator::GenerateCode
 	// generate code for low-level language
 	std::string GeneratedCodeStr;
 	GeneratedCodeStr.reserve(16384);
-	ProcessGeneration(GeneratedCodeStr, ProgramInfo);
+	ProcessGeneration(GeneratedCodeStr, IRInfo);
 
 
 	// create other language file

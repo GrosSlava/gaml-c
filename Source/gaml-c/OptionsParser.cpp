@@ -79,7 +79,9 @@ static const std::vector<FOptionInfo> Options =
 
 	FOptionInfo("",		"--no_translate",			"do not translate the generated code",					false,	NoTranslationOption),
 	FOptionInfo("",		"--dump_lexeme",			"dump lexemes to file",									false,	DumpLexemeOption),
+	FOptionInfo("",		"--dump_ast",				"dump all ast to file",									false,	DumpASTOption),
 	FOptionInfo("",		"--dump_modules",			"dump modules dependencies to file",					false,	DumpModulesOption),
+	FOptionInfo("",		"--dump_ir",				"dump IR to file",										false,	DumpIROption),
 	FOptionInfo("",		"--dump_c",					"dump generated code to file",							false,	DumpCOption), 
 	FOptionInfo("-S",	"--dump_asm",				"dump assembler to file",								false,	DumpASMOption),
 	FOptionInfo("-c",	"",							"no linking, only compile",								false,	NoLinkingOption),
@@ -358,9 +360,19 @@ OPTION_FUNCTION(DumpLexemeOption)
 	OutCompileOptions.DumpLexemes = true;
 }
 
+OPTION_FUNCTION(DumpASTOption)
+{
+	OutCompileOptions.DumpAST = true;
+}
+
 OPTION_FUNCTION(DumpModulesOption)
 {
 	OutCompileOptions.DumpModuleDependencies = true;
+}
+
+OPTION_FUNCTION(DumpIROption)
+{
+	OutCompileOptions.DumpIR = true;
 }
 
 OPTION_FUNCTION(DumpCOption)

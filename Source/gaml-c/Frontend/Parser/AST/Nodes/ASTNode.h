@@ -4,44 +4,94 @@
 
 #include "CoreMinimal.h"
 
+#include "Token/Token.h"
 
-
-
-class IASTCodeGenFactory;
-
-struct FProgramInfo;
-struct FASTSymbols;
 
 
 
 /*
-	Interface for all AST nodes.
+	Base class for all AST nodes.
 */
-class IASTNode
+class ASTNode
 {
 public:
 
-	inline IASTNode() { }
-	virtual ~IASTNode() { }
+	ASTNode() = delete;
+	inline ASTNode(const Token& InToken, int MaxChildrenCoint) : Children(MaxChildrenCoint, nullptr), ContextToken(InToken) { }
+	virtual ~ASTNode() { }
 
 
 
 public:
 
 	/*
-		Recursive interpret AST.
+		@return cached context token.
 	*/
-	virtual void InterpretAST(const FProgramInfo& ProgramInfo, FASTSymbols& LocalInfo) = 0;
-	virtual bool GetInterpretResultAsBool() const = 0;
-	virtual int GetInterpretResultAsInt() const = 0;
-	virtual double GetInterpretResultAsDouble() const = 0;
-	virtual std::string GetInterpretResultAsString() const = 0;
-
+	inline const Token& GetCTXToken() const noexcept { return ContextToken; }
+	/*
+		@return count of node children.
+	*/
+	inline size_t GetChildrenCount() const noexcept { return Children.size(); }
 
 	/*
-		Recursive generate code based on AST.
-		Analyzer already check all names and errors.
-		Code interpretation not needed.
+		@return operand at index, invalid index returns nullptr.
 	*/
-	virtual std::string GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const = 0;
+	inline std::shared_ptr<ASTNode> GetChild(int Index) const noexcept
+	{
+		if( Index < 0 || Index >= Children.size() ) return nullptr;
+
+		return Children[Index];
+	}
+	/*
+		Set operand at index.
+		Invalid index cause compilation error.
+	*/
+	void SetChild(int Index, std::shared_ptr<ASTNode> Child);
+
+public:
+
+	/*
+		Assign left or/and right subtrees.
+	*/
+	virtual void AssignSubTrees(std::shared_ptr<ASTNode> Lhs, std::shared_ptr<ASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight) = 0;
+
+	/*
+		Get node name as single string.
+	*/
+	virtual std::string GetNodeName() const noexcept = 0;
+
+
+
+
+protected:
+
+	/*
+		AST node children.
+	*/
+	std::vector<std::shared_ptr<ASTNode>> Children;
+
+	/*
+		Context operator token.
+	*/
+	Token ContextToken;
 };
+
+
+
+#define DECLARE_NODE(Name, ChildrenCount)                                                                                                      \
+	class Name final : public ASTNode                                                                                                          \
+	{                                                                                                                                          \
+	public:                                                                                                                                    \
+                                                                                                                                               \
+		inline Name(const Token& InToken) : ASTNode(InToken, ChildrenCount)                                                                    \
+		{                                                                                                                                      \
+		}                                                                                                                                      \
+                                                                                                                                               \
+	public:                                                                                                                                    \
+                                                                                                                                               \
+		virtual void AssignSubTrees(std::shared_ptr<ASTNode> Lhs, std::shared_ptr<ASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight) override; \
+		virtual std::string GetNodeName() const noexcept override                                                                              \
+		{                                                                                                                                      \
+			return #Name;                                                                                                                       \
+		}                                                                                                                                      \
+	};

@@ -15,7 +15,9 @@
 
 struct Token;
 class BaseGenerator;
+
 struct FProgramInfo;
+struct FIRInfo;
 
 
 
@@ -68,7 +70,8 @@ private:
 	bool ProcessLexer(const std::string& Code, std::vector<Token>& OutTokens);
 	bool ProcessParser(const std::vector<Token>& Tokens, FProgramInfo& OutProgramInfo);
 	bool ProcessSemantic(FProgramInfo& ProgramInfo);
-	bool GenerateCode(const FProgramInfo& ProgramInfo, std::string& OutCompiledObjectFilePath);
+	bool ProcessIR(FProgramInfo& ProgramInfo, FIRInfo& OutIR);
+	bool GenerateCode(const FIRInfo& IRInfo, std::string& OutCompiledObjectFilePath);
 
 	//..............................................................//
 
@@ -78,9 +81,18 @@ private:
 	*/
 	void DumpLexemes(const std::vector<Token>& Tokens);
 	/*
+		Save translation unit AST into file.
+	*/
+	void DumpAST(const FProgramInfo& ProgramInfo);
+	/*
 		Save translation unit dependencies into file.
 	*/
 	void DumpModuleDependencies(const FProgramInfo& ProgramInfo);
+	/*
+		Save translation unit IR into file.
+	*/
+	void DumpIR(const FIRInfo& IRInfo);
+
 
 
 	/*

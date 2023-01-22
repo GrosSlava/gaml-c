@@ -1,7 +1,6 @@
 // Copyright 2022 - 2023 GrosSlava.
 
 #include "ReduceCHelperLibrary.h"
-#include "ReduceCNodeCodeGen.h"
 
 
 
@@ -166,7 +165,8 @@ std::string FReduceCHelperLibrary::GetFunctionImplementationBodyCStr
 )
 // clang-format on
 {
-	return FunctionCompileInfo.FunctionCodeTree.GenerateCode(std::make_shared<ReduceC_ASTCodeGenFactory>(), ProgramInfo);
+	//return FunctionCompileInfo.FunctionCodeTree.GenerateCode(std::make_shared<ReduceC_ASTCodeGenFactory>(), ProgramInfo);
+	return "";
 }
 
 

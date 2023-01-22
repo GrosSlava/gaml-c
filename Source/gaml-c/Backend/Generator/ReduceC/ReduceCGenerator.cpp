@@ -7,14 +7,14 @@
 
 
 
-void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FProgramInfo& ProgramInfo)
+void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FIRInfo& IRInfo)
 {
 	GeneratedCodeStr += "/*\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetGenerationTime() + "\n";
 	GeneratedCodeStr += FGeneratorHelperLibrary::GetCompilerIdentifier() + "\n";
 	GeneratedCodeStr += "*/\n\n";
 
-
+#if 0 //TODO
 	GeneratedCodeStr += "\n/*.......................................Types declaration.......................................*/\n\n";
 	for( const std::pair<std::string, FClassInfo>& LClassInfo : ProgramInfo.Classes )
 	{
@@ -91,7 +91,7 @@ void ReduceCGenerator::ProcessGeneration(std::string& GeneratedCodeStr, const FP
 		GeneratedCodeStr += "\n}\n";
 	}
 	GeneratedCodeStr += "\n/*................................................................................................*/\n";
-
+#endif
 
 	std::replace(GeneratedCodeStr.begin(), GeneratedCodeStr.end(), FCompilerConfig::COMPILE_NAME_SEPARATOR, '_');
 }

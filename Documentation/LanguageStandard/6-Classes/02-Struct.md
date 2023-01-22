@@ -43,9 +43,6 @@ Struct - it is wrapper over data with bound methods.
 ### Example
 
 ```
-***
-	@align(16)
-***
 public struct FMyStruct
 {
 	// by default uninitialized members contains trash

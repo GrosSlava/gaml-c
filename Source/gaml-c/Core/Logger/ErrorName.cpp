@@ -86,7 +86,7 @@ FErrorInfo GetErrorInfo(EErrorMessageType MessageType)
 	CASE_ERROR(FUNCTION_DESCRIPTION_MISMATCH):				return FErrorInfo(EErrorType::ERROR, EWarningLevel::NoWarnings, "Mismatch of the function description.");
 	CASE_ERROR(FUNCTION_STATIC_CODE_OVERRIDE):				return FErrorInfo(EErrorType::ERROR, EWarningLevel::NoWarnings, "Function static code override.");
 	CASE_ERROR(CLASS_NAME_NOT_FOUND):						return FErrorInfo(EErrorType::ERROR, EWarningLevel::NoWarnings, "Class name was not found.");
-	CASE_ERROR(AST_SET_OPERATOR_OPERAND_OUT_OF_RANGE):		return FErrorInfo(EErrorType::ERROR, EWarningLevel::NoWarnings, "AST set operator operand out of range.");
+	CASE_ERROR(AST_SET_CHILD_OUT_OF_RANGE):					return FErrorInfo(EErrorType::ERROR, EWarningLevel::NoWarnings, "AST set child out of range.");
 	
 	//Code generator
 	CASE_ERROR(NO_DEFAULT_COMPILER_FOR_CURRENT_PLATFORM):	return FErrorInfo(EErrorType::ERROR, EWarningLevel::NoWarnings, "No default compiler for current platform.");

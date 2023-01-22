@@ -97,7 +97,7 @@ enum class EErrorMessageType
 
 	CLASS_NAME_NOT_FOUND,
 
-	AST_SET_OPERATOR_OPERAND_OUT_OF_RANGE,
+	AST_SET_CHILD_OUT_OF_RANGE,
 
 
 	/* Code generator */

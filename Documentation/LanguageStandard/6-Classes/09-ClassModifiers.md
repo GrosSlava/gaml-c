@@ -53,10 +53,3 @@ object UMySingletonObject
 > This class can't be inhereted. \
 > Can be used once. \
 > Order is not important.
-
-> `@align([SIZE])` \
-> Set class data memory align in bytes. \
-> SIZE <= 0 means by default. \
-> SIZE can be expression for compile-time calculation. \
-> Can be used once. \
-> Order is not important.

@@ -178,7 +178,7 @@
 		"DescriptionModifiers": {
 			"patterns": [
 				{
-					"match": "(\\@)(?:\\s*)\\b(extern_c|cdecl|stdcall|fastcall|const|static|virtual|override|abstract|final|deprecated|unimplemented|align)\\b",
+					"match": "(\\@)(?:\\s*)\\b(extern_c|cdecl|stdcall|fastcall|const|static|virtual|override|abstract|final|deprecated|unimplemented)\\b",
 					"captures": {
 						"1": {
 							"name": "keyword.other.gaml"
@@ -404,7 +404,7 @@
 			"patterns": [
 				{
 					"name": "keyword.other.gaml",
-					"match": "\\b(sizeof|typeof|nameof|alignof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|islambda|isiterable|isenumerable|isabstract|isalias|in|is|addr)\\b"
+					"match": "\\b(sizeof|typeof|nameof|isfunction|isstruct|isenum|isinterface|isobject|iscomponent|issubclass|isinstance|islambda|isiterable|isenumerable|isabstract|isalias|in|is|addr)\\b"
 				}
 			]
 		},

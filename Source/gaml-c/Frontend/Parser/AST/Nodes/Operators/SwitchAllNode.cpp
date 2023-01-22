@@ -1,51 +1,16 @@
 // Copyright 2022 - 2023 GrosSlava.
 
 #include "Parser/AST/Nodes/ASTOperators.h"
-#include "Logger/CompileLogger.h"
+#include "Logger/ErrorLogger.h"
 
 
 
 
 
-void SwitchAllNode::InterpretAST(const FProgramInfo& ProgramInfo, FASTSymbols& LocalInfo)
+void SwitchAllNode::AssignSubTrees(std::shared_ptr<ASTNode> Lhs, std::shared_ptr<ASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
 {
-	//TODO
-}
+	OutUseLeft = false;
+	OutUseRight = false;
 
-bool SwitchAllNode::GetInterpretResultAsBool() const
-{
-	//TODO
-	return false;
-}
-
-int SwitchAllNode::GetInterpretResultAsInt() const
-{
-	//TODO
-	return 0;
-}
-
-double SwitchAllNode::GetInterpretResultAsDouble() const
-{
-	//TODO
-	return 0.0;
-}
-
-std::string SwitchAllNode::GetInterpretResultAsString() const
-{
-	//TODO
-	return "";
-}
-
-
-
-
-
-std::string SwitchAllNode::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const
-{
-	if( ASTCodeGenFactory == nullptr ) return "";
-
-	std::shared_ptr<INodeCodeGen<SwitchAllNode>> LCodeGen = ASTCodeGenFactory->MakeSwitchAllGen();
-	if( LCodeGen == nullptr ) return "";
-
-	return LCodeGen->GenerateCode(this, ProgramInfo);
+	FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
 }

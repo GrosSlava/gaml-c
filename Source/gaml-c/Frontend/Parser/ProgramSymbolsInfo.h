@@ -203,10 +203,6 @@ public:
 	bool IsDeprecated = false;
 	bool IsUnimplemented = false;
 
-	int Align = -1;
-
-
-
 public:
 
 	friend bool operator==(const FModfiers& A, const FModfiers& B)
@@ -224,8 +220,7 @@ public:
 			A.IsAbstract == B.IsAbstract 				&&
 			A.IsFinal == B.IsFinal 						&&
 			A.IsDeprecated == B.IsDeprecated 			&&
-			A.IsUnimplemented == B.IsUnimplemented 		&&
-			A.Align == B.Align;
+			A.IsUnimplemented == B.IsUnimplemented;
 		// clang-format on
 	}
 

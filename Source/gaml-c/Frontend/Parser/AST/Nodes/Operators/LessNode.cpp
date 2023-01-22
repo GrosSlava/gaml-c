@@ -1,59 +1,22 @@
 // Copyright 2022 - 2023 GrosSlava.
 
 #include "Parser/AST/Nodes/ASTOperators.h"
-#include "Logger/CompileLogger.h"
+#include "Logger/ErrorLogger.h"
 
 
 
 
 
-void LessNode::InterpretAST(const FProgramInfo& ProgramInfo, FASTSymbols& LocalInfo)
+void LessNode::AssignSubTrees(std::shared_ptr<ASTNode> Lhs, std::shared_ptr<ASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
 {
-	//TODO
-}
+	if( !Lhs || !Rhs )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
+	}
 
-bool LessNode::GetInterpretResultAsBool() const
-{
-	//TODO
-	return false;
-}
+	Children[LESS_NODE_LEFT_OPERAND] = Lhs;
+	Children[LESS_NODE_RIGHT_OPERAND] = Rhs;
 
-int LessNode::GetInterpretResultAsInt() const
-{
-	//TODO
-	return 0;
-}
-
-double LessNode::GetInterpretResultAsDouble() const
-{
-	//TODO
-	return 0.0;
-}
-
-std::string LessNode::GetInterpretResultAsString() const
-{
-	//TODO
-	return "";
-}
-
-
-
-
-
-void LessNode::AssignSubTrees(std::shared_ptr<IASTNode> Lhs, std::shared_ptr<IASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
-{
-	//TODO
 	OutUseLeft = true;
 	OutUseRight = true;
-}
-
-
-
-
-
-std::string LessNode::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const
-{
-	return "";
-
-	//TODO
 }

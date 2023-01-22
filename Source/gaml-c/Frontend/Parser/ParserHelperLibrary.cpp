@@ -373,7 +373,7 @@ std::string FParserHelperLibrary::GetFirstModuleName(const std::vector<Token>& T
 
 
 
-int FParserHelperLibrary::GetOperationPriority(ETokenType TokenType) noexcept
+int FParserHelperLibrary::GetOperationPriority(ETokenType TokenType, bool UseAlternative) noexcept
 {
 	switch( TokenType )
 	{
@@ -418,8 +418,8 @@ int FParserHelperLibrary::GetOperationPriority(ETokenType TokenType) noexcept
 	case ETokenType::BINARY_SHR: return 10;
 	case ETokenType::IN: return 10;
 
-	case ETokenType::PLUS: return 11;
-	case ETokenType::MINUS: return 11;
+	case ETokenType::PLUS: return UseAlternative ? 13 : 11;
+	case ETokenType::MINUS: return UseAlternative ? 13 : 11;
 
 	case ETokenType::STAR: return 12;
 	case ETokenType::SLASH: return 12;
@@ -442,7 +442,6 @@ int FParserHelperLibrary::GetOperationPriority(ETokenType TokenType) noexcept
 	case ETokenType::SIZE_OF: return 16;
 	case ETokenType::TYPE_OF: return 16;
 	case ETokenType::NAME_OF: return 16;
-	case ETokenType::ALIGN_OF: return 16;
 	case ETokenType::IS_FUNCTION: return 16;
 	case ETokenType::IS_STRUCT: return 16;
 	case ETokenType::IS_ENUM: return 16;

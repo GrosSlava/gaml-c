@@ -1,59 +1,22 @@
 // Copyright 2022 - 2023 GrosSlava.
 
 #include "Parser/AST/Nodes/ASTOperators.h"
-#include "Logger/CompileLogger.h"
+#include "Logger/ErrorLogger.h"
 
 
 
 
 
-void GreatherNode::InterpretAST(const FProgramInfo& ProgramInfo, FASTSymbols& LocalInfo)
+void GreatherNode::AssignSubTrees(std::shared_ptr<ASTNode> Lhs, std::shared_ptr<ASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
 {
-	//TODO
-}
+	if( !Lhs || !Rhs )
+	{
+		FErrorLogger::Raise(EErrorMessageType::INVALID_STATE, ContextToken);
+	}
 
-bool GreatherNode::GetInterpretResultAsBool() const
-{
-	//TODO
-	return false;
-}
+	Children[GREATHER_NODE_LEFT_OPERAND] = Lhs;
+	Children[GREATHER_NODE_RIGHT_OPERAND] = Rhs;
 
-int GreatherNode::GetInterpretResultAsInt() const
-{
-	//TODO
-	return 0;
-}
-
-double GreatherNode::GetInterpretResultAsDouble() const
-{
-	//TODO
-	return 0.0;
-}
-
-std::string GreatherNode::GetInterpretResultAsString() const
-{
-	//TODO
-	return "";
-}
-
-
-
-
-
-void GreatherNode::AssignSubTrees(std::shared_ptr<IASTNode> Lhs, std::shared_ptr<IASTNode> Rhs, bool& OutUseLeft, bool& OutUseRight)
-{
-	//TODO
 	OutUseLeft = true;
 	OutUseRight = true;
-}
-
-
-
-
-
-std::string GreatherNode::GenerateCode(std::shared_ptr<IASTCodeGenFactory> ASTCodeGenFactory, const FProgramInfo& ProgramInfo) const
-{
-	return "";
-
-	//TODO
 }

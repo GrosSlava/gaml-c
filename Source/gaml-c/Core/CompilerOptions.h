@@ -104,9 +104,17 @@ struct FCompileOptions
 	*/
 	bool DumpLexemes = false;
 	/*
+		Dump PARSER stage to file.
+	*/
+	bool DumpAST = false;
+	/*
 		Dump all used modules dependencies to file.
 	*/
 	bool DumpModuleDependencies = false;
+	/*
+		Dump program IR to file.
+	*/
+	bool DumpIR = false;
 	/*
 		Dump generated code to file.
 	*/

@@ -11,7 +11,7 @@
 #include "CompilerConfig.h"
 #include "CompilerHelperLibrary.h"
 
-#include "Parser/ProgramSymbols.h"
+#include "IR/IRInfo.h"
 #include "Logger/ErrorLogger.h"
 
 
@@ -40,13 +40,13 @@ public:
 		Translate code to object file.
 
 		@param FileInfo - Original file info.
-		@param ProgramInfo - Program abstract view.
+		@param IRInfo - Program abstract view.
 		@param OutCompiledObjectFilePath - Result path to generated object file.
 		@return success.
 	*/
 	virtual bool GenerateCode
 	(
-		const FGamlFileInfo& FileInfo, const FProgramInfo& ProgramInfo, 
+		const FGamlFileInfo& FileInfo, const FIRInfo& IRInfo, 
 		std::string& OutCompiledObjectFilePath
 	);
 	// clang-format on
@@ -60,7 +60,7 @@ protected:
 	/*
 		Translate code to other language.
 	*/
-	virtual void ProcessGeneration(std::string& GeneratedCodeStr, const FProgramInfo& ProgramInfo) { }
+	virtual void ProcessGeneration(std::string& GeneratedCodeStr, const FIRInfo& IRInfo) { }
 
 protected:
 
