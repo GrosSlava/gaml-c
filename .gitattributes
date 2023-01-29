@@ -1,6 +1,11 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Set platform specific files
+*.sln text eol=crlf
+*.sh text eol=lf
+*.bat text eol=crlf
+
 # Image
 *.jpg filter=lfs diff=lfs merge=lfs -text
 *.jpeg filter=lfs diff=lfs merge=lfs -text
