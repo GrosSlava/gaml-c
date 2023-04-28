@@ -20,8 +20,7 @@
 
 ## Guides
 
-You can find the complete manuals in the *Documentation* folder. \
-Or you can use [GitBook](https://grosslava.gitbook.io/gaml-c/)
+You can find the complete manuals in the *Documentation* folder.
 
 ### Guides overview
 
