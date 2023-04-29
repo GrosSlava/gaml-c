@@ -21,7 +21,7 @@ struct FIRInfo;
 
 
 
-/*
+/**
 	Main object for compilation pipeline.
 */
 struct FCompiler
@@ -34,7 +34,7 @@ public:
 
 public:
 
-	/*
+	/**
 		Start compilation pipeline.
 	*/
 	inline std::string Process(const std::string& FilePath) { return Process(FGamlFileInfo(FilePath)); }
@@ -42,7 +42,7 @@ public:
 
 private:
 
-	/*
+	/**
 		@return path to result directory.
 	*/
 	inline std::string GetCompilerOutputDir(const std::string& FileName) const noexcept
@@ -52,7 +52,7 @@ private:
 	}
 
 
-	/*
+	/**
 		Log error based on compiler context.
 	*/
 	inline void LogError(EErrorType ErrorType, const std::string& FileName, const std::string& Message, size_t Line, size_t Pos) const
@@ -76,31 +76,22 @@ private:
 	//..............................................................//
 
 
-	/*
+	/**
 		Save translation unit lexemes into file.
 	*/
 	void DumpLexemes(const std::vector<Token>& Tokens);
-	/*
+	/**
 		Save translation unit AST into file.
 	*/
 	void DumpAST(const FProgramInfo& ProgramInfo);
-	/*
+	/**
 		Save translation unit dependencies into file.
 	*/
 	void DumpModuleDependencies(const FProgramInfo& ProgramInfo);
-	/*
+	/**
 		Save translation unit IR into file.
 	*/
 	void DumpIR(const FIRInfo& IRInfo);
-
-
-
-	/*
-		Construct code generator based on current compilation options.
-
-		@return generated code generator.
-	*/
-	BaseGenerator* CreateCodeGenerator() const noexcept;
 
 
 

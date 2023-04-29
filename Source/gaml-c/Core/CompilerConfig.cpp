@@ -19,10 +19,8 @@
 
 // set your arch for cross compiler
 // clang-format off
-#if WINDOWS_64
+#if WINDOWS_32 || WINDOWS_64
 	const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
-#elif WINDOWS_32
-	const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86;
 #elif LINUX
 	const ETargetArch FCompilerConfig::DEFAULT_TARGET_ARCH = ETargetArch::x86_64;
 #else

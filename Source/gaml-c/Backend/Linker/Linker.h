@@ -13,7 +13,7 @@
 
 
 
-/*
+/**
 	Object for linking compiled object files.
 */
 struct FLinker
@@ -26,7 +26,7 @@ public:
 
 public:
 
-	/*
+	/**
 		Start linking.
 
 		@param ObjectFilesPaths - Array of object files to link.
@@ -36,14 +36,14 @@ public:
 
 private:
 
-	/*
+	/**
 		@return path to result directory.
 	*/
 	inline std::string GetOutputDirectoryPath() const noexcept
 	{
 		return FCoreObjects::CompileOptions.OutputDir.empty() ? FirstFileInfo.PathToFileOnly : FCoreObjects::CompileOptions.OutputDir;
 	}
-	/*
+	/**
 		@return path to resulting file.
 	*/
 	inline std::string GetOutputFilePath(const std::string& Extension) const noexcept
@@ -56,7 +56,7 @@ private:
 	}
 
 
-	/*
+	/**
 		Raise error based on linker context.
 	*/
 	inline void RaiseError(EErrorMessageType ErrorMessageType, const std::string& ObjectFilePath) const
@@ -66,7 +66,7 @@ private:
 
 private:
 
-	/*
+	/**
 		Run platform specific linker.
 	*/
 	void RunThirdPartyLinker(const std::vector<std::string>& ObjectFilesPaths, const std::vector<std::string>& LibsFilesPaths);
@@ -76,7 +76,7 @@ private:
 
 private:
 
-	/*
+	/**
 		Cached name of first passed file.
 	*/
 	FGamlFileInfo FirstFileInfo;

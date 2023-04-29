@@ -8,6 +8,12 @@ set(CMAKE_SUPPRESS_REGENERATION true)
 
 
 
+if(MSVC)
+  add_definitions(/MP)
+endif()
+
+
+
 include_directories(${PROJECT_SOURCE_DIR}/gaml-c/Core)
 include_directories(${PROJECT_SOURCE_DIR}/gaml-c/Backend)
 include_directories(${PROJECT_SOURCE_DIR}/gaml-c/Frontend)

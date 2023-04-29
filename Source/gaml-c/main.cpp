@@ -9,7 +9,7 @@
 
 
 
-/*
+/**
 	gaml-c entry point.
 */
 int main(int argc, char** argv)

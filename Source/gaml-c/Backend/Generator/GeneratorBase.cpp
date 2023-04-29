@@ -21,7 +21,6 @@ bool BaseGenerator::GenerateCode
 {
 	// set context
 	CurrentFileInfo = FileInfo;
-
 	OutCompiledObjectFilePath.clear();
 
 
@@ -46,19 +45,16 @@ bool BaseGenerator::GenerateCode
 	LFile.close();
 
 
-	// compile generated code by native compiler
-	if( !FCoreObjects::CompileOptions.NoTranslation )
+	// compile generated code to binary
+	const std::string LFileExtension = FPlatformHelperLibrary::GetPlatformObjectFileExtension(FCoreObjects::CompileOptions.TargetPlatform);
+	if( LFileExtension.empty() )
 	{
-		const std::string LFileExtension = FPlatformHelperLibrary::GetPlatformObjectFileExtension(FCoreObjects::CompileOptions.TargetPlatform);
-		if( LFileExtension.empty() )
-		{
-			RaiseError(EErrorMessageType::INVALID_GENERATION_EXTENSION, 0, 0, 0);
-			return false;
-		}
-
-		OutCompiledObjectFilePath = GetOutputFilePath(LFileExtension);
-		FGenericPlatform::RunThirdPartyCompiler(CurrentFileInfo, LOutFilePath, GetOutputDirectoryPath(), OutCompiledObjectFilePath);
+		RaiseError(EErrorMessageType::INVALID_GENERATION_EXTENSION, 0, 0, 0);
+		return false;
 	}
+	OutCompiledObjectFilePath = GetOutputFilePath(LFileExtension);
+	CompileToBinary(LOutFilePath, OutCompiledObjectFilePath);
+	
 
 	// remove generated low-level code if needed
 	if( !FCoreObjects::CompileOptions.DumpGeneratedCode )

@@ -9,12 +9,12 @@
 
 
 
-/*
+/**
 	Helper object for logging from compiler.
 */
 struct FCompileLogger
 {
-	/*
+	/**
 		Log formatted message.
 
 		@param ErrorType - Severity of the error.
@@ -24,13 +24,13 @@ struct FCompileLogger
 		@param Pos - Context line position.
 	*/
 	static void Raise(EErrorType ErrorType, const std::string& File, const std::string& Message, size_t Line, size_t Pos);
-	/*
+	/**
 		Log error message into stderr.
 
 		@param Message - Message to log.
 	*/
 	static void MessageError(const std::string& Message);
-	/*
+	/**
 		Log text message stdout.
 
 		@param Message - Message to log.

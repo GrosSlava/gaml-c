@@ -17,14 +17,14 @@ struct FGamlFileInfo;
 
 
 
-/*
+/**
 	Helper library for common compiler operations.
 */
 struct FCompilerHelperLibrary
 {
 	//.........................................................Misc........................................................//
 
-	/*
+	/**
 		Time code performance.
 
 		@param Lambda - Code to check.
@@ -42,13 +42,13 @@ struct FCompilerHelperLibrary
 		return Duration.count();
 	}
 
-	/*
+	/**
 		@param MillisecondsCount - Time in milliseconds.
 		@return formatted current time.
 	*/
 	static std::string GetPrettyTimeStr(size_t MillisecondsCount) noexcept;
 
-	/*
+	/**
 		Execute console command on platform.
 		
 		@return command exit code.
@@ -60,7 +60,7 @@ struct FCompilerHelperLibrary
 
 	//.....................................................Path............................................................//
 
-	/*
+	/**
 		Split file path into Path/Name/Extension.
 
 		@param FilePath - Path to file for splitting.
@@ -70,7 +70,7 @@ struct FCompilerHelperLibrary
 	*/
 	static void SplitFilePath(const std::string& FilePath, std::string& OutPathOnly, std::string& OutNameOnly, std::string& OutExtensionOnly);
 
-	/*
+	/**
 		Split file path by separator.
 
 		@param FilePath - Path to file for splitting.
@@ -79,7 +79,7 @@ struct FCompilerHelperLibrary
 	*/
 	static void SplitPathToParts(const std::string& FilePath, std::vector<std::string>& OutParts, char Separator = std::filesystem::path::preferred_separator);
 
-	/*
+	/**
 		Concatanate paths by platform specific delimiter.
 
 		@param Lhs - Left hand string to concatanate.
@@ -89,7 +89,7 @@ struct FCompilerHelperLibrary
 	static std::string CatPaths(const std::string& Lhs, const std::string Rhs, char Separator = std::filesystem::path::preferred_separator);
 
 	// clang-format off
-	/*
+	/**
 		Concatanate array of path parts by given separator.
 
 		@param Parts - Array of path parts.
@@ -103,7 +103,7 @@ struct FCompilerHelperLibrary
 	);
 	// clang-format on
 
-	/*
+	/**
 		Make "up" path. It can be see like "../../../"
 
 		@param UpCount - Count of directories to up.
@@ -116,7 +116,7 @@ struct FCompilerHelperLibrary
 	//...................................................Files.............................................................//
 
 	// clang-format off
-	/*
+	/**
 		Find all files with specific extension in given folder and it's subfolders.
 
 		@param Path - Path to directory to search.
@@ -130,7 +130,7 @@ struct FCompilerHelperLibrary
 	);
 	// clang-format on
 
-	/*
+	/**
 		Find all files with GAML extension in given folder and it's subfolders (search both of sources and headers).
 	*/
 	static inline void GetAllGamlFilesInFolder(const std::string& Path, std::vector<FGamlFileInfo>& OutFilesInfo)
@@ -138,18 +138,18 @@ struct FCompilerHelperLibrary
 		GetAllFilesWithExtensionsInFolder(Path, {FCompilerConfig::COMPILE_FILE_EXTENSION, FCompilerConfig::HEADER_FILE_EXTENSION}, OutFilesInfo);
 	}
 
-	/*
+	/**
 		@param Path - Directory to search.
 		@return first folder name from given directory.
 	*/
 	static std::string GetFirstFolderName(const std::string& Path);
 
-	/*
+	/**
 		@return first existing folder from FoldersBestOrder.
 	*/
 	static std::string GetBestFolderName(const std::string& Path, const std::vector<std::string>& FoldersBestOrder);
 
-	/*
+	/**
 		Read file into string.
 
 		@param FilePath - Path to file.
@@ -157,7 +157,7 @@ struct FCompilerHelperLibrary
 		@return success.
 	*/
 	static bool ReadAllFileToStr(const std::string& FilePath, std::string& OutFileSource);
-	/*
+	/**
 		Read file into string.
 
 		@param File - Opened file.

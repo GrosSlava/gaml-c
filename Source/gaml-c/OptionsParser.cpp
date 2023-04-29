@@ -55,41 +55,34 @@ static const std::vector<FOptionInfo> Options =
 	FOptionInfo("-v",	"--version",				"compiler version",										false,	VersionOption),
 
 	FOptionInfo("-p",	"--package=",				"compiling package dir with gaml files",				true,	PackageOption),
-	FOptionInfo("-b",	"",							"static link package dir with object files",			true,	StaticLinkOption),
+	FOptionInfo("-P",	"--link_package=",			"static link package dir with object files",			true,	StaticLinkOption),
 	FOptionInfo("-l",	"--lib=",					"link library",											true,	LinkLibraryOption),
 	FOptionInfo("-o",	"--output=",				"set output directory",									true,	OutputOption),
-	FOptionInfo("",		"--name=",					"set result name",										true,	ProgramNameOption),
+	FOptionInfo("-n",	"--name=",					"set result name",										true,	ProgramNameOption),
 	FOptionInfo("-O",	"",							"set optimization level [0 - 2]",						true,	OptimizationLevelOption),
 	FOptionInfo("-W",	"",							"set warning level [0 - 3]",							true,	WarningLevelOption),
-	FOptionInfo("",		"--code_type=",				"set code generation type [ReduceC, LLVM]",				true,	CodeGenerationTypeOption),
 	FOptionInfo("",		"--subsystem=",				"set type of subsystem [Console, Window]",				true,	SubsystemTypeOption),
+	FOptionInfo("",		"--build=",					"set type of program build [lib, dlib, exe]",			true,	BuildTypeOption),
 	FOptionInfo("",		"--platform=",				"set target platform (Undefined, Windows, Linux)",		true,	TargetPlatformOption),
-	FOptionInfo("",		"--arch=",					"set target arch (x86, x86_64, ARM, ARM_64)",			true,	TargetArchOption),
+	FOptionInfo("",		"--arch=",					"set target arch (x86_64, AArch64)",			        true,	TargetArchOption),
 	FOptionInfo("-e",	"--entry=",					"set entry point name",									true,	EntryPointOption),
 	FOptionInfo("-L",	"--libpath=",				"add libs searching dir",								true,	LibsSearchingOption),
 
 	FOptionInfo("",		"--debug",					"include debug information",							false,	DebugOption),
-	FOptionInfo("",		"--DLL",					"output result will be in dll",							false,	DLLOption),
 	FOptionInfo("",		"--w2e",					"convert warnings to errors",							false,	WarningToErrorsOption),
-	FOptionInfo("",		"--no_builtin",				"no builtin content",									false,	NoBuiltinOption), 
 	FOptionInfo("",		"--no_reflection",			"disable reflection code generation",					false,	NoReflectionOption),
-	FOptionInfo("",		"--freestanding",			"generate freestanding code",							false,	FreestandingOption),
-	FOptionInfo("",		"--no_stack_protector",		"disable stack protection",								false,	NoStackProtectionOption),
-	FOptionInfo("",		"--no_red_zone",			"disable red zones",									false,	NoRedZonesOption),
-
-	FOptionInfo("",		"--no_translate",			"do not translate the generated code",					false,	NoTranslationOption),
-	FOptionInfo("",		"--dump_lexeme",			"dump lexemes to file",									false,	DumpLexemeOption),
-	FOptionInfo("",		"--dump_ast",				"dump all ast to file",									false,	DumpASTOption),
-	FOptionInfo("",		"--dump_modules",			"dump modules dependencies to file",					false,	DumpModulesOption),
-	FOptionInfo("",		"--dump_ir",				"dump IR to file",										false,	DumpIROption),
-	FOptionInfo("",		"--dump_c",					"dump generated code to file",							false,	DumpCOption), 
-	FOptionInfo("-S",	"--dump_asm",				"dump assembler to file",								false,	DumpASMOption),
-	FOptionInfo("-c",	"",							"no linking, only compile",								false,	NoLinkingOption),
 
 	FOptionInfo("-q",	"--quiet",					"no compiler messages",									false,	QuietOption),
 	FOptionInfo("",		"--no_context",				"no context string with errors",						false,	NoContextOption),
 	FOptionInfo("",		"--progress",				"show compilation progress",							false,	ShowProgressOption), 
 	FOptionInfo("-t",	"--time",					"show total compilation time",							false,	ShowCompileTimeOption),
+
+	FOptionInfo("",		"--dump_lexeme",			"dump lexemes to file",									false,	DumpLexemeOption),
+	FOptionInfo("",		"--dump_ast",				"dump all ast to file",									false,	DumpASTOption),
+	FOptionInfo("",		"--dump_modules",			"dump modules dependencies to file",					false,	DumpModulesOption),
+	FOptionInfo("",		"--dump_ir",				"dump IR to file",										false,	DumpIROption),
+	FOptionInfo("",		"--dump_code",				"dump generated code to file",							false,	DumpGeneratedCodeOption),
+	FOptionInfo("-c",	"",							"no linking, only compile",								false,	NoLinkingOption),
 };
 // clang-format on
 
@@ -220,23 +213,6 @@ OPTION_FUNCTION(WarningLevelOption)
 	}
 }
 
-OPTION_FUNCTION(CodeGenerationTypeOption)
-{
-	if( Argument == "ReduceC" )
-	{
-		OutCompileOptions.CodeGenerationType = ECodeGenerationType::ReduceC;
-	}
-	else if( Argument == "LLVM" )
-	{
-		OutCompileOptions.CodeGenerationType = ECodeGenerationType::LLVM;
-	}
-	else
-	{
-		FCompileLogger::MessageError("Invalid code generation type: " + Argument);
-		exit(0);
-	}
-}
-
 OPTION_FUNCTION(SubsystemTypeOption)
 {
 	if( Argument == "Console" )
@@ -250,6 +226,27 @@ OPTION_FUNCTION(SubsystemTypeOption)
 	else
 	{
 		FCompileLogger::MessageError("Invalid subsystem type: " + Argument);
+		exit(0);
+	}
+}
+
+OPTION_FUNCTION(BuildTypeOption)
+{
+	if( Argument == "lib" )
+	{
+		OutCompileOptions.BuildType = EBuildType::StaticLibrary;
+	}
+	else if( Argument == "dlib" )
+	{
+		OutCompileOptions.BuildType = EBuildType::SharedLibrary;
+	}
+	else if( Argument == "exe" )
+	{
+		OutCompileOptions.BuildType = EBuildType::Executable;
+	}
+	else
+	{
+		FCompileLogger::MessageError("Invalid build type: " + Argument);
 		exit(0);
 	}
 }
@@ -277,21 +274,13 @@ OPTION_FUNCTION(TargetPlatformOption)
 
 OPTION_FUNCTION(TargetArchOption)
 {
-	if( Argument == "x86" )
-	{
-		OutCompileOptions.TargetArch = ETargetArch::x86;
-	}
-	else if( Argument == "x86_64" )
+	if( Argument == "x86_64" )
 	{
 		OutCompileOptions.TargetArch = ETargetArch::x86_64;
 	}
-	else if( Argument == "ARM" )
+	else if( Argument == "AArch64" )
 	{
-		OutCompileOptions.TargetArch = ETargetArch::arm;
-	}
-	else if( Argument == "ARM_64" )
-	{
-		OutCompileOptions.TargetArch = ETargetArch::arm_64;
+		OutCompileOptions.TargetArch = ETargetArch::AArch64;
 	}
 	else
 	{
@@ -315,44 +304,14 @@ OPTION_FUNCTION(DebugOption)
 	OutCompileOptions.IsDebug = true;
 }
 
-OPTION_FUNCTION(DLLOption)
-{
-	OutCompileOptions.IsDLL = true;
-}
-
 OPTION_FUNCTION(WarningToErrorsOption)
 {
 	OutCompileOptions.ConvertWarningsToErrors = true;
 }
 
-OPTION_FUNCTION(NoBuiltinOption)
-{
-	OutCompileOptions.NoBuiltin = true;
-}
-
 OPTION_FUNCTION(NoReflectionOption)
 {
 	OutCompileOptions.NoReflection = true;
-}
-
-OPTION_FUNCTION(FreestandingOption)
-{
-	OutCompileOptions.Freestanding = true;
-}
-
-OPTION_FUNCTION(NoStackProtectionOption)
-{
-	OutCompileOptions.NoStackProtection = true;
-}
-
-OPTION_FUNCTION(NoRedZonesOption)
-{
-	OutCompileOptions.NoRedZone = true;
-}
-
-OPTION_FUNCTION(NoTranslationOption)
-{
-	OutCompileOptions.NoTranslation = true;
 }
 
 OPTION_FUNCTION(DumpLexemeOption)
@@ -375,14 +334,9 @@ OPTION_FUNCTION(DumpIROption)
 	OutCompileOptions.DumpIR = true;
 }
 
-OPTION_FUNCTION(DumpCOption)
+OPTION_FUNCTION(DumpGeneratedCodeOption)
 {
 	OutCompileOptions.DumpGeneratedCode = true;
-}
-
-OPTION_FUNCTION(DumpASMOption)
-{
-	OutCompileOptions.DumpAssembly = true;
 }
 
 OPTION_FUNCTION(NoLinkingOption)

@@ -7,7 +7,7 @@
 
 
 
-/*
+/**
 	Information about file in separate form.
 */
 struct FGamlFileInfo
@@ -71,11 +71,11 @@ public:
 
 public:
 
-	/*
+	/**
 		Set all parts from full file path.
 	*/
 	void SetFromPath(const std::string& FilePath);
-	/*
+	/**
 		Clear content.
 	*/
 	inline void Clear() noexcept
@@ -85,15 +85,15 @@ public:
 		ExtensionOnly.clear();
 	}
 
-	/*
+	/**
 		@return original concatanated path.
 	*/
 	inline std::string GetFileFullPath() const noexcept { return PathToFileOnly + FileNameOnly + "." + ExtensionOnly; }
-	/*
+	/**
 		@return length of file path string.
 	*/
 	inline size_t GetSize() const noexcept { return PathToFileOnly.size() + FileNameOnly.size() + ExtensionOnly.size() + 1; }
-	/*
+	/**
 		@return true if path to file is empty. 
 	*/
 	inline bool IsEmpty() const noexcept { return PathToFileOnly.empty() && FileNameOnly.empty(); }
@@ -103,15 +103,15 @@ public:
 
 public:
 
-	/*
+	/**
 		Only path with end by separator.
 	*/
 	std::string PathToFileOnly = "";
-	/*
+	/**
 		Only name of file.
 	*/
 	std::string FileNameOnly = "";
-	/*
+	/**
 		Only file extension.
 	*/
 	std::string ExtensionOnly = "";

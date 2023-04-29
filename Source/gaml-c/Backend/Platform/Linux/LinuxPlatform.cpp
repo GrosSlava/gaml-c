@@ -11,98 +11,6 @@
 
 
 // clang-format off
-int FGenericPlatform::RunGCC
-(
-	const FGamlFileInfo& OriginalFile,
-	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
-)
-// clang-format on
-{
-	std::string ConsoleCommand = "";
-	ConsoleCommand.reserve(256);
-
-	switch( FCoreObjects::CompileOptions.TargetArch )
-	{
-	case ETargetArch::x86:
-	{
-		ConsoleCommand += "gcc -m32";
-		break;
-	}
-	case ETargetArch::x86_64:
-	{
-		ConsoleCommand += "gcc -m64";
-		break;
-	}
-	case ETargetArch::arm:
-	{
-		ConsoleCommand += "gcc -marm";
-		break;
-	}
-	case ETargetArch::arm_64:
-	{
-		ConsoleCommand += "gcc -marm";
-		break;
-	}
-	default:
-	{
-		FErrorLogger::Raise(EErrorMessageType::INVALID_ARCH_FOR_GENERATE, OriginalFile.GetFileFullPath(), 0, 0, 0);
-		break;
-	}
-	}
-
-	switch( FCoreObjects::CompileOptions.OptimizationLevel )
-	{
-	case EOptimizationLevel::NoOptimization:
-	{
-		ConsoleCommand += " -O0";
-		break;
-	}
-	case EOptimizationLevel::SizeOptimization:
-	{
-		ConsoleCommand += " -Os";
-		break;
-	}
-	case EOptimizationLevel::SpeedOptimization:
-	{
-		ConsoleCommand += " -Ofast";
-		break;
-	}
-	}
-
-	// clang-format off
-	if( FCoreObjects::CompileOptions.IsDebug )                    { ConsoleCommand += " -g"; }
-	if( FCoreObjects::CompileOptions.ConvertWarningsToErrors )    { ConsoleCommand += " -Werror"; }
-	if( FCoreObjects::CompileOptions.DumpAssembly )               { ConsoleCommand += " -S"; }
-	if( FCoreObjects::CompileOptions.NoBuiltin )                  { ConsoleCommand += " -fno-builtin"; }
-	if( FCoreObjects::CompileOptions.Freestanding )               { ConsoleCommand += " -ffreestanding"; }
-	if( FCoreObjects::CompileOptions.NoStackProtection )          { ConsoleCommand += " -fno-stack-protector"; }
-	if( FCoreObjects::CompileOptions.NoRedZone )                  { ConsoleCommand += " -mno-red-zone"; }
-	// clang-format on
-
-	ConsoleCommand += " -c -Wextra -Wall -fexec-charset=UTF-8 -finput-charset=UTF-8 -masm=intel";
-	ConsoleCommand += " -o" + CompiledObjectFilePath;
-	ConsoleCommand += " " + FilePath;
-
-	return FCompilerHelperLibrary::RunConsoleCommand(ConsoleCommand);
-}
-
-// clang-format off
-int FGenericPlatform::RunLLC
-(
-	const FGamlFileInfo& OriginalFile,
-	const std::string& FilePath, const std::string& OutputDirectoryPath, const std::string& CompiledObjectFilePath
-)
-// clang-format on
-{
-	//TODO
-	return 0;
-}
-
-
-
-
-
-// clang-format off
 int FGenericPlatform::RunThirdPartyLinker
 (
 	const std::string& OutputFilePath,
@@ -157,10 +65,10 @@ int FGenericPlatform::RunThirdPartyLinker
 	}
 
 	// clang-format off
-	if( FCoreObjects::CompileOptions.Freestanding )           { ConsoleCommand += " -nostdlib"; }
-	if( !FCoreObjects::CompileOptions.EntryPoint.empty() )    { ConsoleCommand += " -nostartfiles -e" + FCoreObjects::CompileOptions.EntryPoint; }
-	if( FCoreObjects::CompileOptions.IsDebug )                { ConsoleCommand += ""; }
-	if( FCoreObjects::CompileOptions.IsDLL )                  { ConsoleCommand += " -shared -fPIC"; }
+	if( true /* Freestanding */ )												{ ConsoleCommand += " -nostdlib"; }
+	if( !FCoreObjects::CompileOptions.EntryPoint.empty() )						{ ConsoleCommand += " -nostartfiles -e" + FCoreObjects::CompileOptions.EntryPoint; }
+	if( FCoreObjects::CompileOptions.IsDebug )									{ ConsoleCommand += ""; }
+	if( FCoreObjects::CompileOptions.BuildType == EBuildType::SharedLibrary )	{ ConsoleCommand += " -shared -fPIC"; }
 	// clang-format on
 
 	ConsoleCommand += " -o" + OutputFilePath;

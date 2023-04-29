@@ -11,7 +11,7 @@ struct FGamlFileInfo;
 
 
 
-/*
+/**
 	Main object for organizing tools.
 */
 struct FToolChain final
@@ -25,7 +25,7 @@ public:
 public:
 
 	// clang-format off
-	/*
+	/**
 		Process tool chain pipeline.
 
 		@param SourceFilePaths - Array of source files to compile.

@@ -10,7 +10,7 @@
 
 
 
-/*
+/**
 	All project global objects for easy access.
 	Must be inited in main.
 */

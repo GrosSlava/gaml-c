@@ -8,7 +8,7 @@
 
 
 
-/*
+/**
 	Error/Warning message identifier.
 */
 enum class EErrorMessageType
@@ -117,7 +117,7 @@ enum class EErrorMessageType
 
 
 
-/*
+/**
 	Helper struct for information about error.
 */
 struct FErrorInfo
@@ -133,21 +133,21 @@ public:
 
 public:
 
-	/*
+	/**
 		Severity of the error.
 	*/
 	EErrorType ErrorType = EErrorType::WARNING;
-	/*
+	/**
 		Level of warning.
 	*/
 	EWarningLevel WarningLevel = EWarningLevel::NoWarnings;
-	/*
+	/**
 		Message for this error.
 	*/
 	std::string Message = "";
 };
 
-/*
+/**
 	@return predefined error info based on MessageType.
 */
 FErrorInfo GetErrorInfo(EErrorMessageType MessageType);

@@ -14,14 +14,14 @@ struct Token;
 
 
 
-/*
+/**
 	Helper struct to raise warnings and errors from compiler.
 	@see FCompileLogger.
 */
 struct FErrorLogger
 {
 	// clang-format off
-	/*
+	/**
 		@param MessageType - Type of error.
 		@param File - Context file.
 		@param Line - Context line.
@@ -35,7 +35,7 @@ struct FErrorLogger
 	);
 	// clang-format on
 
-	/*
+	/**
 		@param MessageType - Type of error.
 		@param CTXToken - Context token.
 	*/

@@ -13,7 +13,7 @@
 #include <algorithm>
 
 
-/*
+/**
 	Determine current platform
 */
 // clang-format off

@@ -5,7 +5,7 @@
 
 
 
-/*
+/**
 	Supported target platforms.
 */
 enum class ETargetPlatform : unsigned char
@@ -15,18 +15,16 @@ enum class ETargetPlatform : unsigned char
 	Linux
 };
 
-/*
+/**
 	Supported target architectures.
 */
 enum class ETargetArch : unsigned char
 {
-	x86,
 	x86_64,
-	arm,
-	arm_64
+	AArch64
 };
 
-/*
+/**
 	Types of code optimization.
 */
 enum class EOptimizationLevel : unsigned char
@@ -36,7 +34,7 @@ enum class EOptimizationLevel : unsigned char
 	SpeedOptimization = 2
 };
 
-/*
+/**
 	Types of severity of the warning.
 */
 enum class EWarningLevel : unsigned char
@@ -47,7 +45,7 @@ enum class EWarningLevel : unsigned char
 	MinorWarning = 3
 };
 
-/*
+/**
 	Severity of the error.
 */
 enum class EErrorType : unsigned char
@@ -56,20 +54,21 @@ enum class EErrorType : unsigned char
 	WARNING
 };
 
-/*
-	Types of available code generations.
-*/
-enum class ECodeGenerationType : unsigned char
-{
-	ReduceC,
-	LLVM
-};
-
-/*
+/**
 	Type of subsystem for which the executable file is intended.
 */
 enum class ESubsystemType : unsigned char
 {
 	Console,
 	Window
+};
+
+/**
+	Type of program build.
+*/
+enum class EBuildType : unsigned char
+{
+	SharedLibrary,
+	StaticLibrary,
+	Executable
 };

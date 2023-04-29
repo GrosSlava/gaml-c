@@ -11,7 +11,6 @@
 #include "IR/IRInfo.h"
 
 #include "Generator/GeneratorBase.h"
-#include "Generator/ReduceC/ReduceCGenerator.h"
 #include "Generator/LLVM/LLVMGenerator.h"
 
 #include <fstream>
@@ -120,11 +119,8 @@ bool FCompiler::ProcessIR(FProgramInfo& ProgramInfo, FIRInfo& OutIR)
 
 bool FCompiler::GenerateCode(const FIRInfo& IRInfo, std::string& OutCompiledObjectFilePath)
 {
-	BaseGenerator* LGenerator = CreateCodeGenerator();
-	if( LGenerator == nullptr )
-	{
-		return false;
-	}
+	// hardcode select generator, no dynamic switch
+	BaseGenerator* LGenerator = new LLVMGenerator();
 
 	const bool LSuccess = LGenerator->GenerateCode(FileInfo, IRInfo, OutCompiledObjectFilePath);
 	delete LGenerator;
@@ -264,20 +260,4 @@ void FCompiler::DumpModuleDependencies(const FProgramInfo& ProgramInfo)
 void FCompiler::DumpIR(const FIRInfo& IRInfo)
 {
 	//TODO
-}
-
-
-
-
-
-BaseGenerator* FCompiler::CreateCodeGenerator() const noexcept
-{
-	switch( FCoreObjects::CompileOptions.CodeGenerationType )
-	{
-	case ECodeGenerationType::ReduceC: return new ReduceCGenerator();
-	case ECodeGenerationType::LLVM: return new LLVMGenerator();
-	}
-
-	LogError(EErrorType::ERROR, "", "!!!UNDEFINED CODE GENERATOR TYPE!!!", 0, 0);
-	return nullptr;
 }
